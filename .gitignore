@@ -194,3 +194,4 @@ poetry.toml
 .ionide
 
 # End of https://www.toptal.com/developers/gitignore/api/python,serverless,visualstudiocode
+node_modules
