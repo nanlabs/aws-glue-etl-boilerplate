@@ -1,0 +1,30 @@
+service: ${env:SERVICE_NAME, 'etl-boilerplate'}
+
+frameworkVersion: "3"
+
+plugins:
+  - serverless-plugin-scripts
+  - serverless-glue
+
+useDotenv: true
+
+custom:
+  scripts:
+    hooks:
+      "package:initialize": npm run zip-libs
+  documentDB:
+    connectionSecretName: ${param:DocumentDBConnectionSecretName, env:DOCUMENT_DB_SECRET_NAME}
+  postgresDB:
+    connectionSecretName: ${param:PostgresDBConnectionSecretName, env:POSTGRES_DB_SECRET_NAME}
+
+provider:
+  name: aws
+  stage: ${opt:stage, env:STAGE, 'local'}
+  region: ${opt:region, env:AWS_REGION, 'us-east-1'}
+  profile: ${opt:aws-profile, env:AWS_PROFILE, ''}
+  deploymentBucket:
+    blockPublicAccess: true
+    versioning: true
+    serverSideEncryption: AES256
+
+Glue: ${file(./glue.yml)}
