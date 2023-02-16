@@ -14,3 +14,13 @@ the repo history.
 
 @edwinabot tested this successfully in Ubuntu 22.04 running on WSL2 with Docker Desktop 4.16.3 (96739).
 [Installed act](https://github.com/nektos/act#bash-script) via Bash script.
+
+# Use Case
+
+Let's consider the following case:
+
+> "We need to build a datalake to support a threat intelligence operation"
+
+We'll leverage OSINT sources, our first integration will be with [Abuse.ch](https://abuse.ch/),
+[URLHaus](https://urlhaus.abuse.ch/api/) [Daily MISP Events](https://urlhaus.abuse.ch/downloads/misp/).
+We'll implement an ETL for this source.
