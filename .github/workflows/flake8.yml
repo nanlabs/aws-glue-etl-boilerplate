@@ -18,5 +18,6 @@ jobs:
         with:
           ignore: "E203,E266,E501,W503,F403,F401"
           max-line-length: "89"
-          path: "etl-boilerplate"
+          path: "jobs"
           plugins: "flake8-bugbear==22.1.11 flake8-black"
+          args: "--config=.flake8"
