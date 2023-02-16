@@ -3,20 +3,6 @@ ignore = E203, E266, E501, W503, F403, F401
 max-line-length = 89
 max-complexity = 18
 select = B,C,E,F,W,T4,B9
-exclude =
-    .git
-    .hg
-    .mypy_cache
-    .tox
-    .venv
-    _build
-    buck-out
-    build
-    dist
-    .serverless
-    .glue
-    node_modules
-    .ipynb_checkpoints
-    reference/*
-    blib2to3
-    tests/data
+require-plugins =
+    flake8-bugbear
+    flake8-black

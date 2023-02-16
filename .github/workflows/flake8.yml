@@ -11,13 +11,10 @@ jobs:
         uses: actions/checkout@v3
       - name: Set up Python environment
         uses: actions/setup-python@v4
-        with:
-          python-version: "3.10"
+      - name: Install Flake8 Plugins
+        run: python -m pip install flake8-bugbear==22.1.11 flake8-black
       - name: flake8 Lint
         uses: py-actions/flake8@v2
         with:
-          ignore: "E203,E266,E501,W503,F403,F401"
-          max-line-length: "89"
           path: "jobs"
-          plugins: "flake8-bugbear==22.1.11 flake8-black"
           args: "--config=.flake8"
