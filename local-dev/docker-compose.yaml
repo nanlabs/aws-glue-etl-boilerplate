@@ -1,0 +1,8 @@
+services:
+  glue-job:
+    build: .
+    environment:
+      DISABLE_SSL: "true"
+    command: spark-submit /home/glue_user/workspace/hello_world.py --JOB_NAME=hello_world
+    volumes:
+      - ../jobs/:/home/glue_user/workspace/
