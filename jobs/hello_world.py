@@ -1,9 +1,13 @@
 import sys
-from awsglue.transforms import *
+
 from awsglue.utils import getResolvedOptions
 from pyspark.context import SparkContext
 from awsglue.context import GlueContext
 from awsglue.job import Job
+
+from jobs.etl.extract import extract
+from jobs.etl.load import load
+from libs.config import get_config
 
 args = getResolvedOptions(sys.argv, ["JOB_NAME"])
 sc = SparkContext()
@@ -13,25 +17,16 @@ job = Job(glueContext)
 job.init(args["JOB_NAME"], args)
 
 
-persons = glueContext.create_dynamic_frame.from_catalog(
-    database="legislators", table_name="persons_json"
-)
+config = get_config()
 
-persons.printSchema()
+paths = [f"s3://{config.source_bucket_name}/*"]
 
-persons = persons.relationalize()
+ddf = extract(glueContext, paths, config)
+ddf.printSchema()
 
-persons.printSchema()
+ddf = ddf.relationalize()
+ddf.printSchema()
 
-glueContext.write_dynamic_frame.from_options(
-    frame=persons,
-    connection_type="postgresql",
-    connection_options={
-        "url": "foo__postgresql__conn__string",
-        "user": "foou",
-        "password": "bar",
-    },
-    format="parquet",
-)
+load(ddf, config)
 
 job.commit()
