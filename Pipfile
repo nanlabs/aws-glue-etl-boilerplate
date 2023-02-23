@@ -10,6 +10,7 @@ flake8 = "*"
 flake8-black = "*"
 flake8-bugbear = "*"
 black = "*"
+localstack = "*"
 
 [requires]
 python_version = "3.10"
