@@ -24,6 +24,9 @@ def get_url_for_engine(
     :param password: The password to connect with
     :return: The url for the engine
     """
+    if engine is None:
+        raise ValueError("engine is required. Please provide a valid engine.")
+
     urls = {
         "sqlserver": f"jdbc:sqlserver://{host}:{port};database={database}",
         "postgres": f"jdbc:postgresql://{host}:{port}/{database}",
@@ -32,9 +35,6 @@ def get_url_for_engine(
         ),
         "s3": None,
     }
-
-    if engine is None:
-        raise ValueError("engine is required. Please provide a valid engine.")
 
     return urls[engine]
 
@@ -86,15 +86,15 @@ def get_connection_type(engine: str, ssl: bool = False) -> str:
     :param ssl: Whether to use ssl or not
     :return: The connection type for the engine
     """
+    if engine is None:
+        raise ValueError("engine is required. Please provide a valid engine.")
+
     enginesConnectionTypes = {
         "sqlserver": "jdbc",
         "postgres": "jdbc",
         "mongo": "mongodb",
         "s3": "s3a",
     }
-
-    if engine is None:
-        raise ValueError("engine is required. Please provide a valid engine.")
 
     connection_type = enginesConnectionTypes[engine]
 
@@ -111,15 +111,15 @@ def get_driver_for_engine(engine: str = None) -> str:
     :param engine: The engine to get the driver for
     :return: The driver for the engine
     """
+    if engine is None:
+        raise ValueError("engine is required. Please provide a valid engine.")
+
     drivers = {
         "sqlserver": "com.microsoft.sqlserver.jdbc.SQLServerDriver",
         "postgres": "org.postgresql.Driver",
         "mongo": None,
         "s3": "org.apache.hadoop.fs.s3a.S3AFileSystem",
     }
-
-    if engine is None:
-        raise ValueError("engine is required. Please provide a valid engine.")
 
     return drivers[engine]
 
@@ -131,15 +131,15 @@ def get_format_for_engine(engine: str = None) -> str:
     :param engine: The engine to get the format for
     :return: The format for the engine
     """
+    if engine is None:
+        raise ValueError("engine is required. Please provide a valid engine.")
+
     enginesFormats = {
         "sqlserver": "jdbc",
         "postgres": "jdbc",
         "mongo": "mongodb",
         "s3": "json",
     }
-
-    if engine is None:
-        raise ValueError("engine is required. Please provide a valid engine.")
 
     return enginesFormats[engine]
 
@@ -183,6 +183,9 @@ def get_connection_options(
     :param path: The path to connect to
     :return: The format and options for the engine
     """
+    if engine is None:
+        raise ValueError("engine is required. Please provide a valid engine.")
+
     format = get_format_for_engine(engine)
 
     connection_type = get_connection_type(engine=engine, ssl=ssl)
@@ -238,8 +241,5 @@ def get_connection_options(
             "path": path,
         },
     }
-
-    if engine is None:
-        raise ValueError("engine is required. Please provide a valid engine.")
 
     return format, connection_type, connection_options[engine]
