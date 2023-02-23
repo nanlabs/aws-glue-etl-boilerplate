@@ -10,7 +10,9 @@ class EnvironmentVariable:
     args = {}
     cache = {}
 
-    def __init__(self, args: dict = {}) -> None:
+    def __init__(self, args: dict = None) -> None:
+        if args is None:
+            args = dict()
         self.args = args
         self.load_env()
 
@@ -504,7 +506,7 @@ class EnvironmentVariable:
 envs_instance = None
 
 
-def get_envs(args: dict = {}) -> EnvironmentVariable:
+def get_envs(args: dict = None) -> EnvironmentVariable:
     """
     Get the envs instance. If it doesn't exist, create it.
 
@@ -512,6 +514,8 @@ def get_envs(args: dict = {}) -> EnvironmentVariable:
     :return: The envs.
     """
     global envs_instance
+    if args is None:
+        args = dict()
     if envs_instance is None:
         envs_instance = EnvironmentVariable(args)
     return envs_instance

@@ -8,7 +8,9 @@ class Config:
     Get the credentials from the AWS Secret Manager or from the environment variables
     """
 
-    def __init__(self, args: dict = {}) -> None:
+    def __init__(self, args: dict = None) -> None:
+        if args is None:
+            args = dict()
         self.env = get_envs(args)
         self.sr = get_secrets_resolver(
             udb_secret_name=self.udb_secret_name,
@@ -481,7 +483,7 @@ class Config:
 config_instance = None
 
 
-def get_config(args: dict = dict()) -> Config:
+def get_config(args: dict) -> Config:
     """
     Get the config instance. If it doesn't exist, create it.
 

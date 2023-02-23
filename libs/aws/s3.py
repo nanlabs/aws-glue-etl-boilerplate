@@ -51,7 +51,7 @@ class AwsS3Client:
         bucket = self.s3.Bucket(self.bucket_name)
         object_exists = False
 
-        for i in bucket.objects.filter(Prefix=key):
+        for _i in bucket.objects.filter(Prefix=key):
             object_exists = True
 
         if object_exists:
@@ -62,8 +62,10 @@ class AwsS3Client:
 
     def put_object(self, data: bytes, key: str) -> dict:
         """
-        Adds an object to a bucket. You must have WRITE permissions on a bucket to add an object to it.
-        Amazon S3 never adds partial objects; if you receive a success response, Amazon S3 added the entire object to the bucket.
+        Adds an object to a bucket. You must have WRITE permissions on a bucket
+        to add an object to it.
+        Amazon S3 never adds partial objects; if you receive a success response,
+        Amazon S3 added the entire object to the bucket.
 
         :param data: The data of the object encoded into bytes.
         :param key: The URI and the object's name.

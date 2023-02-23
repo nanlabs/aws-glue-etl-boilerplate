@@ -50,7 +50,11 @@ def _build_mongodb_connection_string(
 ):
     encoded_user = _encode_mongodb_auth_special_chars(user)
     encoded_pass = _encode_mongodb_auth_special_chars(password)
-    return f"mongodb://{encoded_user}:{encoded_pass}@{host}:{port}/{database}?tls={'true' if ssl else 'false'}&tlsCaFile={load_tls_ca_bundle() if ssl else ''}"
+    return (
+        f"mongodb://{encoded_user}:{encoded_pass}@{host}:{port}/"
+        f"{database}?tls={'true' if ssl else 'false'}&tlsCaFile="
+        f"{load_tls_ca_bundle() if ssl else ''}"
+    )
 
 
 def _encode_mongodb_auth_special_chars(authchars: str):
@@ -60,7 +64,8 @@ def _encode_mongodb_auth_special_chars(authchars: str):
         : / ? # [ ] @
 
     See the following resources:
-        * https://www.mongodb.com/docs/manual/reference/connection-string/#connection-string-uri-format
+        * https://www.mongodb.com/docs/manual/reference/connection-string/
+            #connection-string-uri-format
         * https://www.rfc-editor.org/rfc/rfc3986#section-2.1
         * https://docs.python.org/3/library/urllib.parse.html#urllib.parse.quote
 
