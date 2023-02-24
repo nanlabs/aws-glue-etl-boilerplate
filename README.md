@@ -15,6 +15,16 @@ the repo history.
 @edwinabot tested this successfully in Ubuntu 22.04 running on WSL2 with Docker Desktop 4.16.3 (96739).
 [Installed act](https://github.com/nektos/act#bash-script) via Bash script.
 
+## Notes
+
+### Why the Dockerfile is at the root of the project and not in local-dev?
+
+Since we need to add some Python deps for our project, we need to `ADD` (or `COPY`) the `Pipfile`. The reason  to have the Dockerfile at the root of the project is that:
+
+> The <src> path must be inside the context of the build; you cannot ADD ../something /something, because the first step of a docker build is to send the context directory (and subdirectories) to the docker daemon. [Dockerfile ADD documentation](https://docs.docker.com/engine/reference/builder/#add)
+
+To be more precise, we need the Dokerfile to be at least at the same level of the Pipfile.
+
 # Use Case
 
 Let's consider the following case:
