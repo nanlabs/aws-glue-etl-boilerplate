@@ -3,19 +3,18 @@ services:
     build: ..
     environment:
       DISABLE_SSL: "true"
-    command: spark-submit jobs/hello_world.py --JOB_NAME=hello_world
-    # entrypoint: ["tail", "-f", "/dev/null"] # for local development purposes
+    # command: spark-submit jobs/hello_world.py --JOB_NAME=hello_world
+    entrypoint: [ "tail", "-f", "/dev/null" ]
     volumes:
       - ../jobs:/home/glue_user/workspace/jobs
       - ../libs:/home/glue_user/workspace/libs
       - ~/.aws:/home/glue_user/.aws
     env_file:
       - .env
-
     depends_on:
       - localstack
-    #   database:
-    #     condition: service_healthy
+    networks:
+      - aws-glue-boilerplate
 
   localstack:
     container_name: "${LOCALSTACK_DOCKER_NAME-localstack_main}"
@@ -28,14 +27,28 @@ services:
       - LAMBDA_EXECUTOR=${LAMBDA_EXECUTOR-}
       - DOCKER_HOST=unix:///var/run/docker.sock
     volumes:
-      - "${LOCALSTACK_VOLUME_DIR:-./volume}:/var/lib/localstack"
+      - localstack:${LOCALSTACK_DATA_DIR:-/tmp/}localstack/data
       - "/var/run/docker.sock:/var/run/docker.sock"
+    networks:
+      - aws-glue-boilerplate
 
-  database:
-    image: 'postgres:latest'
-    ports:
-      - 5432:5432
-    environment:
-      POSTGRES_USER: username
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: etlboilerpate
+  setup-resources:
+    image: mesosphere/aws-cli:1.14.5
+    entrypoint: tail -f /dev/null
+    # command: /project/localstack # /setup-resources.sh
+    volumes:
+      - ./local-dev/localstack:/project
+      - ~/.aws:/home/glue_user/.aws
+    networks:
+      - aws-glue-boilerplate
+    depends_on:
+      - localstack
+    env_file:
+      - .env
+
+networks:
+  aws-glue-boilerplate:
+    driver: "bridge"
+
+volumes:
+  localstack:

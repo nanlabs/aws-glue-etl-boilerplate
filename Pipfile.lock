@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "def9363ad752bee4b79ba3b3049229a5d884e7dd838268bca71b72db6735fc26"
+            "sha256": "528788b8b5c13665a99009cb418ee0580979e9fbcaf36d77ca67f8a2d21a0836"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -189,6 +189,13 @@
             "editable": true,
             "git": "https://github.com/awslabs/aws-glue-libs.git",
             "ref": "f973095b9f2aa784cbcc87681a00da3127125337"
+        },
+        "awscli-local": {
+            "hashes": [
+                "sha256:8694445f4fcf11e1ed15c0cf47150b85f5904cc6f27ae8157043b89cf9f4b16a"
+            ],
+            "index": "pypi",
+            "version": "==0.20"
         },
         "black": {
             "hashes": [
