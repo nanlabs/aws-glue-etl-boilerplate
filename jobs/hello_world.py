@@ -16,10 +16,9 @@ spark = glueContext.spark_session
 job = Job(glueContext)
 job.init(args["JOB_NAME"], args)
 
-
 config = get_config()
 
-paths = [f"s3://{config.source_bucket_name}/*"]
+paths = [f"s3://{config.s3_bucket_name}/*"]
 
 ddf = extract(glueContext, paths, config)
 ddf.printSchema()

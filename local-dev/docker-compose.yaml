@@ -4,11 +4,13 @@ services:
     environment:
       DISABLE_SSL: "true"
     command: spark-submit jobs/hello_world.py --JOB_NAME=hello_world
-    # command: /bin/sh -c "while sleep 1000; do :; done"
+    # entrypoint: ["tail", "-f", "/dev/null"] # for local development purposes
     volumes:
       - ../jobs:/home/glue_user/workspace/jobs
       - ../libs:/home/glue_user/workspace/libs
       - ~/.aws:/home/glue_user/.aws
+    env_file:
+      - .env
 
     depends_on:
       - localstack
