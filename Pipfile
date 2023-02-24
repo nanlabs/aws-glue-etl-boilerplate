@@ -4,10 +4,13 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-pyspark = "*"
-aws-glue-libs = {editable = true, ref = "f973095b9f2aa784cbcc87681a00da3127125337", git = "https://github.com/awslabs/aws-glue-libs.git"}
+wget = "*"
+pymongo = "*"
+boto3 = "*"
 
 [dev-packages]
+pyspark = "*"
+aws-glue-libs = {editable = true, ref = "f973095b9f2aa784cbcc87681a00da3127125337", git = "https://github.com/awslabs/aws-glue-libs.git"}
 flake8 = "*"
 flake8-black = "*"
 flake8-bugbear = "*"

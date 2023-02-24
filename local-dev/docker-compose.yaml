@@ -1,8 +1,38 @@
 services:
   glue-job:
-    build: .
+    build: ..
     environment:
       DISABLE_SSL: "true"
-    command: spark-submit /home/glue_user/workspace/hello_world.py --JOB_NAME=hello_world
+    command: spark-submit jobs/hello_world.py --JOB_NAME=hello_world
+    # command: /bin/sh -c "while sleep 1000; do :; done"
     volumes:
-      - ../jobs/:/home/glue_user/workspace/
+      - ../jobs:/home/glue_user/workspace/jobs
+      - ../libs:/home/glue_user/workspace/libs
+
+    depends_on:
+      - localstack
+    #   database:
+    #     condition: service_healthy
+
+  localstack:
+    container_name: "${LOCALSTACK_DOCKER_NAME-localstack_main}"
+    image: localstack/localstack:latest
+    ports:
+      - "127.0.0.1:4566:4566" # LocalStack Gateway
+      - "127.0.0.1:4510-4559:4510-4559" # external services port range
+    environment:
+      - DEBUG=${DEBUG-}
+      - LAMBDA_EXECUTOR=${LAMBDA_EXECUTOR-}
+      - DOCKER_HOST=unix:///var/run/docker.sock
+    volumes:
+      - "${LOCALSTACK_VOLUME_DIR:-./volume}:/var/lib/localstack"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+
+  database:
+    image: 'postgres:latest'
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: username
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: etlboilerpate
