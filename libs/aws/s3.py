@@ -37,7 +37,7 @@ class AwsS3Client:
             "s3", endpoint_url=endpoint_url or config.aws_endpoint_url
         )
         self.bucket_name = (
-            bucket_name if bucket_name is not None else config.datalake_bucket_name
+            bucket_name if bucket_name is not None else config.s3_bucket_name
         )
 
     def get_object(self, key: str) -> Union[str, None]:
@@ -75,7 +75,7 @@ class AwsS3Client:
 
         return obj.put(Body=data)
 
-    def get_objects(self, key: str = None, delimiter: str = None) -> list:
+    def get_objects(self, key: str = "", delimiter: str = "") -> list:
         """
         Returns all items in a specific folder.
 
@@ -86,7 +86,7 @@ class AwsS3Client:
 
         return list(bucket.objects.filter(Prefix=key, Delimiter=delimiter))
 
-    def get_all_keys(self, delimiter: str = None) -> list:
+    def get_all_keys(self, delimiter: str = "") -> list:
         """
         Returns all keys in the bucket.
 
