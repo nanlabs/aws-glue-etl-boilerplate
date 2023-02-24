@@ -270,7 +270,7 @@ class Config:
 config_instance = None
 
 
-def get_config(args: dict) -> Config:
+def get_config(args: dict = None) -> Config:
     """
     Get the config instance. If it doesn't exist, create it.
 
@@ -278,6 +278,8 @@ def get_config(args: dict) -> Config:
     :return: The config class instance.
     """
     global config_instance
+    if args is None:
+        args = dict()
     if config_instance is None:
         config_instance = Config(args)
     return config_instance
