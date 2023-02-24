@@ -8,19 +8,19 @@ secrets_resolver_instance = None
 
 
 def get_secrets_resolver(
-    udb_secret_name: str = None, analyticsdb_secret_name: str = None
+    documentdb_secret_name: str = None, postgresdb_secret_name: str = None
 ) -> SecretsResolver:
     """
     Get the secrets manager instance. This is a singleton.
 
-    :param udb_secret_name: The name of the unified data base.
+    :param documentdb_secret_name: The name of the unified data base.
     :return: The secrets manager instance.
     """
     global secrets_resolver_instance
     if secrets_resolver_instance is None:
         secrets_resolver_instance = SecretsResolver(
-            udb_secret_name=udb_secret_name,
-            analyticsdb_secret_name=analyticsdb_secret_name,
+            documentdb_secret_name=documentdb_secret_name,
+            postgresdb_secret_name=postgresdb_secret_name,
         )
     return secrets_resolver_instance
 
@@ -31,11 +31,11 @@ class SecretsResolver:
 
     def __init__(
         self,
-        udb_secret_name: str = "measured/UnifiedDatabase",
-        analyticsdb_secret_name: str = "measured/AnalyticsPostgresDB",
+        documentdb_secret_name: str,
+        postgresdb_secret_name: str,
     ) -> None:
-        self.udb_secret_name = udb_secret_name
-        self.analyticsdb_secret_name = analyticsdb_secret_name
+        self.documentdb_secret_name = documentdb_secret_name
+        self.postgresdb_secret_name = postgresdb_secret_name
 
     def get_secret_key(
         self,
@@ -89,13 +89,13 @@ class SecretsResolver:
             # Mssql - Quotes
             "quotes": {"secret_name": "ims/db/read-only", "region_name": "us-east-1"},
             # UnifiedDB - DocumentDB
-            "measured_unifieddb": {
-                "secret_name": self.udb_secret_name,
+            "documentdb": {
+                "secret_name": self.documentdb_secret_name,
                 "region_name": "us-east-1",
             },
             # AnalyticsDB - Postgres
-            "measured_analyticsdb": {
-                "secret_name": self.analyticsdb_secret_name,
+            "postgresdb": {
+                "secret_name": self.postgresdb_secret_name,
                 "region_name": "us-east-1",
             },
         }
@@ -148,206 +148,106 @@ class SecretsResolver:
                 self.secret_cache[data_source] = decoded_binary_secret
                 return decoded_binary_secret
 
-    def get_submission_database(self) -> str:
-        """
-        Get the Name for the submission database or None if it is not set.
-
-        :return: A string with the the value.
-        """
-        return "workflow"
-
-    def get_submission_engine(self) -> str:
-        """
-        Get the Engine for the submission database or None if it is not set.
-
-        :return: A string with the the value.
-        """
-        return self.get_secret_key("submissions", "engine", default="postgres")
-
-    def get_submission_host(self) -> str:
-        """
-        Get the Host for the submission database or None if it is not set.
-
-        :return: A string with the the value.
-        """
-        return self.get_secret_key("submissions", "host")
-
-    def get_submission_port(self) -> str:
-        """
-        Get the Port for the submission database or None if it is not set.
-
-        :return: A string with the the value.
-        """
-        return self.get_secret_key("submissions", "port")
-
-    def get_submission_user(self) -> str:
-        """
-        Get the User for the submission database or None if it is not set.
-
-        :return: A string with the the value.
-        """
-        return self.get_secret_key("submissions", "username")
-
-    def get_submission_password(self) -> str:
-        """
-        Get the Password for the submission database or None if it is not set.
-
-        :return: A string with the the value.
-        """
-        return self.get_secret_key("submissions", "password")
-
-    def get_ims_engine(self) -> str:
-        """
-        Get the Engine for the ims database or None if it is not set.
-
-        :return: A string with the the value.
-        """
-        return self.get_secret_key("quotes", "engine", default="sqlserver")
-
-    def get_ims_host(self) -> str:
-        """
-        Get the Host for the IMS database or None if it is not set.
-
-        :return: A string with the the value.
-        """
-        return self.get_secret_key("quotes", "host")
-
-    def get_ims_port(self) -> str:
-        """
-        Get the Port for the IMS database or None if it is not set.
-
-        :return: A string with the the value.
-        """
-        return self.get_secret_key("quotes", "port")
-
-    def get_ims_user(self) -> str:
-        """
-        Get the User for the IMS database or None if it is not set.
-
-        :return: A string with the the value.
-        """
-        return self.get_secret_key("quotes", "username")
-
-    def get_ims_password(self) -> str:
-        """
-        Get the Pasword for the IMS database or None if it is not set.
-
-        :return: A string with the the value.
-        """
-        return self.get_secret_key("quotes", "password")
-
-    def get_ims_database(self) -> str:
-        """
-        Get the Name for the IMS database or None if it is not set.
-
-        :return: A string with the the value.
-        """
-        return self.get_secret_key("quotes", "database")
-
-    def get_udb_database(self) -> str:
+    def get_documentdb_database(self) -> str:
         """
         Get the Name for the Unified database or None if it is not set.
 
         :return: A string with the the value.
         """
-        return self.get_secret_key(
-            "measured_unifieddb", "database", default="UnifiedDB"
-        )
+        return self.get_secret_key("documentdb", "database", default="UnifiedDB")
 
-    def get_udb_host(self) -> str:
+    def get_documentdb_host(self) -> str:
         """
         Get the Host for the Unified database or None if it is not set.
 
         :return: A string with the the value.
         """
-        return self.get_secret_key("measured_unifieddb", "host")
+        return self.get_secret_key("documentdb", "host")
 
-    def get_udb_port(self) -> str:
+    def get_documentdb_port(self) -> str:
         """
         Get the Port for the Unified database or None if it is not set.
 
         :return: A string with the the value.
         """
-        return self.get_secret_key("measured_unifieddb", "port")
+        return self.get_secret_key("documentdb", "port")
 
-    def get_udb_user(self) -> str:
+    def get_documentdb_user(self) -> str:
         """
         Get the User for the Unified database or None if it is not set.
 
         :return: A string with the the value.
         """
-        return self.get_secret_key("measured_unifieddb", "username")
+        return self.get_secret_key("documentdb", "username")
 
-    def get_udb_password(self) -> str:
+    def get_documentdb_password(self) -> str:
         """
         Get the Password for the Unified database or None if it is not set.
 
         :return: A string with the the value.
         """
-        return self.get_secret_key("measured_unifieddb", "password")
+        return self.get_secret_key("documentdb", "password")
 
-    def get_udb_engine(self) -> str:
+    def get_documentdb_engine(self) -> str:
         """
         Get the engine for the Unified database or None if it is not set.
 
         :return: A string with the the value.
         """
-        return self.get_secret_key("measured_unifieddb", "engine", default="mongo")
+        return self.get_secret_key("documentdb", "engine", default="mongo")
 
-    def get_udb_ssl(self) -> bool:
+    def get_documentdb_ssl(self) -> bool:
         """
         Get the ssl for the Unified database or None if it is not set.
 
         :return: A string with the the value.
         """
-        return self.get_secret_key("measured_unifieddb", "ssl", default=False)
+        return self.get_secret_key("documentdb", "ssl", default=False)
 
-    def get_analyticsdb_database(self) -> str:
+    def get_postgresdb_database(self) -> str:
         """
         Get the Name for the Analytics database or None if it is not set.
 
         :return: A string with the the value.
         """
-        return self.get_secret_key(
-            "measured_analyticsdb", "database", default="AnalyticsDB"
-        )
+        return self.get_secret_key("postgresdb", "database", default="AnalyticsDB")
 
-    def get_analyticsdb_host(self) -> str:
+    def get_postgresdb_host(self) -> str:
         """
         Get the Host for the Analytics database or None if it is not set.
 
         :return: A string with the the value.
         """
-        return self.get_secret_key("measured_analyticsdb", "host")
+        return self.get_secret_key("postgresdb", "host")
 
-    def get_analyticsdb_port(self) -> str:
+    def get_postgresdb_port(self) -> str:
         """
         Get the Port for the Analytics database or None if it is not set.
 
         :return: A string with the the value.
         """
-        return self.get_secret_key("measured_analyticsdb", "port")
+        return self.get_secret_key("postgresdb", "port")
 
-    def get_analyticsdb_user(self) -> str:
+    def get_postgresdb_user(self) -> str:
         """
         Get the User for the Analytics database or None if it is not set.
 
         :return: A string with the the value.
         """
-        return self.get_secret_key("measured_analyticsdb", "username")
+        return self.get_secret_key("postgresdb", "username")
 
-    def get_analyticsdb_password(self) -> str:
+    def get_postgresdb_password(self) -> str:
         """
         Get the Password for the Analytics database or None if it is not set.
 
         :return: A string with the the value.
         """
-        return self.get_secret_key("measured_analyticsdb", "password")
+        return self.get_secret_key("postgresdb", "password")
 
-    def get_analyticsdb_engine(self) -> str:
+    def get_postgresdb_engine(self) -> str:
         """
         Get the engine for the Analytics database or None if it is not set.
 
         :return: A string with the the value.
         """
-        return self.get_secret_key("measured_analyticsdb", "engine", default="postgres")
+        return self.get_secret_key("postgresdb", "engine", default="postgres")

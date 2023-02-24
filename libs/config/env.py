@@ -117,102 +117,102 @@ class EnvironmentVariable:
         self, default: Any = None, throw_error: bool = False
     ) -> str:
         """
-        Get the Secret Name for the Unified database or None if it is not set.
+        Get the Secret Name for the DocumentDB database or None if it is not set.
 
         :param default: The default value if the variable is not found.
         :param throw_error: If true, throw an error if the variable is not found.
         :return: A string with the the value.
         """
         return self.get_var(
-            "UNIFIED_DB_SECRET_NAME", default=default, throw_error=throw_error
+            "DOCUMENTDB_SECRET_NAME", default=default, throw_error=throw_error
         )
 
     def get_documentdb_ssl(self, default: Any = None, throw_error: bool = False) -> str:
         """
-        Get the SSL Mode for the Unified database or None if it is not set.
+        Get the SSL Mode for the DocumentDB database or None if it is not set.
 
         :param default: The default value if the variable is not found.
         :param throw_error: If true, throw an error if the variable is not found.
         :return: A string with the the value.
         """
-        return self.get_var("UNIFIED_DB_SSL", default=default, throw_error=throw_error)
+        return self.get_var("DOCUMENTDB_SSL", default=default, throw_error=throw_error)
 
     def get_documentdb_database(
         self, default: Any = None, throw_error: bool = False
     ) -> str:
         """
-        Get the Name for the Unified database or None if it is not set.
+        Get the Name for the DocumentDB database or None if it is not set.
 
         :param default: The default value if the variable is not found.
         :param throw_error: If true, throw an error if the variable is not found.
         :return: A string with the the value.
         """
-        return self.get_var("UNIFIED_DB_NAME", default=default, throw_error=throw_error)
+        return self.get_var("DOCUMENTDB_NAME", default=default, throw_error=throw_error)
 
     def get_documentdb_host(
         self, default: Any = None, throw_error: bool = False
     ) -> str:
         """
-        Get the Host for the Unified database or None if it is not set.
+        Get the Host for the DocumentDB database or None if it is not set.
 
         :param default: The default value if the variable is not found.
         :param throw_error: If true, throw an error if the variable is not found.
         :return: A string with the the value.
         """
-        return self.get_var("UNIFIED_DB_HOST", default=default, throw_error=throw_error)
+        return self.get_var("DOCUMENTDB_HOST", default=default, throw_error=throw_error)
 
     def get_documentdb_port(
         self, default: Any = None, throw_error: bool = False
     ) -> str:
         """
-        Get the Port for the Unified database or None if it is not set.
+        Get the Port for the DocumentDB database or None if it is not set.
 
         :param default: The default value if the variable is not found.
         :param throw_error: If true, throw an error if the variable is not found.
         :return: A string with the the value.
         """
-        return self.get_var("UNIFIED_DB_PORT", default=default, throw_error=throw_error)
+        return self.get_var("DOCUMENTDB_PORT", default=default, throw_error=throw_error)
 
     def get_documentdb_user(
         self, default: Any = None, throw_error: bool = False
     ) -> str:
         """
-        Get the User for the Unified database or None if it is not set.
+        Get the User for the DocumentDB database or None if it is not set.
 
         :param default: The default value if the variable is not found.
         :param throw_error: If true, throw an error if the variable is not found.
         :return: A string with the the value.
         """
         return self.get_var(
-            "UNIFIED_DB_USERNAME", default=default, throw_error=throw_error
+            "DOCUMENTDB_USERNAME", default=default, throw_error=throw_error
         )
 
     def get_documentdb_password(
         self, default: Any = None, throw_error: bool = False
     ) -> str:
         """
-        Get the Password for the Unified database or None if it is not set.
+        Get the Password for the DocumentDB database or None if it is not set.
 
         :param default: The default value if the variable is not found.
         :param throw_error: If true, throw an error if the variable is not found.
         :return: A string with the the value.
         """
         return self.get_var(
-            "UNIFIED_DB_PASSWORD", default=default, throw_error=throw_error
+            "DOCUMENTDB_PASSWORD", default=default, throw_error=throw_error
         )
 
     def get_documentdb_engine(
         self, default: Any = None, throw_error: bool = False
     ) -> str:
         """
-        Get the engine for the Unified database or None if it is not set.
+        Get the engine for the DocumentDB database or None if it is not set.
 
         :param default: The default value if the variable is not found.
         :param throw_error: If true, throw an error if the variable is not found.
         :return: A string with the the value.
         """
         return self.get_var(
-            "UNIFIED_DB_ENGINE", default=default, throw_error=throw_error
+            "DOCUMENTDB_ENGINE", default=default, throw_error=throw_error
         )
 
     def get_postgresdb_secret_name(
@@ -226,7 +226,7 @@ class EnvironmentVariable:
         :return: A string with the the value.
         """
         return self.get_var(
-            "postgres_DB_SECRET_NAME", default=default, throw_error=throw_error
+            "POSTGRES_DB_SECRET_NAME", default=default, throw_error=throw_error
         )
 
     def get_postgresdb_database(
@@ -240,7 +240,7 @@ class EnvironmentVariable:
         :return: A string with the the value.
         """
         return self.get_var(
-            "postgres_DB_NAME", default=default, throw_error=throw_error
+            "POSTGRES_DB_NAME", default=default, throw_error=throw_error
         )
 
     def get_postgresdb_host(
@@ -254,7 +254,7 @@ class EnvironmentVariable:
         :return: A string with the the value.
         """
         return self.get_var(
-            "postgres_DB_HOST", default=default, throw_error=throw_error
+            "POSTGRES_DB_HOST", default=default, throw_error=throw_error
         )
 
     def get_postgresdb_port(
@@ -268,7 +268,7 @@ class EnvironmentVariable:
         :return: A string with the the value.
         """
         return self.get_var(
-            "postgres_DB_PORT", default=default, throw_error=throw_error
+            "POSTGRES_DB_PORT", default=default, throw_error=throw_error
         )
 
     def get_postgresdb_user(
@@ -282,7 +282,7 @@ class EnvironmentVariable:
         :return: A string with the the value.
         """
         return self.get_var(
-            "postgres_DB_USERNAME", default=default, throw_error=throw_error
+            "POSTGRES_DB_USERNAME", default=default, throw_error=throw_error
         )
 
     def get_postgresdb_password(
@@ -296,7 +296,7 @@ class EnvironmentVariable:
         :return: A string with the the value.
         """
         return self.get_var(
-            "postgres_DB_PASSWORD", default=default, throw_error=throw_error
+            "POSTGRES_DB_PASSWORD", default=default, throw_error=throw_error
         )
 
     def get_postgresdb_engine(
@@ -310,7 +310,7 @@ class EnvironmentVariable:
         :return: A string with the the value.
         """
         return self.get_var(
-            "postgres_DB_ENGINE", default=default, throw_error=throw_error
+            "POSTGRES_DB_ENGINE", default=default, throw_error=throw_error
         )
 
     def get_s3_bucket_name(self, default: Any = None, throw_error: bool = False) -> str:
@@ -321,9 +321,7 @@ class EnvironmentVariable:
         :param throw_error: If true, throw an error if the variable is not found.
         :return: A string with the the value.
         """
-        return self.get_var(
-            "SCAN_BUCKET_NAME", default=default, throw_error=throw_error
-        )
+        return self.get_var("S3_BUCKET_NAME", default=default, throw_error=throw_error)
 
 
 envs_instance = None
