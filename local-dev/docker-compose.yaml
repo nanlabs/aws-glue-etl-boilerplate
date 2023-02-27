@@ -3,8 +3,8 @@ services:
     build: ..
     environment:
       DISABLE_SSL: "true"
-    # command: spark-submit jobs/hello_world.py --JOB_NAME=hello_world
-    entrypoint: [ "tail", "-f", "/dev/null" ]
+    command: spark-submit jobs/hello_world.py --JOB_NAME=hello_world
+    # entrypoint: [ "tail", "-f", "/dev/null" ]
     volumes:
       - ../jobs:${WORKDIR}/jobs
       - ../libs:${WORKDIR}/libs
