@@ -18,9 +18,7 @@ job.init(args["JOB_NAME"], args)
 
 config = get_config()
 
-paths = [f"s3://{config.s3_bucket_name}/*"]
-
-ddf = extract(glueContext, paths, config)
+ddf = extract(glueContext, config)
 ddf.printSchema()
 
 ddf = ddf.relationalize()
