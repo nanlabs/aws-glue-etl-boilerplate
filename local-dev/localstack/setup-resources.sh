@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# Lets check if localstack is available. If we can't reach to localstack
+# in 60 seconds we error out
 counter=0
 until $(curl --output /dev/null --silent --head --fail http://localstack:4566); do
     if [ ${counter} -eq 60 ];then
@@ -11,9 +13,19 @@ until $(curl --output /dev/null --silent --head --fail http://localstack:4566); 
     sleep 1
 done
 
+# Create a bucket for the sample data
+aws --endpoint-url=https://localstack:4566 --no-verify-ssl \
+    s3api create-bucket --bucket sampledata
 
-tar -xf /home/glue_user/workspace/s3/sampledata.tar.xz --directory /home/glue_user/workspace/s3/
-awslocal s3api create-bucket --bucket sampledata
-for file in /localstack/s3/*.json; do
-    awslocal s3api put-object --bucket sampledata --key file --body /localstack/s3/$file
+# Make a temp dir for the sample data
+mkdir /tmp/s3
+
+# Un-tar the sample data to the temp directory
+tar --skip-old-files -xf  ${WORKDIR}/s3/sampledata.tar.xz --directory /tmp/s3/
+
+# Iterate over the sample json files and upload them to the bucket
+for file in /tmp/s3/*.json; do
+    filename=$(basename ${file})
+    aws --endpoint-url=https://localstack:4566 --no-verify-ssl \
+        s3api put-object --bucket sampledata --key ${filename} --body ${file}
 done

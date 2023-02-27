@@ -34,8 +34,8 @@ services:
 
   setup-resources:
     build: ..
-    entrypoint: tail -f /dev/null
-    # command: /project/localstack # /setup-resources.sh
+    entrypoint: /bin/bash
+    command: ${WORKDIR}/setup-resources.sh
     volumes:
       - ./localstack:/home/glue_user/workspace/
       - ~/.aws:/home/glue_user/.aws
@@ -45,6 +45,8 @@ services:
       - localstack
     env_file:
       - .env
+    environment:
+      - WORKDIR=${WORKDIR}
 
 networks:
   aws-glue-boilerplate:
