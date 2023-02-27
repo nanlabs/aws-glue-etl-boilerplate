@@ -12,7 +12,7 @@ def extract(glueContext: GlueContext, config: Config):
     connection_params = config.aws_client_vars
     connection_params["engine"] = "s3"
     connection_params["paths"] = [
-        f"{o.bucket_name}/{o.key}" for o in client.get_objects()
+        f"s3://{o.bucket_name}/{o.key}" for o in client.get_objects()
     ]
     ddf = read_from_options(glueContext, **connection_params)
     return ddf
