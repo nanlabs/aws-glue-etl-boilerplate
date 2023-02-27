@@ -1,10 +1,18 @@
 #!/bin/sh
 
-# Needed so all localstack components will startup correctly (i'm sure there's a better way to do this)
-sleep 10
+counter=0
+until $(curl --output /dev/null --silent --head --fail http://localstack:4566); do
+    if [ ${counter} -eq 60 ];then
+      echo "Timeout: Failed to reach localstack."
+      exit 1
+    fi
+    counter=$(($counter+1))
+    printf '.'
+    sleep 1
+done
 
 
-tar -xf /localstack/s3/sampledata.tar.xz --directory /localstack/s3/
+tar -xf /home/glue_user/workspace/s3/sampledata.tar.xz --directory /home/glue_user/workspace/s3/
 awslocal s3api create-bucket --bucket sampledata
 for file in /localstack/s3/*.json; do
     awslocal s3api put-object --bucket sampledata --key file --body /localstack/s3/$file

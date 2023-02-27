@@ -33,11 +33,11 @@ services:
       - aws-glue-boilerplate
 
   setup-resources:
-    image: mesosphere/aws-cli:1.14.5
+    build: ..
     entrypoint: tail -f /dev/null
     # command: /project/localstack # /setup-resources.sh
     volumes:
-      - ./local-dev/localstack:/project
+      - ./localstack:/home/glue_user/workspace/
       - ~/.aws:/home/glue_user/.aws
     networks:
       - aws-glue-boilerplate
