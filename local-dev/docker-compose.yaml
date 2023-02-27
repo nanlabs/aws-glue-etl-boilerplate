@@ -6,8 +6,8 @@ services:
     # command: spark-submit jobs/hello_world.py --JOB_NAME=hello_world
     entrypoint: [ "tail", "-f", "/dev/null" ]
     volumes:
-      - ../jobs:/home/glue_user/workspace/jobs
-      - ../libs:/home/glue_user/workspace/libs
+      - ../jobs:${WORKDIR}/jobs
+      - ../libs:${WORKDIR}/libs
       - ~/.aws:/home/glue_user/.aws
     env_file:
       - .env
@@ -37,7 +37,7 @@ services:
     entrypoint: /bin/bash
     command: ${WORKDIR}/setup-resources.sh
     volumes:
-      - ./localstack:/home/glue_user/workspace/
+      - ./localstack:${WORKDIR}
       - ~/.aws:/home/glue_user/.aws
     networks:
       - aws-glue-boilerplate
