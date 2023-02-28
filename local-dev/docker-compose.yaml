@@ -1,0 +1,76 @@
+services:
+  glue-job:
+    build: ..
+    environment:
+      DISABLE_SSL: "true"
+    command: spark-submit jobs/hello_world.py --JOB_NAME=hello_world
+    # entrypoint: [ "tail", "-f", "/dev/null" ]
+    volumes:
+      - ../jobs:${WORKDIR}/jobs
+      - ../libs:${WORKDIR}/libs
+      - ~/.aws:/home/glue_user/.aws
+    env_file:
+      - .env
+    depends_on:
+      - localstack
+      # - setup-resources
+    networks:
+      - aws-glue-boilerplate
+
+  localstack:
+    container_name: "${LOCALSTACK_DOCKER_NAME-localstack_main}"
+    image: localstack/localstack:latest
+    ports:
+      - "127.0.0.1:4566:4566" # LocalStack Gateway
+      - "127.0.0.1:4510-4559:4510-4559" # external services port range
+    environment:
+      - DEBUG=${DEBUG-}
+      - LAMBDA_EXECUTOR=${LAMBDA_EXECUTOR-}
+      - DOCKER_HOST=unix:///var/run/docker.sock
+    volumes:
+      - localstack:${LOCALSTACK_DATA_DIR:-/tmp/}localstack/data
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    networks:
+      - aws-glue-boilerplate
+
+  setup-resources:
+    build: ..
+    entrypoint: /bin/bash
+    command: ${WORKDIR}/setup-resources.sh
+    volumes:
+      - ./localstack:${WORKDIR}
+      - ~/.aws:/home/glue_user/.aws
+    networks:
+      - aws-glue-boilerplate
+    depends_on:
+      - localstack
+    environment:
+      - WORKDIR=${WORKDIR}
+
+  postgresql:
+    image: postgres:latest
+    restart: always
+    user: postgres
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB_NAME}
+      - POSTGRES_USER=${POSTGRES_DB_USERNAME}
+      - POSTGRES_PASSWORD=${POSTGRES_DB_PASSWORD}
+    expose:
+      - 5432
+    healthcheck:
+      test: [ "CMD", "pg_isready" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - aws-glue-boilerplate
+
+networks:
+  aws-glue-boilerplate:
+    driver: "bridge"
+
+volumes:
+  localstack:
+  postgres-data:
