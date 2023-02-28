@@ -67,6 +67,24 @@ services:
     networks:
       - aws-glue-boilerplate
 
+  pgadmin:
+    container_name: pgadmin4
+    image: dpage/pgadmin4:latest
+    restart: always
+    depends_on:
+      - postgresql
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
+      PGADMIN_SERVER_JSON_FILE: ${PGADMIN_SERVER_JSON_FILE}
+    ports:
+      - 5050:80
+    networks:
+      - aws-glue-boilerplate
+    volumes:
+      - ./pgadmin-bootstrap/:/pgadmin4/bootstrap/
+
+
 networks:
   aws-glue-boilerplate:
     driver: "bridge"
