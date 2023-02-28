@@ -15,6 +15,18 @@ the repo history.
 @edwinabot tested this successfully in Ubuntu 22.04 running on WSL2 with Docker Desktop 4.16.3 (96739).
 [Installed act](https://github.com/nektos/act#bash-script) via Bash script.
 
+## PostgreSQL & pgAdmin
+
+The dev environment comes with [pgAdmin](https://www.pgadmin.org/) configured so you can query the local PostgreSQL instance. After `docker compose up` you can access pgAdmin at http://localhost:5050
+
+Look at the [.env.example](local-dev/.env.example) for default users and passwords for Postgres and pgAdmin. The env vars are:
+
+* POSTGRES_DB_USERNAME
+* POSTGRES_DB_PASSWORD
+* PGADMIN_DEFAULT_EMAIL
+* PGADMIN_DEFAULT_PASSWORD
+
+Exploring the configured servers for the first time in pgAdmin will prompt for the password for the server, that is POSTGRES_DB_PASSWORD.
 ## Notes
 
 ### Why the Dockerfile is at the root of the project and not in local-dev?
