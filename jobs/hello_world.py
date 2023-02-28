@@ -6,7 +6,7 @@ from awsglue.context import GlueContext
 from awsglue.job import Job
 
 from jobs.etl.extract import extract
-from jobs.etl.load import load_to_postgresql_db
+from jobs.etl import load_to_postgresql_db, load_to_document_db
 from libs.config import get_config
 
 args = getResolvedOptions(sys.argv, ["JOB_NAME"])
@@ -22,5 +22,6 @@ ddf = extract(glueContext, config)
 ddf.printSchema()
 
 load_to_postgresql_db(ddf, config, "profiles")
+load_to_document_db(ddf, config, "profiles")
 
 job.commit()
