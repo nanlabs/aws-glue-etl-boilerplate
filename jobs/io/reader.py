@@ -4,7 +4,7 @@ from .helpers import get_connection_options
 
 def read_from_options(
     context: GlueContext,
-    **options: str,
+    **options: dict,
 ) -> DynamicFrame:
     """
     Returns the dataframe reader for the engine
