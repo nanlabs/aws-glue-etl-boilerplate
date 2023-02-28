@@ -26,7 +26,7 @@ Look at the [.env.example](local-dev/.env.example) for default users and passwor
 * PGADMIN_DEFAULT_EMAIL
 * PGADMIN_DEFAULT_PASSWORD
 
-Exploring the configured servers for the first time in pgAdmin will propt for the password for the server, that is POSTGRES_DB_PASSWORD.
+Exploring the configured servers for the first time in pgAdmin will prompt for the password for the server, that is POSTGRES_DB_PASSWORD.
 ## Notes
 
 ### Why the Dockerfile is at the root of the project and not in local-dev?
