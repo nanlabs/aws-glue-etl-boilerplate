@@ -49,7 +49,7 @@ services:
 
   postgresql:
     image: postgres:latest
-    restart: always
+    restart: unless-stopped
     user: postgres
     volumes:
       - postgres-data:/var/lib/postgresql/data
@@ -70,7 +70,7 @@ services:
   pgadmin:
     container_name: pgadmin4
     image: dpage/pgadmin4:latest
-    restart: always
+    restart: unless-stopped
     depends_on:
       - postgresql
     environment:
@@ -86,7 +86,8 @@ services:
 
   mongodb:
     image: mongo:4
-    restart: always
+    command: --tlsMode disabled
+    restart: unless-stopped
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${DOCUMENTDB_USERNAME}
       MONGO_INITDB_ROOT_PASSWORD: ${DOCUMENTDB_PASSWORD}
@@ -95,7 +96,7 @@ services:
 
   mongo-express:
     image: mongo-express
-    restart: always
+    restart: unless-stopped
     ports:
       - 8081:8081
     environment:
