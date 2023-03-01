@@ -138,7 +138,10 @@ class EnvironmentVariable:
         :param throw_error: If true, throw an error if the variable is not found.
         :return: A string with the the value.
         """
-        return self.get_var("DOCUMENTDB_SSL", default=default, throw_error=throw_error)
+        value = self.get_var("DOCUMENTDB_SSL", default=default, throw_error=throw_error)
+        if isinstance(value, str):
+            value = True if value.lower() == "true" else False
+        return value
 
     def get_documentdb_database(
         self, default: Any = None, throw_error: bool = False

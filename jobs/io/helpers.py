@@ -1,4 +1,4 @@
-from typing import Dict, Tuple
+from typing import Dict, Tuple, Union
 from urllib.parse import quote
 from libs.common import load_tls_ca_bundle
 
@@ -46,15 +46,19 @@ def _build_mongodb_connection_string(
     engine: str,
     user: str = None,
     password: str = None,
-    ssl: bool = False,
+    ssl: Union[bool, str] = False,
 ):
     encoded_user = _encode_mongodb_auth_special_chars(user)
     encoded_pass = _encode_mongodb_auth_special_chars(password)
-    return (
+
+    url = (
         f"mongodb://{encoded_user}:{encoded_pass}@{host}:{port}/"
-        f"{database}?tls={'true' if ssl else 'false'}&tlsCaFile="
-        f"{load_tls_ca_bundle() if ssl else ''}"
+        f"{database}?tls={'true' if ssl else 'false'}"
     )
+    if ssl:
+        url = url + f"&tlsCaFile={load_tls_ca_bundle()}"
+
+    return url
 
 
 def _encode_mongodb_auth_special_chars(authchars: str):
