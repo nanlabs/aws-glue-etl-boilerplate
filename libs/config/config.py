@@ -59,6 +59,7 @@ class Config:
             "user": self.documentdb_user,
             "password": self.documentdb_password,
             "ssl": self.documentdb_ssl,
+            "authdb": self.documentdb_authdb,
         }
 
     @cached_property
@@ -184,6 +185,15 @@ class Config:
         :return: A string with the the value.
         """
         return self.env.get_documentdb_user() or self.sr.get_documentdb_user()
+
+    @cached_property
+    def documentdb_authdb(self) -> str:
+        """
+        Get the User for the Unified database or None if it is not set.
+
+        :return: A string with the the value.
+        """
+        return self.env.get_documentdb_authdb() or self.sr.get_documentdb_authdb()
 
     @cached_property
     def documentdb_password(self) -> str:

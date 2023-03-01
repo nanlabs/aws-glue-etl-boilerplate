@@ -221,6 +221,20 @@ class EnvironmentVariable:
             "DOCUMENTDB_ENGINE", default=default, throw_error=throw_error
         )
 
+    def get_documentdb_authdb(
+        self, default: Any = None, throw_error: bool = False
+    ) -> str:
+        """
+        Get the authentication db for the DocumentDB database or None if it is not set.
+
+        :param default: The default value if the variable is not found.
+        :param throw_error: If true, throw an error if the variable is not found.
+        :return: A string with the the value.
+        """
+        return self.get_var(
+            "DOCUMENTDB_AUTHDB", default=default, throw_error=throw_error
+        )
+
     def get_postgresdb_secret_name(
         self, default: Any = None, throw_error: bool = False
     ) -> str:

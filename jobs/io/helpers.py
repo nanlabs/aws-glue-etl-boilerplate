@@ -11,6 +11,7 @@ def get_url_for_engine(
     user: str = None,
     password: str = None,
     ssl: bool = False,
+    authdb: str = None,
 ) -> str:
     """
     Returns the url for the engine. Will use the AWS credentials only if the
@@ -31,7 +32,7 @@ def get_url_for_engine(
         "sqlserver": f"jdbc:sqlserver://{host}:{port};database={database}",
         "postgres": f"jdbc:postgresql://{host}:{port}/{database}",
         "mongo": _build_mongodb_connection_string(
-            host, port, database, engine, user, password, ssl
+            host, port, database, engine, user, password, ssl, authdb
         ),
         "s3": None,
     }
@@ -47,13 +48,14 @@ def _build_mongodb_connection_string(
     user: str = None,
     password: str = None,
     ssl: Union[bool, str] = False,
+    authdb: str = "admin",
 ):
     encoded_user = _encode_mongodb_auth_special_chars(user)
     encoded_pass = _encode_mongodb_auth_special_chars(password)
 
     url = (
         f"mongodb://{encoded_user}:{encoded_pass}@{host}:{port}/"
-        f"{database}?tls={'true' if ssl else 'false'}"
+        f"{authdb}?tls={'true' if ssl else 'false'}"
     )
     if ssl:
         url = url + f"&tlsCaFile={load_tls_ca_bundle()}"
@@ -165,6 +167,7 @@ def get_connection_options(
     aws_endpoint_url: str = None,
     paths: str = None,
     path: str = None,
+    authdb: str = None,
 ) -> Tuple[str, str, Dict[str, str]]:
     """
     Returns the format and options for the engine. Will use the AWS credentials
@@ -202,6 +205,7 @@ def get_connection_options(
         user=user,
         password=password,
         ssl=ssl,
+        authdb=authdb,
     )
 
     driver = get_driver_for_engine(engine=engine)
