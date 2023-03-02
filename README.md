@@ -37,6 +37,49 @@ Since we need to add some Python deps for our project, we need to `ADD` (or `COP
 
 To be more precise, we need the Dokerfile to be at least at the same level of the Pipfile.
 
+### Why MongoDB 4.0 and not the Latest version?
+
+At the time of this writing, March 2nd 2023, DocumentDB is [compatible with MongoDB 4.0](https://docs.aws.amazon.com/documentdb/latest/developerguide/compatibility.html). Using MongoDB 4.0 in the development environment makes sense for three reasons:
+
+* Since these are compatible, we can use MongoDB to mimmic DocumentDB for local development.
+* There's no official Docker image for DocumentDB.
+* AWS Glue Lib Docker image comes with a Spark version that does not support the latest mongodb-driver-sync versions.
+
+### Why the mongo driver downgrade?
+
+The following traceback will give you a hint of what is going on:
+
+```
+Traceback (most recent call last):
+  File "/home/glue_user/workspace/jobs/hello_world.py", line 25, in <module>
+    load_to_document_db(ddf, config, "profiles")
+  File "/home/glue_user/workspace/jobs/etl/load_documentdb.py", line 10, in load_to_document_db
+    write_from_options(ddf, mode="overwrite", **connection_params)
+  File "/home/glue_user/workspace/jobs/io/writer.py", line 21, in write_from_options
+    ddf.toDF().write.format(format).mode(mode).options(**connection_options).save()
+  File "/home/glue_user/spark/python/pyspark/sql/readwriter.py", line 966, in save
+    self._jwrite.save()
+  File "/home/glue_user/spark/python/lib/py4j-0.10.9.5-src.zip/py4j/java_gateway.py", line 1321, in __call__
+  File "/home/glue_user/spark/python/pyspark/sql/utils.py", line 190, in deco
+    return f(*a, **kw)
+  File "/home/glue_user/spark/python/lib/py4j-0.10.9.5-src.zip/py4j/protocol.py", line 326, in get_return_value
+py4j.protocol.Py4JJavaError: An error occurred while calling o90.save.
+: java.lang.NoClassDefFoundError: com/mongodb/internal/connection/InternalConnectionPoolSettings
+        at com.mongodb.client.internal.MongoClientImpl.createCluster(MongoClientImpl.java:223)
+        at com.mongodb.client.internal.MongoClientImpl.<init>(MongoClientImpl.java:70)
+        at com.mongodb.client.MongoClients.create(MongoClients.java:108)
+        at com.mongodb.client.MongoClients.create(MongoClients.java:93)
+        at com.mongodb.client.MongoClients.create(MongoClients.java:78)
+        at com.mongodb.spark.sql.connector.connection.DefaultMongoClientFactory.create(DefaultMongoClientFactory.java:46)
+        at com.mongodb.spark.sql.connector.connection.MongoClientCache.lambda$acquire$0(MongoClientCache.java:99)
+        at java.util.HashMap.computeIfAbsent(HashMap.java:1128)
+        at com.mongodb.spark.sql.connector.connection.MongoClientCache.acquire(MongoClientCache.java:97)
+...
+```
+
+Basically, the Spark version that comes with AWS Glue Lib Docker image depends on mongodb-driver-sync-3.10.2.jar.
+The provided version mongodb-driver-sync-4.7.2.jar has several breaking changes, an one of those we see in this stacktrace.
+
 # Use Case
 
 Let's consider the following case:
