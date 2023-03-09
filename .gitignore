@@ -198,3 +198,5 @@ node_modules
 garbage
 bin
 local-dev/volume
+libs.zip
+jobs.zip

@@ -1,7 +1,11 @@
 {
   "devDependencies": {
+    "bestzip": "^2.2.1",
     "serverless": "^3.27.0",
     "serverless-glue": "^2.12.0",
     "serverless-plugin-scripts": "^1.0.2"
+  },
+  "scripts": {
+    "zip-libs": "bestzip libs.zip libs/* && bestzip jobs.zip jobs/*"
   }
 }
