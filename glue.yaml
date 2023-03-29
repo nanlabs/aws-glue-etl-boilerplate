@@ -1,83 +1,86 @@
-Glue:
-  bucketDeploy: someBucket # Required
-  createBucket: true # Optional, default = false
-  createBucketConfig: # Optional
-    ACL: private # Optional, private | public-read | public-read-write | authenticated-read
-    LocationConstraint: af-south-1
-    GrantFullControl: "STRING_VALUE" # Optional
-    GrantRead: "STRING_VALUE" # Optional
-    GrantReadACP: "STRING_VALUE" # Optional
-    GrantWrite: "STRING_VALUE" # Optional
-    GrantWriteACP: "STRING_VALUE" # Optional
-    ObjectLockEnabledForBucket: true # Optional
-    ObjectOwnership: BucketOwnerPreferred # Optional
-  s3Prefix: some/s3/key/location/ # optional, default = 'glueJobs/'
-  tempDirBucket: someBucket # optional, default = '{serverless.serviceName}-{provider.stage}-gluejobstemp'
-  tempDirS3Prefix: some/s3/key/location/ # optional, default = ''. The job name will be appended to the prefix name
-  jobs:
-    - name: super-glue-job # Required
-      id: # Optional, string
-      scriptPath: src/script.py # Required script will be named with the name after '/' and uploaded to s3Prefix location
-      Description: # Optional, string
-      tempDir: true # Optional true | false
-      type: spark # spark / spark_streaming / pythonshell # Required
-      glueVersion: python3-2.0 # Required "python3.9-1.0" | "python3.9-2.0" | "python3.9-3.0" | "python3-1.0" | "python3-2.0" | "python3-3.0" | "python2-1.0" | "python2-0.9" | "scala2-1.0" | "scala2-0.9" | "scala2-2.0" | "scala3-3.0"
-      role: arn:aws:iam::000000000:role/someRole # Required
-      MaxCapacity: 1 #Optional
-      MaxConcurrentRuns: 3 # Optional
-      WorkerType: Standard # Optional, G.1X | G.2X
-      NumberOfWorkers: 1 # Optional
-      SecurityConfiguration: # Optional, name of security configuration
-      Connections: # Optional
-        - some-conection-string
-        - other-conection-string
-      Timeout: # Optional, number
-      MaxRetries: # Optional, number
-      DefaultArguments: # Optional
-        class: string # Optional
-        scriptLocation: string # Optional
-        extraPyFiles: string # Optional
-        extraJars: string # Optional
-        userJarsFirst: string # Optional
-        usePostgresDriver: string # Optional
-        extraFiles: string # Optional
-        disableProxy: string # Optional
-        jobBookmarkOption: string # Optional
-        enableAutoScaling: string # Optional
-        enableS3ParquetOptimizedCommitter: string # Optional
-        enableRenameAlgorithmV2: string # Optional
-        enableGlueDatacatalog: string # Optional
-        enableMetrics: string # Optional
-        enableContinuousCloudwatchLog: string # Optional
-        enableContinuousLogFilter: string # Optional
-        continuousLogLogGroup: string # Optional
-        continuousLogLogStreamPrefix: string # Optional
-        continuousLogConversionPattern: string # Optional
-        enableSparkUi: string # Optional
-        sparkEventLogsPath: string # Optional
-        additionalPythonModules: string # Optional
-        customArguments: # Optional; these are user-specified custom default arguments that are passed into cloudformation with a leading -- (required for glue)
+bucketDeploy: someBucket # Required
+createBucket: true # Optional, default = false
+createBucketConfig: # Optional
+  ACL: private # Optional, private | public-read | public-read-write | authenticated-read
+  LocationConstraint: af-south-1
+  GrantFullControl: "STRING_VALUE" # Optional
+  GrantRead: "STRING_VALUE" # Optional
+  GrantReadACP: "STRING_VALUE" # Optional
+  GrantWrite: "STRING_VALUE" # Optional
+  GrantWriteACP: "STRING_VALUE" # Optional
+  ObjectLockEnabledForBucket: true # Optional
+  ObjectOwnership: BucketOwnerPreferred # Optional
+s3Prefix: some/s3/key/location/ # optional, default = 'glueJobs/'
+tempDirBucket: someBucket # optional, default = '{serverless.serviceName}-{provider.stage}-gluejobstemp'
+tempDirS3Prefix: some/s3/key/location/ # optional, default = ''. The job name will be appended to the prefix name
+jobs:
+  - name: hello-world # Required
+    id: # Optional, string
+    scriptPath: src/script.py # Required script will be named with the name after '/' and uploaded to s3Prefix location
+    Description: # Optional, string
+    tempDir: true # Optional true | false
+    type: spark # spark / spark_streaming / pythonshell # Required
+    glueVersion: python3-4.0 # Required "python3.9-1.0" | "python3.9-2.0" | "python3.9-3.0" | "python3-1.0" | "python3-2.0" | "python3-3.0" | "python2-1.0" | "python2-0.9" | "scala2-1.0" | "scala2-0.9" | "scala2-2.0" | "scala3-3.0"
+    role: role: !Sub arn:aws:iam::${AWS::AccountId}:role/GlueJobRole/${self:service}-${self:provider.stage}-GlueJobRole # Required
+    MaxCapacity: 1 #Optional
+    MaxConcurrentRuns: 3 # Optional
+    WorkerType: Standard # Optional, G.1X | G.2X
+    NumberOfWorkers: 1 # Optional
+    SecurityConfiguration: # Optional, name of security configuration
+    Connections: # Optional
+      - some-conection-string
+      - other-conection-string
+    Timeout: # Optional, number
+    MaxRetries: # Optional, number
+    DefaultArguments: # Optional
+      class: string # Optional
+      scriptLocation: string # Optional
+      extraPyFiles: s3://${self:service}-${self:provider.stage}-glue-deploy-bucket/libs.zip,s3://${self:service}-${self:provider.stage}-glue-deploy-bucket/jobs.zip # Optional
+      extraJars: string # Optional
+      userJarsFirst: string # Optional
+      usePostgresDriver: string # Optional
+      extraFiles: string # Optional
+      disableProxy: string # Optional
+      jobBookmarkOption: string # Optional
+      enableAutoScaling: string # Optional
+      enableS3ParquetOptimizedCommitter: string # Optional
+      enableRenameAlgorithmV2: string # Optional
+      enableGlueDatacatalog: string # Optional
+      enableMetrics: string # Optional
+      enableContinuousCloudwatchLog: string # Optional
+      enableContinuousLogFilter: string # Optional
+      continuousLogLogGroup: string # Optional
+      continuousLogLogStreamPrefix: string # Optional
+      continuousLogConversionPattern: string # Optional
+      enableSparkUi: string # Optional
+      sparkEventLogsPath: string # Optional
+      additionalPythonModules: string # Optional
+      customArguments: # Optional; these are user-specified custom default arguments that are passed into cloudformation with a leading -- (required for glue)
+        custom_arg_1: custom_value
+        custom_arg_2: other_custom_value
+    SupportFiles: # Optional
+      - local_path: jobs.zip
+        s3_bucket: ${self:service}-${self:provider.stage}-glue-deploy-bucket
+        s3_prefix: ""
+        execute_upload: true
+      - local_path: libs.zip
+        s3_bucket: ${self:service}-${self:provider.stage}-glue-deploy-bucket
+        s3_prefix: ""
+        execute_upload: true
+    Tags:
+      job_tag_example_1: example1
+      job_tag_example_2: example2
+triggers:
+  - name: some-trigger-name # Required
+    Description: # Optional, string
+    StartOnCreation: True # Optional, True or False
+    schedule: 30 12 * * ? * # Optional, CRON expression. The trigger will be created with On-Demand type if the schedule is not provided.
+    Tags:
+      trigger_tag_example_1: example1
+    actions: # Required. One or more jobs to trigger
+      - name: super-glue-job # Required
+        args: # Optional
           custom_arg_1: custom_value
           custom_arg_2: other_custom_value
-      SupportFiles: # Optional
-        - local_path: path/to/file/or/folder/ # Required if SupportFiles is given, you can pass a folder path or a file path
-          s3_bucket: bucket-name-where-to-upload-files # Required if SupportFiles is given
-          s3_prefix: some/s3/key/location/ # Required if SupportFiles is given
-          execute_upload: True # Boolean, True to execute upload, False to not upload. Required if SupportFiles is given
-      Tags:
-        job_tag_example_1: example1
-        job_tag_example_2: example2
-  triggers:
-    - name: some-trigger-name # Required
-      Description: # Optional, string
-      StartOnCreation: True # Optional, True or False
-      schedule: 30 12 * * ? * # Optional, CRON expression. The trigger will be created with On-Demand type if the schedule is not provided.
-      Tags:
-        trigger_tag_example_1: example1
-      actions: # Required. One or more jobs to trigger
-        - name: super-glue-job # Required
-          args: # Optional
-            custom_arg_1: custom_value
-            custom_arg_2: other_custom_value
-          timeout: 30 # Optional, if set, it overwrites specific jobs timeout when job starts via trigger
-          SecurityConfiguration: # Optional, name of security configuration
+        timeout: 30 # Optional, if set, it overwrites specific jobs timeout when job starts via trigger
+        SecurityConfiguration: # Optional, name of security configuration

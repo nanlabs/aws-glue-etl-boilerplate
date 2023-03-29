@@ -27,4 +27,4 @@ provider:
     versioning: true
     serverSideEncryption: AES256
 
-Glue: ${file(./glue.yml)}
+Glue: ./glue.yml
