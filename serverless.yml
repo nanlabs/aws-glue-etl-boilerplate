@@ -27,4 +27,32 @@ provider:
     versioning: true
     serverSideEncryption: AES256
 
-Glue: ./glue.yml
+Glue:
+  bucketDeploy: nan-aws-glue-boilerplate
+  createBucket: true
+  createBucketConfig:
+    ACL: private
+  s3Prefix: ""
+  tempDirBucket: nan-aws-glue-boilerplate-temp
+  jobs:
+    - name: hello-world
+      scriptPath: jobs/hello_world.py
+      type: spark
+      glueVersion: python3-4.0
+      role: !Sub arn:aws:iam::${AWS::AccountId}:role/GlueJobRole/${self:service}-${self:provider.stage}-GlueJobRole # Required
+      MaxConcurrentRuns: 3
+      WorkerType: Standard
+      NumberOfWorkers: 1
+      Timeout: 60
+      MaxRetries: 0
+      DefaultArguments:
+        extraPyFiles: s3://nan-aws-glue-boilerplate/jobs.zip
+      SupportFiles:
+        - local_path: jobs.zip
+          s3_bucket: nan-aws-glue-boilerplate
+          s3_prefix: ""
+          execute_upload: true
+        - local_path: libs.zip
+          s3_bucket: nan-aws-glue-boilerplate
+          s3_prefix: ""
+          execute_upload: true
