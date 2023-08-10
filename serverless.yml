@@ -1,6 +1,4 @@
-service: ${env:SERVICE_NAME, 'etl-boilerplate'}
-
-frameworkVersion: "3"
+service: ${env:SERVICE_NAME}
 
 plugins:
   - serverless-plugin-scripts
@@ -8,51 +6,22 @@ plugins:
 
 useDotenv: true
 
+package:
+  individually: true
+
 custom:
   scripts:
     hooks:
       "package:initialize": npm run zip-libs
-  documentDB:
-    connectionSecretName: ${param:DocumentDBConnectionSecretName, env:DOCUMENT_DB_SECRET_NAME}
-  postgresDB:
-    connectionSecretName: ${param:PostgresDBConnectionSecretName, env:POSTGRES_DB_SECRET_NAME}
 
 provider:
   name: aws
-  stage: ${opt:stage, env:STAGE, 'local'}
-  region: ${opt:region, env:AWS_REGION, 'us-east-1'}
-  profile: ${opt:aws-profile, env:AWS_PROFILE, ''}
-  deploymentBucket:
-    blockPublicAccess: true
-    versioning: true
-    serverSideEncryption: AES256
+  stage: local
+  runtime: python3.9
 
-Glue:
-  bucketDeploy: nan-aws-glue-boilerplate
-  createBucket: true
-  createBucketConfig:
-    ACL: private
-  s3Prefix: ""
-  tempDirBucket: nan-aws-glue-boilerplate-temp
-  jobs:
-    - name: hello-world
-      scriptPath: jobs/hello_world.py
-      type: spark
-      glueVersion: python3-4.0
-      role: !Sub arn:aws:iam::${AWS::AccountId}:role/GlueJobRole/${self:service}-${self:provider.stage}-GlueJobRole # Required
-      MaxConcurrentRuns: 3
-      WorkerType: Standard
-      NumberOfWorkers: 1
-      Timeout: 60
-      MaxRetries: 0
-      DefaultArguments:
-        extraPyFiles: s3://nan-aws-glue-boilerplate/jobs.zip
-      SupportFiles:
-        - local_path: jobs.zip
-          s3_bucket: nan-aws-glue-boilerplate
-          s3_prefix: ""
-          execute_upload: true
-        - local_path: libs.zip
-          s3_bucket: nan-aws-glue-boilerplate
-          s3_prefix: ""
-          execute_upload: true
+# Glue Jobs configuration:
+# Check the full documentation at https://www.npmjs.com/package/serverless-glue
+Glue: ${file(./glue.yml)}
+
+resources:
+  - ${file(./resource/GlueResources.yml)}

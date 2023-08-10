@@ -5,7 +5,8 @@ services:
       DISABLE_SSL: "true"
     # entrypoint: [ "tail", "-f", "/dev/null" ]
     volumes:
-      - ../src:${WORKDIR}/src
+      - ../libs:${WORKDIR}/libs
+      - ../jobs:${WORKDIR}/jobs
       - ~/.aws:/home/glue_user/.aws
     env_file:
       - .env

@@ -76,24 +76,12 @@ class SecretsResolver:
             return self.secret_cache[data_source]
 
         sources = {
-            # Postgress - Submissions
-            "submissions": {
-                "secret_name": "rds/production",
-                "region_name": "us-east-1",
-            },
-            # S3 - Scans
-            "scans": {
-                "secret_name": "AmazonSageMaker-sagemaker-bitbucket",
-                "region_name": "us-east-1",
-            },
-            # Mssql - Quotes
-            "quotes": {"secret_name": "ims/db/read-only", "region_name": "us-east-1"},
-            # UnifiedDB - DocumentDB
+            # DocumentDB
             "documentdb": {
                 "secret_name": self.documentdb_secret_name,
                 "region_name": "us-east-1",
             },
-            # AnalyticsDB - Postgres
+            # Postgres
             "postgresdb": {
                 "secret_name": self.postgresdb_secret_name,
                 "region_name": "us-east-1",
@@ -150,15 +138,15 @@ class SecretsResolver:
 
     def get_documentdb_database(self) -> str:
         """
-        Get the Name for the Unified database or None if it is not set.
+        Get the Name for the DocumentDb or None if it is not set.
 
         :return: A string with the the value.
         """
-        return self.get_secret_key("documentdb", "database", default="UnifiedDB")
+        return self.get_secret_key("documentdb", "database", default="DocumentDb")
 
     def get_documentdb_host(self) -> str:
         """
-        Get the Host for the Unified database or None if it is not set.
+        Get the Host for the DocumentDb or None if it is not set.
 
         :return: A string with the the value.
         """
@@ -166,7 +154,7 @@ class SecretsResolver:
 
     def get_documentdb_port(self) -> str:
         """
-        Get the Port for the Unified database or None if it is not set.
+        Get the Port for the DocumentDb or None if it is not set.
 
         :return: A string with the the value.
         """
@@ -174,7 +162,7 @@ class SecretsResolver:
 
     def get_documentdb_user(self) -> str:
         """
-        Get the User for the Unified database or None if it is not set.
+        Get the User for the DocumentDb or None if it is not set.
 
         :return: A string with the the value.
         """
@@ -182,7 +170,7 @@ class SecretsResolver:
 
     def get_documentdb_password(self) -> str:
         """
-        Get the Password for the Unified database or None if it is not set.
+        Get the Password for the DocumentDb or None if it is not set.
 
         :return: A string with the the value.
         """
@@ -190,7 +178,7 @@ class SecretsResolver:
 
     def get_documentdb_engine(self) -> str:
         """
-        Get the engine for the Unified database or None if it is not set.
+        Get the engine for the DocumentDb or None if it is not set.
 
         :return: A string with the the value.
         """
@@ -198,7 +186,7 @@ class SecretsResolver:
 
     def get_documentdb_ssl(self) -> bool:
         """
-        Get the ssl for the Unified database or None if it is not set.
+        Get the ssl for the DocumentDb or None if it is not set.
 
         :return: A string with the the value.
         """
@@ -210,7 +198,7 @@ class SecretsResolver:
 
         :return: A string with the the value.
         """
-        return self.get_secret_key("postgresdb", "database", default="AnalyticsDB")
+        return self.get_secret_key("postgresdb", "database", default="Postgres")
 
     def get_postgresdb_host(self) -> str:
         """

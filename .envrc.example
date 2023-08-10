@@ -1,0 +1,8 @@
+# AWS Configuration and Serverless Deployment
+
+export SERVICE_NAME=aws-glue-etl
+export AWS_AVAILABILITY_ZONE=us-east-1a
+export VPC_ID=
+export SUBNET_ID=
+
+

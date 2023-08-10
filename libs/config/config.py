@@ -144,7 +144,7 @@ class Config:
     @cached_property
     def documentdb_secret_name(self) -> str:
         """
-        Get the Secret Name for the Unified database or None if it is not set.
+        Get the Secret Name for the DocumentDB or None if it is not set.
 
         :return: A string with the the value.
         """
@@ -153,7 +153,7 @@ class Config:
     @cached_property
     def documentdb_database(self) -> str:
         """
-        Get the Name for the Unified database or None if it is not set.
+        Get the Name for the DocumentDB or None if it is not set.
 
         :return: A string with the the value.
         """
@@ -162,7 +162,7 @@ class Config:
     @cached_property
     def documentdb_host(self) -> str:
         """
-        Get the Host for the Unified database or None if it is not set.
+        Get the Host for the DocumentDB or None if it is not set.
 
         :return: A string with the the value.
         """
@@ -171,7 +171,7 @@ class Config:
     @cached_property
     def documentdb_port(self) -> str:
         """
-        Get the Port for the Unified database or None if it is not set.
+        Get the Port for the DocumentDB or None if it is not set.
 
         :return: A string with the the value.
         """
@@ -180,7 +180,7 @@ class Config:
     @cached_property
     def documentdb_user(self) -> str:
         """
-        Get the User for the Unified database or None if it is not set.
+        Get the User for the DocumentDB or None if it is not set.
 
         :return: A string with the the value.
         """
@@ -189,7 +189,7 @@ class Config:
     @cached_property
     def documentdb_authdb(self) -> str:
         """
-        Get the User for the Unified database or None if it is not set.
+        Get the User for the DocumentDB or None if it is not set.
 
         :return: A string with the the value.
         """
@@ -198,7 +198,7 @@ class Config:
     @cached_property
     def documentdb_password(self) -> str:
         """
-        Get the Password for the Unified database or None if it is not set.
+        Get the Password for the DocumentDB or None if it is not set.
 
         :return: A string with the the value.
         """
@@ -216,7 +216,7 @@ class Config:
     @cached_property
     def postgresdb_secret_name(self) -> str:
         """
-        Get the Secret Name for the Unified database or None if it is not set.
+        Get the Secret Name for the DocumentDB or None if it is not set.
 
         :return: A string with the the value.
         """
@@ -225,7 +225,7 @@ class Config:
     @cached_property
     def postgresdb_database(self) -> str:
         """
-        Get the Name for the Unified database or None if it is not set.
+        Get the Name for the DocumentDB or None if it is not set.
 
         :return: A string with the the value.
         """
@@ -234,7 +234,7 @@ class Config:
     @cached_property
     def postgresdb_host(self) -> str:
         """
-        Get the Host for the Unified database or None if it is not set.
+        Get the Host for the DocumentDB or None if it is not set.
 
         :return: A string with the the value.
         """
@@ -243,7 +243,7 @@ class Config:
     @cached_property
     def postgresdb_port(self) -> str:
         """
-        Get the Port for the Unified database or None if it is not set.
+        Get the Port for the DocumentDB or None if it is not set.
 
         :return: A string with the the value.
         """
@@ -252,7 +252,7 @@ class Config:
     @cached_property
     def postgresdb_user(self) -> str:
         """
-        Get the User for the Unified database or None if it is not set.
+        Get the User for the DocumentDB or None if it is not set.
 
         :return: A string with the the value.
         """
@@ -261,7 +261,7 @@ class Config:
     @cached_property
     def postgresdb_password(self) -> str:
         """
-        Get the Password for the Unified database or None if it is not set.
+        Get the Password for the DocumentDB or None if it is not set.
 
         :return: A string with the the value.
         """

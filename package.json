@@ -1,11 +1,26 @@
 {
+  "name": "serverless-glue-etl",
+  "version": "1.0.0",
+  "description": "Serverless Glue example",
+  "main": "index.js",
+  "scripts": {
+    "sls": "serverless",
+    "sls:deploy": "serverless deploy",
+    "sls:package": "serverless package",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "zip-libs": "bestzip libs.zip libs/* && bestzip jobs.zip jobs/*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/nanlabs/aws-glue-etl-boilerplate.git"
+  },
+  "author": "ulises-jeremias",
+  "license": "MIT",
+  "homepage": "https://github.com/nanlabs/aws-glue-etl-boilerplate#readme",
   "devDependencies": {
     "bestzip": "^2.2.1",
     "serverless": "^3.27.0",
     "serverless-glue": "^2.12.0",
     "serverless-plugin-scripts": "^1.0.2"
-  },
-  "scripts": {
-    "zip-libs": "bestzip libs.zip libs/* && bestzip jobs.zip jobs/*"
   }
 }
