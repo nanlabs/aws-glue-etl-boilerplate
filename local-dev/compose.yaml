@@ -3,11 +3,9 @@ services:
     build: ..
     environment:
       DISABLE_SSL: "true"
-    command: spark-submit jobs/hello_world.py --JOB_NAME=hello_world
     # entrypoint: [ "tail", "-f", "/dev/null" ]
     volumes:
-      - ../jobs:${WORKDIR}/jobs
-      - ../libs:${WORKDIR}/libs
+      - ../src:${WORKDIR}/src
       - ~/.aws:/home/glue_user/.aws
     env_file:
       - .env
@@ -21,12 +19,15 @@ services:
     container_name: "${LOCALSTACK_DOCKER_NAME-localstack_main}"
     image: localstack/localstack:latest
     ports:
-      - "127.0.0.1:4566:4566" # LocalStack Gateway
-      - "127.0.0.1:4510-4559:4510-4559" # external services port range
+      - "4566:4566" # LocalStack Gateway
+      - "4510-4559:4510-4559" # external services port range
     environment:
       - DEBUG=${DEBUG-}
+      - PERSISTENCE=${PERSISTENCE-}
       - LAMBDA_EXECUTOR=${LAMBDA_EXECUTOR-}
+      - LOCALSTACK_API_KEY=${LOCALSTACK_API_KEY-} # only required for Pro
       - DOCKER_HOST=unix:///var/run/docker.sock
+      - SERVICES=s3
     volumes:
       - localstack:${LOCALSTACK_DATA_DIR:-/tmp/}localstack/data
       - "/var/run/docker.sock:/var/run/docker.sock"
@@ -36,22 +37,24 @@ services:
   setup-resources:
     build: ..
     entrypoint: /bin/bash
-    command: ${WORKDIR}/setup-resources.sh
+    command: /project/setup-resources.sh
     volumes:
-      - ./localstack:${WORKDIR}
-      - ~/.aws:/home/glue_user/.aws
+      - ./localstack:/project
+    environment:
+      - AWS_ACCESS_KEY_ID=dummyaccess
+      - AWS_SECRET_ACCESS_KEY=dummysecret
+      - AWS_DEFAULT_REGION=us-east-1
     networks:
       - aws-glue-boilerplate
     depends_on:
       - localstack
-    environment:
-      - WORKDIR=${WORKDIR}
 
   postgresql:
     image: postgres:latest
     restart: unless-stopped
     user: postgres
     volumes:
+      - ./postgres/initdb.d:/docker-entrypoint-initdb.d
       - postgres-data:/var/lib/postgresql/data
     environment:
       - POSTGRES_DB=${POSTGRES_DB_NAME}
@@ -71,8 +74,8 @@ services:
     container_name: pgadmin4
     image: dpage/pgadmin4:latest
     restart: unless-stopped
-    depends_on:
-      - postgresql
+    volumes:
+      - ./pgadmin-bootstrap/:/pgadmin4/bootstrap/
     environment:
       PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
       PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
@@ -81,16 +84,27 @@ services:
       - 5050:80
     networks:
       - aws-glue-boilerplate
-    volumes:
-      - ./pgadmin-bootstrap/:/pgadmin4/bootstrap/
+    depends_on:
+      - postgresql
 
-  mongodb:
+  docdb:
     image: mongo:4
     command: --tlsMode disabled
     restart: unless-stopped
     environment:
-      MONGO_INITDB_ROOT_USERNAME: ${DOCUMENTDB_USERNAME}
-      MONGO_INITDB_ROOT_PASSWORD: ${DOCUMENTDB_PASSWORD}
+      MONGO_INITDB_ROOT_USERNAME: ${DOCUMENTDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${DOCUMENTDB_ROOT_PASSWORD}
+      MONGO_INITDB_DATABASE: ${DOCUMENTDB_DATABASE}
+      MONGO_NON_ROOT_USERNAME: ${DOCUMENTDB_USERNAME}
+      MONGO_NON_ROOT_PASSWORD: ${DOCUMENTDB_PASSWORD}
+    volumes:
+      - ./docdb/initdb.d:/docker-entrypoint-initdb.d:ro
+      - docdb-data:/data/db
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongo 127.0.0.1:27017/test --quiet
+      interval: 30s
+      timeout: 10s
+      retries: 3
     networks:
       - aws-glue-boilerplate
 
@@ -99,14 +113,20 @@ services:
     restart: unless-stopped
     ports:
       - 8081:8081
+    depends_on:
+      - docdb
     environment:
-      ME_CONFIG_MONGODB_ADMINUSERNAME: ${ME_CONFIG_MONGODB_ADMINUSERNAME}
-      ME_CONFIG_MONGODB_ADMINPASSWORD: ${ME_CONFIG_MONGODB_ADMINPASSWORD}
-      ME_CONFIG_MONGODB_URL: mongodb://${DOCUMENTDB_USERNAME}:${DOCUMENTDB_PASSWORD}@${DOCUMENTDB_HOST}:${DOCUMENTDB_PORT}
+      ME_CONFIG_MONGODB_ADMINUSERNAME: ${DOCUMENTDB_ROOT_USERNAME}
+      ME_CONFIG_MONGODB_ADMINPASSWORD: ${DOCUMENTDB_ROOT_PASSWORD}
+      ME_CONFIG_MONGODB_SERVER: docdb
+      ME_CONFIG_MONGODB_PORT: 27017
+    healthcheck:
+      test: wget --quiet --tries=3 --spider http://${DOCUMENTDB_ROOT_USERNAME}:${DOCUMENTDB_ROOT_PASSWORD}@127.0.0.1:8081 || exit 1
+      interval: 30s
+      timeout: 10s
+      retries: 3
     networks:
       - aws-glue-boilerplate
-    depends_on:
-      - mongodb
 
 networks:
   aws-glue-boilerplate:
@@ -115,3 +135,4 @@ networks:
 volumes:
   localstack:
   postgres-data:
+  docdb-data:
