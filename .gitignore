@@ -125,6 +125,7 @@ celerybeat.pid
 
 # Environments
 .env
+.envrc
 .venv
 env/
 venv/
@@ -197,6 +198,6 @@ poetry.toml
 node_modules
 garbage
 bin
-local-dev/volume
+local/volume
 libs.zip
 jobs.zip

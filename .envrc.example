@@ -5,4 +5,17 @@ export AWS_AVAILABILITY_ZONE=us-east-1a
 export VPC_ID=
 export SUBNET_ID=
 
+# Local Development Environment configuration
 
+export PGADMIN_DEFAULT_EMAIL="admin@admin.com"
+export PGADMIN_DEFAULT_PASSWORD="adminpass"
+export PGADMIN_SERVER_JSON_FILE="/pgadmin4/bootstrap/servers.json"
+export POSTGRES_DB_NAME="testdb"
+export POSTGRES_DB_USERNAME="admin"
+export POSTGRES_DB_PASSWORD="pass123"
+
+export DOCUMENTDB_ROOT_USERNAME="root"
+export DOCUMENTDB_ROOT_PASSWORD="supersecret"
+export DOCUMENTDB_DATABASE="testdb"
+export DOCUMENTDB_USERNAME="nonroot"
+export DOCUMENTDB_PASSWORD="pass123"

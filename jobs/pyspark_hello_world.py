@@ -5,8 +5,7 @@ from pyspark.context import SparkContext
 from awsglue.context import GlueContext
 from awsglue.job import Job
 
-from jobs.etl.extract import extract
-from jobs.etl import load_to_postgresql_db, load_to_document_db
+from jobs.etl import extract, load_to_postgresql_db, load_to_document_db
 from libs.config import get_config
 
 args = getResolvedOptions(sys.argv, ["JOB_NAME"])

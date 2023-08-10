@@ -21,7 +21,7 @@ aws --endpoint-url=https://localstack:4566 --no-verify-ssl \
 mkdir /tmp/s3
 
 # Un-tar the sample data to the temp directory
-tar --overwrite -xf  ${WORKDIR}/s3/sampledata.tar.xz --directory /tmp/s3/
+tar --overwrite -xf  /project/s3/sampledata.tar.xz --directory /tmp/s3/
 
 # Iterate over the sample json files and upload them to the bucket
 for file in /tmp/s3/*.json; do

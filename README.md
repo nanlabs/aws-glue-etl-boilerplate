@@ -19,7 +19,7 @@ the repo history.
 
 The dev environment comes with [pgAdmin](https://www.pgadmin.org/) configured so you can query the local PostgreSQL instance. After `docker compose up` you can access pgAdmin at http://localhost:5050
 
-Look at the [.env.example](local-dev/.env.example) for default users and passwords for Postgres and pgAdmin. The env vars are:
+Look at the [.env.example](local/.env.example) for default users and passwords for Postgres and pgAdmin. The env vars are:
 
 * POSTGRES_DB_USERNAME
 * POSTGRES_DB_PASSWORD
@@ -29,7 +29,7 @@ Look at the [.env.example](local-dev/.env.example) for default users and passwor
 Exploring the configured servers for the first time in pgAdmin will prompt for the password for the server, that is POSTGRES_DB_PASSWORD.
 ## Notes
 
-### Why the Dockerfile is at the root of the project and not in local-dev?
+### Why the Dockerfile is at the root of the project and not in local?
 
 Since we need to add some Python deps for our project, we need to `ADD` (or `COPY`) the `Pipfile`. The reason  to have the Dockerfile at the root of the project is that:
 

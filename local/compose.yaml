@@ -3,21 +3,17 @@ services:
     build: ..
     environment:
       DISABLE_SSL: "true"
-    # entrypoint: [ "tail", "-f", "/dev/null" ]
     volumes:
-      - ../libs:${WORKDIR}/libs
-      - ../jobs:${WORKDIR}/jobs
+      - ../libs:/home/glue_user/workspace/libs
+      - ../jobs:/home/glue_user/workspace/jobs
       - ~/.aws:/home/glue_user/.aws
-    env_file:
-      - .env
     depends_on:
       - localstack
-      # - setup-resources
     networks:
       - aws-glue-boilerplate
 
   localstack:
-    image: localstack/localstack:latest
+    image: localstack/localstack:1.0.3
     ports:
       - "4566:4566" # LocalStack Gateway
       - "4510-4559:4510-4559" # external services port range
@@ -35,8 +31,8 @@ services:
       - aws-glue-boilerplate
 
   setup-resources:
-    build: ..
-    entrypoint: /bin/bash
+    image: mesosphere/aws-cli:1.14.5
+    entrypoint: /bin/sh -c
     command: /project/setup-resources.sh
     volumes:
       - ./localstack:/project
@@ -50,18 +46,18 @@ services:
       - localstack
 
   postgresql:
-    image: postgres:latest
-    restart: unless-stopped
-    user: postgres
+    image: postgres:15.2
     volumes:
       - ./postgres/initdb.d:/docker-entrypoint-initdb.d
       - postgres-data:/var/lib/postgresql/data
     environment:
-      - POSTGRES_DB=${POSTGRES_DB_NAME}
-      - POSTGRES_USER=${POSTGRES_DB_USERNAME}
-      - POSTGRES_PASSWORD=${POSTGRES_DB_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB_NAME}
+      POSTGRES_USER: ${POSTGRES_DB_USERNAME}
+      POSTGRES_PASSWORD: ${POSTGRES_DB_PASSWORD}
     expose:
       - 5432
+    ports:
+      - 5432:5432
     healthcheck:
       test: [ "CMD", "pg_isready" ]
       interval: 10s
@@ -71,10 +67,10 @@ services:
       - aws-glue-boilerplate
 
   pgadmin:
-    image: dpage/pgadmin4:latest
-    restart: unless-stopped
+    image: dpage/pgadmin4:6.11
+    restart: always
     volumes:
-      - ./pgadmin-bootstrap/:/pgadmin4/bootstrap/
+      - ./postgres/pgadmin-bootstrap/:/pgadmin4/bootstrap/
     environment:
       PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
       PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
@@ -108,7 +104,7 @@ services:
       - aws-glue-boilerplate
 
   mongo-express:
-    image: mongo-express
+    image: mongo-express:1.0.0-alpha.4
     restart: unless-stopped
     ports:
       - 8081:8081

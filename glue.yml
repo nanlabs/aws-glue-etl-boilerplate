@@ -6,7 +6,7 @@ jobs:
     scriptPath: jobs/pyspark_hello_world.py
     type: spark
     role: !Sub arn:aws:iam::${AWS::AccountId}:role/GlueJobRole/GlueJobRole
-    glueVersion: python3-3.0
+    glueVersion: python3-4.0
     MaxConcurrentRuns: 3
     WorkerType: Standard
     NumberOfWorkers: 1
@@ -40,7 +40,7 @@ jobs:
     scriptPath: jobs/pythonshell_hello_world.py
     type: pythonshell
     role: !Sub arn:aws:iam::${AWS::AccountId}:role/GlueJobRole/GlueJobRole
-    glueVersion: python3-3.0
+    glueVersion: python3-4.0
     MaxConcurrentRuns: 3
     WorkerType: Standard
     Timeout: 3000

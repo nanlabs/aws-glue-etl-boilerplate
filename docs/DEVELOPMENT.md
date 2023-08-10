@@ -7,7 +7,7 @@
 ## Quickstart
 
 ```sh
-docker compose -f local-dev/compose.yml up
+docker compose -f local/compose.yml up
 ```
 
 ## Execute jobs
@@ -16,7 +16,7 @@ You can test the example `jobs/hello_world.py` in the following way:
 
 ```sh
 # attach to the container
-docker compose -f local-dev/compose.yml exec -it awsglue /bin/bash
+docker compose -f local/compose.yml exec -it awsglue /bin/bash
 ```
 
 and then run the following command inside the container:
