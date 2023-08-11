@@ -23,10 +23,6 @@ docker-compose -f local/compose.yml exec -it awsglue /bin/bash
 and then run the following command inside the container:
 
 ```sh
-# Set AWS credentials with dummy values to run locally
-export AWS_ACCESS_KEY_ID="dummyaccess"
-export AWS_SECRET_ACCESS_KEY="dummysecret"
-
 # Run the PySpark job
 glue-spark-submit jobs/pyspark_hello_world.py --JOB_NAME job_example --CUSTOM_ARGUMENT custom_value
 ```
