@@ -79,7 +79,7 @@ We utilize the Serverless Framework to deploy AWS Glue jobs and other resources.
 
 You can find detailed implementation notes in the [Implementation Notes](./docs/IMPLEMENTATION_NOTES.md) document.
 
-* * *
+---
 
 ## Use Case Scenario
 
