@@ -17,7 +17,7 @@ class EnvironmentVariable:
         self.load_env()
 
     def load_env(self) -> None:
-        # Load env if dotenv is installed
+        # Load env if dotenv is installed for local development only
         try:
             from dotenv import load_dotenv, find_dotenv
 
@@ -28,7 +28,6 @@ class EnvironmentVariable:
         except ImportError:
             print("dotenv is not installed. Ignoring .env files now")
         except OSError:
-            # FIXME: Stage environment variables should be handled gracefully, DynaConf maybe??
             print(".env.local could not be found")
 
     def get_var(self, key, default: Any = None, throw_error: bool = False) -> Any:
