@@ -49,6 +49,7 @@ class EnvironmentVariable:
             self.cache[key] = default
         return self.cache[key]
 
+
 envs_instance = None
 
 

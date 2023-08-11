@@ -13,6 +13,13 @@ fnm use
 npm install
 ```
 
+## Quickstart
+
+```sh
+cp .envrc.example .envrc
+direnv allow
+```
+
 ## Glue Jobs Deployment
 
 To deploy the app to AWS, you'll first need to configure your AWS credentials. There are many ways

@@ -54,7 +54,7 @@ services:
       - ./postgres/initdb.d:/docker-entrypoint-initdb.d
       - postgres-data:/var/lib/postgresql/data
     environment:
-      POSTGRES_DB: ${POSTGRES_DB_NAME}
+      POSTGRES_DB: ${POSTGRES_DB_DBNAME}
       POSTGRES_USER: ${POSTGRES_DB_USERNAME}
       POSTGRES_PASSWORD: ${POSTGRES_DB_PASSWORD}
     expose:
@@ -92,7 +92,7 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${DOCUMENT_DB_ROOT_USERNAME}
       MONGO_INITDB_ROOT_PASSWORD: ${DOCUMENT_DB_ROOT_PASSWORD}
-      MONGO_INITDB_DATABASE: ${DOCUMENT_DB_DATABASE}
+      MONGO_INITDB_DATABASE: ${DOCUMENT_DB_DBNAME}
       MONGO_NON_ROOT_USERNAME: ${DOCUMENT_DB_USERNAME}
       MONGO_NON_ROOT_PASSWORD: ${DOCUMENT_DB_PASSWORD}
     volumes:

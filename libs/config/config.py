@@ -55,7 +55,7 @@ class Config:
             "engine": self.env.get_var("DOCUMENT_DB_ENGINE"),
             "host": self.env.get_var("DOCUMENT_DB_HOST"),
             "port": self.env.get_var("DOCUMENT_DB_PORT"),
-            "database": self.env.get_var("DOCUMENT_DB_NAME"),
+            "database": self.env.get_var("DOCUMENT_DB_DBNAME"),
             "user": self.env.get_var("DOCUMENT_DB_USERNAME"),
             "password": self.env.get_var("DOCUMENT_DB_PASSWORD"),
             "ssl": self.env.get_var("DOCUMENT_DB_SSL") == "true",
@@ -75,7 +75,7 @@ class Config:
             "engine": self.env.get_var("POSTGRES_DB_ENGINE"),
             "host": self.env.get_var("POSTGRES_DB_HOST"),
             "port": self.env.get_var("POSTGRES_DB_PORT"),
-            "database": self.env.get_var("POSTGRES_DB_NAME"),
+            "database": self.env.get_var("POSTGRES_DB_DBNAME"),
             "user": self.env.get_var("POSTGRES_DB_USERNAME"),
             "password": self.env.get_var("POSTGRES_DB_PASSWORD"),
         }

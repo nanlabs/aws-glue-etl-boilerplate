@@ -29,7 +29,8 @@ class AwsS3Client:
 
         self.session = boto3.Session(
             aws_access_key_id=aws_access_key_id or config.s3_vars["aws_access_key_id"],
-            aws_secret_access_key=aws_secret_access_key or config.s3_vars["aws_secret_access_key"],
+            aws_secret_access_key=aws_secret_access_key
+            or config.s3_vars["aws_secret_access_key"],
             region_name=aws_region_name or config.s3_vars["aws_region"],
             aws_session_token=aws_session_token or config.s3_vars["aws_session_token"],
         )

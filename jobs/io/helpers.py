@@ -52,7 +52,8 @@ def _build_mongodb_connection_string(
     encoded_pass = _encode_mongodb_auth_special_chars(password)
 
     url = (
-        f"mongodb://{encoded_user}:{encoded_pass}@{host}:{port}/{database}?tls={'true' if ssl else 'false'}"
+        f"mongodb://{encoded_user}:{encoded_pass}@{host}:{port}/"
+        "{database}?tls={'true' if ssl else 'false'}"
     )
     if ssl:
         url = url + f"&tlsCaFile={load_tls_ca_bundle()}"

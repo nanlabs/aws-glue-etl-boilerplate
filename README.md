@@ -1,92 +1,122 @@
-# nan-aws-glue-etl-boilerplate
+# AWS Glue ETL Boilerplate
 
-A complete example of an AWS Glue application that uses the Serverless Framework to deploy the infrastructure and DevContainers and/or Docker Compose to run the application locally with AWS Glue Libs, Spark, Jupyter Notebook, AWS CLI, among other tools. It provides jobs using Python Shell and PySpark.
+Welcome to the AWS Glue ETL Boilerplate repository! This is an example AWS Glue application that uses the Serverless Framework to deploy infrastructure and allows local development with AWS Glue Libs, Spark, Jupyter Notebook, and more. It includes jobs using Python Shell and PySpark.
 
-# Local Development
+## Motivation 🚀
 
-## CI/CD
+Are you ready to supercharge your ETL development with AWS Glue? This repository is here to help you quickly set up, develop, and deploy AWS Glue jobs. Streamline your ETL pipelines, harness the power of AWS Glue Libs and Spark, and unlock efficient local development.
 
-We're using GitHub Actions to build our pipelines. We know iterating on pipelines is always somewhat painful,
-this is the recomendation about how to do it with less friction.
+## Features ✨
 
-Use [act](https://github.com/nektos/act) to run the workflows locally and iterate faster without cluttering
-the repo history.
+- **Full AWS Glue Setup:** Deploy Glue jobs using Python Shell Script and PySpark.
+- **Flexible Local Development:** Choose between using VSCode + Remote Containers or Docker Compose.
+- **Comprehensive Documentation:** Easy-to-follow guides for development and deployment.
+- **Reusable Examples:** Building upon multiple examples to provide a well-rounded solution.
+- **Serverless Framework:** Utilize Serverless Framework to deploy AWS Glue jobs and other resources.
 
-@edwinabot tested this successfully in Ubuntu 22.04 running on WSL2 with Docker Desktop 4.16.3 (96739).
-[Installed act](https://github.com/nektos/act#bash-script) via Bash script.
+## Usage
+
+To quickly start a project using this example, follow these steps:
+
+```sh
+npx serverless install -u https://github.com/nanlabs/devops-reference/tree/main/examples/serverless-glue-full-boilerplate -n my-project
+```
+
+## Overview
+
+This example was created by combining the best practices from our following examples:
+
+- [Serverless Glue example](https://github.com/nanlabs/devops-reference/tree/main/examples/serverless-glue/)
+- [AWS Glue docker example](https://github.com/nanlabs/devops-reference/tree/main/examples/docker/glue/)
+- [VSCode DevContainer example](https://github.com/nanlabs/devops-reference/tree/main/examples/devcontainer/glue/)
+
+## Requirements
+
+- [Docker](https://www.docker.com/)
+- [VSCode](https://code.visualstudio.com/) (optional)
+- [Direnv](https://direnv.net/)
+
+## Quickstart
+
+```sh
+cp .envrc.example .envrc
+direnv allow
+```
+
+## Local Development
+
+Choose your preferred local development setup!
+
+### Using VSCode + Remote Containers (recommended)
+
+1. Install Docker
+2. Install [VSCode](https://code.visualstudio.com/)
+3. Install the [Remote Development](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.vscode-remote-extensionpack) extension
+4. Clone this repository
+5. Create your application within a container (see gif below)
+
+![Create application within a container](./docs/vscode-open-in-container.gif)
+
+Once the container is running inside VSCode, you can run the Glue jobs locally.
+
+### Using Docker Compose manually
+
+Refer to the [development documentation](./docs/DEVELOPMENT.md) for detailed steps to set up a local development environment using Docker Compose.
+
+## Deployment
+
+We utilize the Serverless Framework to deploy AWS Glue jobs and other resources. For deployment instructions, check out the [deployment documentation](./docs/DEPLOYMENT.md).
 
 ## PostgreSQL & pgAdmin
 
-The dev environment comes with [pgAdmin](https://www.pgadmin.org/) configured so you can query the local PostgreSQL instance. After `docker compose up` you can access pgAdmin at http://localhost:5050
+The dev environment comes with [pgAdmin](https://www.pgadmin.org/) configured so you can query the local PostgreSQL instance. After `docker compose up`, you can access pgAdmin at <http://localhost:5050>
 
-Look at the [.env.example](local/.env.example) for default users and passwords for Postgres and pgAdmin. The env vars are:
+Refer to the [.env.example](local/.env.example) for default users and passwords for Postgres and pgAdmin. The environment variables are:
 
 - POSTGRES_DB_USERNAME
 - POSTGRES_DB_PASSWORD
 - PGADMIN_DEFAULT_EMAIL
 - PGADMIN_DEFAULT_PASSWORD
 
-Exploring the configured servers for the first time in pgAdmin will prompt for the password for the server, that is POSTGRES_DB_PASSWORD.
+When exploring the configured servers for the first time in pgAdmin, it will prompt for the server password, which is the value of POSTGRES_DB_PASSWORD.
 
 ## Notes
 
 ### Why the Dockerfile is at the root of the project and not in local?
 
-Since we need to add some Python deps for our project, we need to `ADD` (or `COPY`) the `Pipfile`. The reason to have the Dockerfile at the root of the project is that:
+To incorporate necessary Python dependencies for our project, we need to `ADD` (or `COPY`) the `Pipfile`. The Dockerfile is placed at the root of the project because:
 
 > The <src> path must be inside the context of the build; you cannot ADD ../something /something, because the first step of a docker build is to send the context directory (and subdirectories) to the docker daemon. [Dockerfile ADD documentation](https://docs.docker.com/engine/reference/builder/#add)
 
-To be more precise, we need the Dokerfile to be at least at the same level of the Pipfile.
+In essence, the Dockerfile needs to be at least at the same level as the Pipfile.
 
 ### Why MongoDB 4.0 and not the Latest version?
 
-At the time of this writing, March 2nd 2023, DocumentDB is [compatible with MongoDB 4.0](https://docs.aws.amazon.com/documentdb/latest/developerguide/compatibility.html). Using MongoDB 4.0 in the development environment makes sense for three reasons:
+As of March 2nd, 2023, DocumentDB is [compatible with MongoDB 4.0](https://docs.aws.amazon.com/documentdb/latest/developerguide/compatibility.html). Using MongoDB 4.0 in the development environment is advantageous for several reasons:
 
-- Since these are compatible, we can use MongoDB to mimmic DocumentDB for local development.
+- Since these versions are compatible, we can use MongoDB to mimic DocumentDB for local development.
 - There's no official Docker image for DocumentDB.
-- AWS Glue Lib Docker image comes with a Spark version that does not support the latest mongodb-driver-sync versions.
+- The AWS Glue Lib Docker image comes with a Spark version that does not support the latest mongodb-driver-sync versions.
 
 ### Why the mongo driver downgrade?
 
-The following traceback will give you a hint of what is going on:
+The provided traceback indicates the issue:
 
 ```
 Traceback (most recent call last):
-  File "/home/glue_user/workspace/jobs/hello_world.py", line 25, in <module>
-    load_to_document_db(ddf, config, "profiles")
-  File "/home/glue_user/workspace/jobs/etl/load_documentdb.py", line 10, in load_to_document_db
-    write_from_options(ddf, mode="overwrite", **connection_params)
-  File "/home/glue_user/workspace/jobs/io/writer.py", line 21, in write_from_options
-    ddf.toDF().write.format(format).mode(mode).options(**connection_options).save()
-  File "/home/glue_user/spark/python/pyspark/sql/readwriter.py", line 966, in save
-    self._jwrite.save()
-  File "/home/glue_user/spark/python/lib/py4j-0.10.9.5-src.zip/py4j/java_gateway.py", line 1321, in __call__
-  File "/home/glue_user/spark/python/pyspark/sql/utils.py", line 190, in deco
-    return f(*a, **kw)
-  File "/home/glue_user/spark/python/lib/py4j-0.10.9.5-src.zip/py4j/protocol.py", line 326, in get_return_value
+  ...
 py4j.protocol.Py4JJavaError: An error occurred while calling o90.save.
 : java.lang.NoClassDefFoundError: com/mongodb/internal/connection/InternalConnectionPoolSettings
-        at com.mongodb.client.internal.MongoClientImpl.createCluster(MongoClientImpl.java:223)
-        at com.mongodb.client.internal.MongoClientImpl.<init>(MongoClientImpl.java:70)
-        at com.mongodb.client.MongoClients.create(MongoClients.java:108)
-        at com.mongodb.client.MongoClients.create(MongoClients.java:93)
-        at com.mongodb.client.MongoClients.create(MongoClients.java:78)
-        at com.mongodb.spark.sql.connector.connection.DefaultMongoClientFactory.create(DefaultMongoClientFactory.java:46)
-        at com.mongodb.spark.sql.connector.connection.MongoClientCache.lambda$acquire$0(MongoClientCache.java:99)
-        at java.util.HashMap.computeIfAbsent(HashMap.java:1128)
-        at com.mongodb.spark.sql.connector.connection.MongoClientCache.acquire(MongoClientCache.java:97)
-...
+        ...
 ```
 
-Basically, the Spark version that comes with AWS Glue Lib Docker image depends on mongodb-driver-sync-3.10.2.jar.
-The provided version mongodb-driver-sync-4.7.2.jar has several breaking changes, an one of those we see in this stacktrace.
+The Spark version in the AWS Glue Lib Docker image relies on mongodb-driver-sync-3.10.2.jar. The version mongodb-driver-sync-4.7.2.jar, provided, introduces breaking changes, one of which is visible in this stack trace.
 
-# Use Case
+## Use Case
 
-Let's consider the following case:
+Imagine the scenario:
 
-> "We need to build a datalake to support a threat intelligence operation"
+> "We need to build a datalake to support a threat intelligence operation."
 
-We'll leverage OSINT sources, our first integration will be with [Abuse.ch](https://abuse.ch/),
-[URLHaus](https://urlhaus.abuse.ch/api/) [Daily MISP Events](https://urlhaus.abuse.ch/downloads/misp/).
-We'll implement an ETL for this source.
+We'll leverage OSINT sources, starting with an integration with [Abuse.ch](https://abuse.ch/),
+[URLHaus](https://urlhaus.abuse.ch/api/), and [Daily MISP Events](https://urlhaus.abuse.ch/downloads/misp/). Our ETL implementation will focus on this source.
