@@ -21,17 +21,18 @@ The dev environment comes with [pgAdmin](https://www.pgadmin.org/) configured so
 
 Look at the [.env.example](local/.env.example) for default users and passwords for Postgres and pgAdmin. The env vars are:
 
-* POSTGRES_DB_USERNAME
-* POSTGRES_DB_PASSWORD
-* PGADMIN_DEFAULT_EMAIL
-* PGADMIN_DEFAULT_PASSWORD
+- POSTGRES_DB_USERNAME
+- POSTGRES_DB_PASSWORD
+- PGADMIN_DEFAULT_EMAIL
+- PGADMIN_DEFAULT_PASSWORD
 
 Exploring the configured servers for the first time in pgAdmin will prompt for the password for the server, that is POSTGRES_DB_PASSWORD.
+
 ## Notes
 
 ### Why the Dockerfile is at the root of the project and not in local?
 
-Since we need to add some Python deps for our project, we need to `ADD` (or `COPY`) the `Pipfile`. The reason  to have the Dockerfile at the root of the project is that:
+Since we need to add some Python deps for our project, we need to `ADD` (or `COPY`) the `Pipfile`. The reason to have the Dockerfile at the root of the project is that:
 
 > The <src> path must be inside the context of the build; you cannot ADD ../something /something, because the first step of a docker build is to send the context directory (and subdirectories) to the docker daemon. [Dockerfile ADD documentation](https://docs.docker.com/engine/reference/builder/#add)
 
@@ -41,9 +42,9 @@ To be more precise, we need the Dokerfile to be at least at the same level of th
 
 At the time of this writing, March 2nd 2023, DocumentDB is [compatible with MongoDB 4.0](https://docs.aws.amazon.com/documentdb/latest/developerguide/compatibility.html). Using MongoDB 4.0 in the development environment makes sense for three reasons:
 
-* Since these are compatible, we can use MongoDB to mimmic DocumentDB for local development.
-* There's no official Docker image for DocumentDB.
-* AWS Glue Lib Docker image comes with a Spark version that does not support the latest mongodb-driver-sync versions.
+- Since these are compatible, we can use MongoDB to mimmic DocumentDB for local development.
+- There's no official Docker image for DocumentDB.
+- AWS Glue Lib Docker image comes with a Spark version that does not support the latest mongodb-driver-sync versions.
 
 ### Why the mongo driver downgrade?
 
