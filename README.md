@@ -29,7 +29,7 @@ Check out the [Use Case Scenario](#use-case-scenario) to learn more about the mo
 To quickly start a project using this example, follow these steps:
 
 ```sh
-npx serverless install -u https://github.com/nanlabs/devops-reference/tree/main/examples/serverless-glue-full-boilerplate -n my-project
+npx serverless install -u https://github.com/nanlabs/aws-glue-etl-boilerplate -n my-project
 ```
 
 ## Overview
