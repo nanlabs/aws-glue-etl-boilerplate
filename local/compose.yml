@@ -1,14 +1,17 @@
 services:
   awsglue:
     build: ..
+    command: /home/glue_user/jupyter/jupyter_start.sh
     environment:
       DISABLE_SSL: "true"
+    ports:
+      - 4040:4040
+      - 8888:8888
+      - 18080:18080
+      - 8998:8998
     volumes:
-      - ../libs:/home/glue_user/workspace/libs
-      - ../jobs:/home/glue_user/workspace/jobs
-      - ~/.aws:/home/glue_user/.aws
-    depends_on:
-      - localstack
+      - ..:/home/glue_user/workspace/aws-glue-etl-local
+      - awsglue-jupyter:/home/glue_user/workspace/jupyter_workspace
     networks:
       - aws-glue-boilerplate
 
@@ -128,6 +131,7 @@ networks:
     driver: "bridge"
 
 volumes:
+  awsglue-jupyter:
   localstack:
   postgres-data:
   docdb-data:
