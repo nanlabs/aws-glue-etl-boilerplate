@@ -22,7 +22,7 @@ class EnvironmentVariable:
             from dotenv import load_dotenv, find_dotenv
 
             load_dotenv(
-                find_dotenv(".env.local", raise_error_if_not_found=True, usecwd=True)
+                find_dotenv(".env", raise_error_if_not_found=True, usecwd=True)
             )
             print("dotenv loaded")
         except ImportError:
