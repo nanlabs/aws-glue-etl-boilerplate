@@ -8,8 +8,7 @@
 ## Quickstart
 
 ```sh
-cp .envrc.example .envrc
-direnv allow
+cp .env.example .env
 docker-compose -f local/compose.yml up
 ```
 

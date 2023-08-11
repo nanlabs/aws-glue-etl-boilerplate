@@ -34,13 +34,11 @@ This example was created by combining the best practices from our following exam
 
 - [Docker](https://www.docker.com/)
 - [VSCode](https://code.visualstudio.com/) (optional)
-- [Direnv](https://direnv.net/)
 
 ## Quickstart
 
 ```sh
-cp .envrc.example .envrc
-direnv allow
+cp .env.example .env
 ```
 
 ## Local Development

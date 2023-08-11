@@ -16,8 +16,7 @@ npm install
 ## Quickstart
 
 ```sh
-cp .envrc.example .envrc
-direnv allow
+cp .env.example .env
 ```
 
 ## Glue Jobs Deployment
