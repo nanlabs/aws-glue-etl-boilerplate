@@ -2,9 +2,19 @@
 
 Welcome to the AWS Glue ETL Boilerplate repository! This is an example AWS Glue application that uses the Serverless Framework to deploy infrastructure and allows local development with AWS Glue Libs, Spark, Jupyter Notebook, and more. It includes jobs using Python Shell and PySpark.
 
+<div align="center">
+
+```ocaml
+CLICK OR TAP ❲☰❳ TO SHOW TABLE-OF-CONTENTS :D
+```
+
+</div> <!-- center -->
+
 ## Motivation 🚀
 
 Are you ready to supercharge your ETL development with AWS Glue? This repository is here to help you quickly set up, develop, and deploy AWS Glue jobs. Streamline your ETL pipelines, harness the power of AWS Glue Libs and Spark, and unlock efficient local development.
+
+Check out the [Use Case Scenario](#use-case-scenario) to learn more about the motivation behind this example!
 
 ## Features ✨
 
@@ -24,11 +34,11 @@ npx serverless install -u https://github.com/nanlabs/devops-reference/tree/main/
 
 ## Overview
 
-This example was created by combining the best practices from our following examples:
+This boilerplate was created by combining the best practices from our following examples:
 
-- [Serverless Glue example](https://github.com/nanlabs/devops-reference/tree/main/examples/serverless-glue/)
-- [AWS Glue docker example](https://github.com/nanlabs/devops-reference/tree/main/examples/docker/glue/)
-- [VSCode DevContainer example](https://github.com/nanlabs/devops-reference/tree/main/examples/devcontainer/glue/)
+- [Serverless Glue example](https://github.com/nanlabs/devops-reference/tree/main/examples/serverless-glue/) - Deploy AWS Glue jobs using the Serverless Framework.
+- [AWS Glue docker example](https://github.com/nanlabs/devops-reference/tree/main/examples/compose-glue/) - Run AWS Glue jobs locally using Docker Compose.
+- [VSCode DevContainer example](https://github.com/nanlabs/devops-reference/tree/main/examples/devcontainer-glue/) - Run AWS Glue jobs locally using VSCode + Remote Containers.
 
 ## Requirements
 
@@ -65,56 +75,32 @@ Refer to the [development documentation](./docs/DEVELOPMENT.md) for detailed ste
 
 We utilize the Serverless Framework to deploy AWS Glue jobs and other resources. For deployment instructions, check out the [deployment documentation](./docs/DEPLOYMENT.md).
 
-## PostgreSQL & pgAdmin
+## Implementation Notes
 
-The dev environment comes with [pgAdmin](https://www.pgadmin.org/) configured so you can query the local PostgreSQL instance. After `docker compose up`, you can access pgAdmin at <http://localhost:5050>
+You can find detailed implementation notes in the [Implementation Notes](./docs/IMPLEMENTATION_NOTES.md) document.
 
-Refer to the [.env.example](local/.env.example) for default users and passwords for Postgres and pgAdmin. The environment variables are:
+* * *
 
-- POSTGRES_DB_USERNAME
-- POSTGRES_DB_PASSWORD
-- PGADMIN_DEFAULT_EMAIL
-- PGADMIN_DEFAULT_PASSWORD
+## Use Case Scenario
 
-When exploring the configured servers for the first time in pgAdmin, it will prompt for the server password, which is the value of POSTGRES_DB_PASSWORD.
-
-## Notes
-
-### Why the Dockerfile is at the root of the project and not in local?
-
-To incorporate necessary Python dependencies for our project, we need to `ADD` (or `COPY`) the `Pipfile`. The Dockerfile is placed at the root of the project because:
-
-> The <src> path must be inside the context of the build; you cannot ADD ../something /something, because the first step of a docker build is to send the context directory (and subdirectories) to the docker daemon. [Dockerfile ADD documentation](https://docs.docker.com/engine/reference/builder/#add)
-
-In essence, the Dockerfile needs to be at least at the same level as the Pipfile.
-
-### Why MongoDB 4.0 and not the Latest version?
-
-As of March 2nd, 2023, DocumentDB is [compatible with MongoDB 4.0](https://docs.aws.amazon.com/documentdb/latest/developerguide/compatibility.html). Using MongoDB 4.0 in the development environment is advantageous for several reasons:
-
-- Since these versions are compatible, we can use MongoDB to mimic DocumentDB for local development.
-- There's no official Docker image for DocumentDB.
-- The AWS Glue Lib Docker image comes with a Spark version that does not support the latest mongodb-driver-sync versions.
-
-### Why the mongo driver downgrade?
-
-The provided traceback indicates the issue:
-
-```
-Traceback (most recent call last):
-  ...
-py4j.protocol.Py4JJavaError: An error occurred while calling o90.save.
-: java.lang.NoClassDefFoundError: com/mongodb/internal/connection/InternalConnectionPoolSettings
-        ...
-```
-
-The Spark version in the AWS Glue Lib Docker image relies on mongodb-driver-sync-3.10.2.jar. The version mongodb-driver-sync-4.7.2.jar, provided, introduces breaking changes, one of which is visible in this stack trace.
-
-## Use Case
+> Empowering Threat Intelligence with our AWS Glue ETL Boilerplate
 
 Imagine the scenario:
 
-> "We need to build a datalake to support a threat intelligence operation."
+**Objective:** Your organization is on a mission to bolster its threat intelligence capabilities by creating a robust datalake that aggregates and analyzes data from various Open Source Intelligence (OSINT) sources. The goal is to enhance security operations and proactively identify potential threats.
 
-We'll leverage OSINT sources, starting with an integration with [Abuse.ch](https://abuse.ch/),
-[URLHaus](https://urlhaus.abuse.ch/api/), and [Daily MISP Events](https://urlhaus.abuse.ch/downloads/misp/). Our ETL implementation will focus on this source.
+**Challenge:** Traditional threat intelligence methods lack the agility and scalability needed to process the massive influx of data from OSINT sources. Manual data collection and analysis are time-consuming, making it difficult to stay ahead of emerging threats.
+
+**Solution:** Introducing our AWS Glue ETL Boilerplate – a cutting-edge solution that harnesses the power of AWS Glue, Serverless Framework, and efficient local development techniques. This comprehensive example demonstrates how to build an end-to-end datalake tailored for threat intelligence operations.
+
+**Key Features and Benefits:**
+
+🔒 **Enhanced Security Operations:** By centralizing data from OSINT sources, your security team gains a consolidated view of potential threats. Real-time analysis enables quicker responses to emerging incidents.
+
+⚙️ **Flexible ETL Infrastructure:** The Serverless Framework empowers you to deploy AWS Glue jobs seamlessly, adapting to varying data sources and formats. This flexibility ensures smooth data integration.
+
+💡 **Efficient Local Development:** Develop and refine your threat intelligence pipeline locally using VSCode + Remote Containers or Docker Compose. Rapid iteration and testing significantly expedite deployment.
+
+📈 **Scalability for Data Growth:** As your OSINT data volume expands, the solution effortlessly scales to accommodate increasing demands. This ensures your threat intelligence efforts remain effective and up-to-date.
+
+📚 **Comprehensive Documentation:** A wealth of documentation guides your team through each step – from initial setup to deployment – ensuring successful implementation.
