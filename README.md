@@ -65,7 +65,11 @@ Choose your preferred local development setup!
 
 ![Create application within a container](./docs/vscode-open-in-container.gif)
 
-Once the container is running inside VSCode, you can run the Glue jobs locally.
+Once the container is running inside VSCode, you can run the Glue jobs locally as follows:
+
+```sh
+glue-spark-submit jobs/pyspark_hello_world.py --JOB_NAME job_example --CUSTOM_ARGUMENT custom_value
+```
 
 ### Using Docker Compose manually
 
