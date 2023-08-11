@@ -45,12 +45,6 @@ This boilerplate was created by combining the best practices from our following 
 - [Docker](https://www.docker.com/)
 - [VSCode](https://code.visualstudio.com/) (optional)
 
-## Quickstart
-
-```sh
-cp .env.example .env
-```
-
 ## Local Development
 
 Choose your preferred local development setup!
@@ -68,6 +62,11 @@ Choose your preferred local development setup!
 Once the container is running inside VSCode, you can run the Glue jobs locally as follows:
 
 ```sh
+# Set AWS credentials with dummy values to run locally
+export AWS_ACCESS_KEY_ID="dummyaccess"
+export AWS_SECRET_ACCESS_KEY="dummysecret"
+
+# Run PySpark job
 glue-spark-submit jobs/pyspark_hello_world.py --JOB_NAME job_example --CUSTOM_ARGUMENT custom_value
 ```
 

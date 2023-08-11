@@ -14,21 +14,6 @@ class EnvironmentVariable:
         if args is None:
             args = dict()
         self.args = args
-        self.load_env()
-
-    def load_env(self) -> None:
-        # Load env if dotenv is installed for local development only
-        try:
-            from dotenv import load_dotenv, find_dotenv
-
-            load_dotenv(
-                find_dotenv(".env", raise_error_if_not_found=True, usecwd=True)
-            )
-            print("dotenv loaded")
-        except ImportError:
-            print("dotenv is not installed. Ignoring .env files now")
-        except OSError:
-            print(".env.local could not be found")
 
     def get_var(self, key, default: Any = None, throw_error: bool = False) -> Any:
         """

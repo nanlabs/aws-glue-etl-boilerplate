@@ -4,6 +4,8 @@ services:
     command: /home/glue_user/jupyter/jupyter_start.sh
     environment:
       DISABLE_SSL: "true"
+    env_file:
+      - .env
     ports:
       - 4040:4040
       - 8888:8888
