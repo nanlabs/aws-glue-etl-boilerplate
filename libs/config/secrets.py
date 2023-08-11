@@ -39,9 +39,9 @@ class SecretsResolver:
 
     def get_secret_key(
         self,
-        data_source: str,
         key: str,
         secret_name: str = None,
+        region_name: str = None,
         default: str = None,
         json_decode: dict = True,
     ) -> str:
@@ -49,54 +49,38 @@ class SecretsResolver:
         Get a secret from Secrets Manager by key.
         If the secret does not exist, return the default value.
 
-        :param data_source: The name of the data source.
         :param key: The key to get the secret for.
         :param secret_name: The name of the secret in AWS.
+        :param region_name: The AWS region to use.
         :param default: The default value to return if the secret does not exist.
         :param json_decode: Whether to JSON decode the secret.
         :return: The secret value, or the default value if the secret does not exist.
         """
-        secret = self.get_secret(data_source, secret_name=secret_name)
+        secret = self.get_secret(secret_name=secret_name, region_name=region_name)
         if secret is None:
             return default
         if json_decode:
             secret = json.loads(secret)
         return secret[key] if key in secret else default
 
-    def get_secret(self, data_source: str, secret_name: str = None) -> bytes:
+    def get_secret(self, secret_name: str = None, region_name: str = None) -> str:
         """
         Get a secret from Secrets Manager.
 
-        :param data_source: The name of the data source.
         :param secret_name: The name of the secret in AWS.
+        :param region_name: The AWS region to use.
         :return: The secret value, or None if the secret does not exist.
         """
-
-        if data_source in self.secret_cache:
-            return self.secret_cache[data_source]
-
-        sources = {
-            # DocumentDB
-            "documentdb": {
-                "secret_name": self.documentdb_secret_name,
-                "region_name": "us-east-1",
-            },
-            # Postgres
-            "postgresdb": {
-                "secret_name": self.postgresdb_secret_name,
-                "region_name": "us-east-1",
-            },
-        }
 
         session = boto3.session.Session()
         client = session.client(
             service_name="secretsmanager",
-            region_name=sources[data_source]["region_name"],
+            region_name=region_name,
         )
 
         try:
             get_secret_value_response = client.get_secret_value(
-                SecretId=sources[data_source]["secret_name"]
+                SecretId=secret_name,
             )
         except ClientError as e:
             if e.response["Error"]["Code"] == "DecryptionFailureException":
@@ -127,115 +111,11 @@ class SecretsResolver:
             # one of these fields will be populated.
             if "SecretString" in get_secret_value_response:
                 secret = get_secret_value_response["SecretString"]
-                self.secret_cache[data_source] = secret
+                self.secret_cache[secret_name] = secret
                 return secret
             else:
                 decoded_binary_secret = base64.b64decode(
                     get_secret_value_response["SecretBinary"]
                 )
-                self.secret_cache[data_source] = decoded_binary_secret
+                self.secret_cache[secret_name] = decoded_binary_secret
                 return decoded_binary_secret
-
-    def get_documentdb_database(self) -> str:
-        """
-        Get the Name for the DocumentDb or None if it is not set.
-
-        :return: A string with the the value.
-        """
-        return self.get_secret_key("documentdb", "database", default="DocumentDb")
-
-    def get_documentdb_host(self) -> str:
-        """
-        Get the Host for the DocumentDb or None if it is not set.
-
-        :return: A string with the the value.
-        """
-        return self.get_secret_key("documentdb", "host")
-
-    def get_documentdb_port(self) -> str:
-        """
-        Get the Port for the DocumentDb or None if it is not set.
-
-        :return: A string with the the value.
-        """
-        return self.get_secret_key("documentdb", "port")
-
-    def get_documentdb_user(self) -> str:
-        """
-        Get the User for the DocumentDb or None if it is not set.
-
-        :return: A string with the the value.
-        """
-        return self.get_secret_key("documentdb", "username")
-
-    def get_documentdb_password(self) -> str:
-        """
-        Get the Password for the DocumentDb or None if it is not set.
-
-        :return: A string with the the value.
-        """
-        return self.get_secret_key("documentdb", "password")
-
-    def get_documentdb_engine(self) -> str:
-        """
-        Get the engine for the DocumentDb or None if it is not set.
-
-        :return: A string with the the value.
-        """
-        return self.get_secret_key("documentdb", "engine", default="mongo")
-
-    def get_documentdb_ssl(self) -> bool:
-        """
-        Get the ssl for the DocumentDb or None if it is not set.
-
-        :return: A string with the the value.
-        """
-        return self.get_secret_key("documentdb", "ssl", default=False)
-
-    def get_postgresdb_database(self) -> str:
-        """
-        Get the Name for the Analytics database or None if it is not set.
-
-        :return: A string with the the value.
-        """
-        return self.get_secret_key("postgresdb", "database", default="Postgres")
-
-    def get_postgresdb_host(self) -> str:
-        """
-        Get the Host for the Analytics database or None if it is not set.
-
-        :return: A string with the the value.
-        """
-        return self.get_secret_key("postgresdb", "host")
-
-    def get_postgresdb_port(self) -> str:
-        """
-        Get the Port for the Analytics database or None if it is not set.
-
-        :return: A string with the the value.
-        """
-        return self.get_secret_key("postgresdb", "port")
-
-    def get_postgresdb_user(self) -> str:
-        """
-        Get the User for the Analytics database or None if it is not set.
-
-        :return: A string with the the value.
-        """
-        return self.get_secret_key("postgresdb", "username")
-
-    def get_postgresdb_password(self) -> str:
-        """
-        Get the Password for the Analytics database or None if it is not set.
-
-        :return: A string with the the value.
-        """
-        return self.get_secret_key("postgresdb", "password")
-
-    def get_postgresdb_engine(self) -> str:
-        """
-        Get the engine for the Analytics database or None if it is not set.
-
-        :return: A string with the the value.
-        """
-        return self.get_secret_key("postgresdb", "engine", default="postgres")

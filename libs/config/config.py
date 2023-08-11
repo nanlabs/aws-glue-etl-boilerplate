@@ -12,10 +12,7 @@ class Config:
         if args is None:
             args = dict()
         self.env = get_envs(args)
-        self.sr = get_secrets_resolver(
-            documentdb_secret_name=self.documentdb_secret_name,
-            postgresdb_secret_name=self.postgresdb_secret_name,
-        )
+        self.sr = get_secrets_resolver()
 
     @cached_property
     def aws_client_vars(self) -> dict:
@@ -25,11 +22,11 @@ class Config:
         :return: A json with the parameters.
         """
         return {
-            "aws_access_key_id": self.aws_access_key_id,
-            "aws_secret_access_key": self.aws_secret_access_key,
-            "aws_region_name": self.aws_region,
-            "aws_session_token": self.aws_session_token,
-            "aws_endpoint_url": self.aws_endpoint_url,
+            "aws_access_key_id": self.env.get_var("AWS_ACCESS_KEY_ID"),
+            "aws_secret_access_key": self.env.get_var("AWS_SECRET_ACCESS_KEY"),
+            "aws_region_name": self.env.get_var("AWS_REGION"),
+            "aws_session_token": self.env.get_var("AWS_SESSION_TOKEN"),
+            "aws_endpoint_url": self.env.get_var("AWS_ENDPOINT_URL"),
         }
 
     @cached_property
@@ -41,240 +38,47 @@ class Config:
         """
         return {
             **self.aws_client_vars,
-            "bucket_name": self.s3_bucket_name,
+            "bucket_name": self.env.get_var("S3_BUCKET_NAME"),
         }
 
     @cached_property
     def documentdb_vars(self) -> dict:
         """
-        Get connection parameters for the Unified Database.
+        Get connection parameters for the Database.
 
         :return: A json with the connection parameters.
         """
+
+        # TODO: Use the secrets manager to get the connection parameters for the database.
+
         return {
-            "engine": self.documentdb_engine,
-            "host": self.documentdb_host,
-            "port": self.documentdb_port,
-            "database": self.documentdb_database,
-            "user": self.documentdb_user,
-            "password": self.documentdb_password,
-            "ssl": self.documentdb_ssl,
-            "authdb": self.documentdb_authdb,
+            "engine": self.env.get_var("DOCUMENT_DB_ENGINE"),
+            "host": self.env.get_var("DOCUMENT_DB_HOST"),
+            "port": self.env.get_var("DOCUMENT_DB_PORT"),
+            "database": self.env.get_var("DOCUMENT_DB_NAME"),
+            "user": self.env.get_var("DOCUMENT_DB_USERNAME"),
+            "password": self.env.get_var("DOCUMENT_DB_PASSWORD"),
+            "ssl": self.env.get_var("DOCUMENT_DB_SSL") == "true",
         }
 
     @cached_property
     def postgresdb_vars(self) -> dict:
         """
-        Get connection parameters for the Unified Database.
+        Get connection parameters for the Database.
 
         :return: A json with the connection parameters.
         """
+
+        # TODO: Use the secrets manager to get the connection parameters for the database.
+
         return {
-            "engine": self.postgresdb_engine,
-            "host": self.postgresdb_host,
-            "port": self.postgresdb_port,
-            "database": self.postgresdb_database,
-            "user": self.postgresdb_user,
-            "password": self.postgresdb_password,
+            "engine": self.env.get_var("POSTGRES_DB_ENGINE"),
+            "host": self.env.get_var("POSTGRES_DB_HOST"),
+            "port": self.env.get_var("POSTGRES_DB_PORT"),
+            "database": self.env.get_var("POSTGRES_DB_NAME"),
+            "user": self.env.get_var("POSTGRES_DB_USERNAME"),
+            "password": self.env.get_var("POSTGRES_DB_PASSWORD"),
         }
-
-    @cached_property
-    def aws_access_key_id(self) -> str:
-        """
-        Get Access Key Id for the AWS client connection or None if it is not set.
-
-        :return: A string with the the value.
-        """
-        return self.env.get_aws_access_key_id()
-
-    @cached_property
-    def aws_secret_access_key(self) -> str:
-        """
-        Get the Access Key Id for the AWS client connection or None if it is not set.
-
-        :return: A string with the the value.
-        """
-        return self.env.get_aws_secret_access_key()
-
-    @cached_property
-    def aws_region(self) -> str:
-        """
-        Get the Region for the AWS client connection or None if it is not set.
-
-        :return: A string with the the value.
-        """
-        return self.env.get_aws_region()
-
-    @cached_property
-    def aws_session_token(self) -> str:
-        """
-        Get the Session Token for the AWS client connection or None if it is not set.
-
-        :return: A string with the the value.
-        """
-        return self.env.get_aws_session_token()
-
-    @cached_property
-    def aws_endpoint_url(self) -> str:
-        """
-        Get the Endpoint Url for the AWS client connection or None if it is not set.
-
-        :return: A string with the the value.
-        """
-        return self.env.get_aws_endpoint_url()
-
-    @cached_property
-    def documentdb_engine(self) -> str:
-        """
-        Get the Engine for the documentdb database or None if it is not set.
-
-        :return: A string with the the value.
-        """
-        return self.env.get_documentdb_engine() or self.sr.get_documentdb_engine()
-
-    @cached_property
-    def documentdb_ssl(self) -> str:
-        """
-        Get the SSL for the documentdb database or None if it is not set.
-
-        :return: A string with the the value.
-        """
-        return self.env.get_documentdb_ssl() or self.sr.get_documentdb_ssl()
-
-    @cached_property
-    def documentdb_secret_name(self) -> str:
-        """
-        Get the Secret Name for the DocumentDB or None if it is not set.
-
-        :return: A string with the the value.
-        """
-        return self.env.get_documentdb_secret_name() or ""
-
-    @cached_property
-    def documentdb_database(self) -> str:
-        """
-        Get the Name for the DocumentDB or None if it is not set.
-
-        :return: A string with the the value.
-        """
-        return self.env.get_documentdb_database() or self.sr.get_documentdb_database()
-
-    @cached_property
-    def documentdb_host(self) -> str:
-        """
-        Get the Host for the DocumentDB or None if it is not set.
-
-        :return: A string with the the value.
-        """
-        return self.env.get_documentdb_host() or self.sr.get_documentdb_host()
-
-    @cached_property
-    def documentdb_port(self) -> str:
-        """
-        Get the Port for the DocumentDB or None if it is not set.
-
-        :return: A string with the the value.
-        """
-        return self.env.get_documentdb_port() or self.sr.get_documentdb_port()
-
-    @cached_property
-    def documentdb_user(self) -> str:
-        """
-        Get the User for the DocumentDB or None if it is not set.
-
-        :return: A string with the the value.
-        """
-        return self.env.get_documentdb_user() or self.sr.get_documentdb_user()
-
-    @cached_property
-    def documentdb_authdb(self) -> str:
-        """
-        Get the User for the DocumentDB or None if it is not set.
-
-        :return: A string with the the value.
-        """
-        return self.env.get_documentdb_authdb() or self.sr.get_documentdb_authdb()
-
-    @cached_property
-    def documentdb_password(self) -> str:
-        """
-        Get the Password for the DocumentDB or None if it is not set.
-
-        :return: A string with the the value.
-        """
-        return self.env.get_documentdb_password() or self.sr.get_documentdb_password()
-
-    @cached_property
-    def postgresdb_engine(self) -> str:
-        """
-        Get the Engine for the postgresdb database or None if it is not set.
-
-        :return: A string with the the value.
-        """
-        return self.env.get_postgresdb_engine() or self.sr.get_postgresdb_engine()
-
-    @cached_property
-    def postgresdb_secret_name(self) -> str:
-        """
-        Get the Secret Name for the DocumentDB or None if it is not set.
-
-        :return: A string with the the value.
-        """
-        return self.env.get_postgresdb_secret_name() or ""
-
-    @cached_property
-    def postgresdb_database(self) -> str:
-        """
-        Get the Name for the DocumentDB or None if it is not set.
-
-        :return: A string with the the value.
-        """
-        return self.env.get_postgresdb_database() or self.sr.get_postgresdb_database()
-
-    @cached_property
-    def postgresdb_host(self) -> str:
-        """
-        Get the Host for the DocumentDB or None if it is not set.
-
-        :return: A string with the the value.
-        """
-        return self.env.get_postgresdb_host() or self.sr.get_postgresdb_host()
-
-    @cached_property
-    def postgresdb_port(self) -> str:
-        """
-        Get the Port for the DocumentDB or None if it is not set.
-
-        :return: A string with the the value.
-        """
-        return self.env.get_postgresdb_port() or self.sr.get_postgresdb_port()
-
-    @cached_property
-    def postgresdb_user(self) -> str:
-        """
-        Get the User for the DocumentDB or None if it is not set.
-
-        :return: A string with the the value.
-        """
-        return self.env.get_postgresdb_user() or self.sr.get_postgresdb_user()
-
-    @cached_property
-    def postgresdb_password(self) -> str:
-        """
-        Get the Password for the DocumentDB or None if it is not set.
-
-        :return: A string with the the value.
-        """
-        return self.env.get_postgresdb_password() or self.sr.get_postgresdb_password()
-
-    @cached_property
-    def s3_bucket_name(self) -> str:
-        """
-        Get the Bucket name for the s3 S3 object or None if it is not set.
-
-        :return: A string with the the value or a default value if it is not set.
-        """
-        return self.env.get_s3_bucket_name()
 
 
 config_instance = None

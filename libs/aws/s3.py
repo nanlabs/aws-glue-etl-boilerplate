@@ -28,16 +28,16 @@ class AwsS3Client:
         config = get_config()
 
         self.session = boto3.Session(
-            aws_access_key_id=aws_access_key_id or config.aws_access_key_id,
-            aws_secret_access_key=aws_secret_access_key or config.aws_secret_access_key,
-            region_name=aws_region_name or config.aws_region,
-            aws_session_token=aws_session_token or config.aws_session_token,
+            aws_access_key_id=aws_access_key_id or config.s3_vars["aws_access_key_id"],
+            aws_secret_access_key=aws_secret_access_key or config.s3_vars["aws_secret_access_key"],
+            region_name=aws_region_name or config.s3_vars["aws_region"],
+            aws_session_token=aws_session_token or config.s3_vars["aws_session_token"],
         )
         self.s3 = self.session.resource(
-            "s3", endpoint_url=aws_endpoint_url or config.aws_endpoint_url
+            "s3", endpoint_url=aws_endpoint_url or config.s3_vars["aws_endpoint_url"]
         )
         self.bucket_name = (
-            bucket_name if bucket_name is not None else config.s3_bucket_name
+            bucket_name if bucket_name is not None else config.s3_vars["s3_bucket_name"]
         )
 
     def get_object(self, key: str) -> Union[str, None]:
