@@ -28,5 +28,4 @@ jobs:
       - name: Flake8 Lint
         uses: py-actions/flake8@v2
         with:
-          path: "jobs"
           args: "--config=.flake8"
