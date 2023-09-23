@@ -1,4 +1,4 @@
-# AWS Glue ETL Boilerplate
+# AWS Glue ETL Boilerplate [![Awesome](https://awesome.re/mentioned-badge.svg)](https://github.com/nanlabs/awesome-nan)
 
 Welcome to the AWS Glue ETL Boilerplate repository! This is an example AWS Glue application that uses the Serverless Framework to deploy infrastructure and allows local development with AWS Glue Libs, Spark, Jupyter Notebook, and more. It includes jobs using Python Shell and PySpark.
 
