@@ -12,7 +12,7 @@ Resources:
         PhysicalConnectionRequirements:
           AvailabilityZone: ${env:AWS_AVAILABILITY_ZONE}
           SecurityGroupIdList:
-            - !Ref SecurityGroup
+            - !Ref GlueSecurityGroup
           SubnetId: ${env:SUBNET_ID}
   GlueAccessLogs:
     Type: AWS::Logs::LogGroup
