@@ -25,7 +25,7 @@ Resources:
       GroupDescription: ${self:service}-${sls:stage} Security Group
       SecurityGroupIngress:
         - IpProtocol: -1
-          Descritpion: Allow all traffic by default
+          Description: Allow all traffic by default
           CidrIp: 0.0.0.0/0
       Tags:
         - Key: name
