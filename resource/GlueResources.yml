@@ -1,3 +1,4 @@
+---
 Resources:
   GlueConnection:
     Type: AWS::Glue::Connection
@@ -10,7 +11,7 @@ Resources:
           Description: ${self:service}-${sls:stage} Network
           Type: NETWORK
         PhysicalConnectionRequirements:
-          AvailabilityZone: ${env:AWS_AVAILABILITY_ZONE}
+          AvailabilityZone: ${env:AWS_AVAILABILITY_ZONE, ${aws:region}a}
           SecurityGroupIdList:
             - !Ref GlueSecurityGroup
           SubnetId: ${env:SUBNET_ID}
