@@ -1,4 +1,5 @@
-from awsglue.context import GlueContext, DynamicFrame
+from awsglue.context import DynamicFrame, GlueContext
+
 from jobs.io.writer import write_from_options
 from libs.config import Config
 

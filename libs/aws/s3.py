@@ -1,5 +1,7 @@
 from typing import Union
+
 import boto3
+
 from libs.config import get_config
 
 

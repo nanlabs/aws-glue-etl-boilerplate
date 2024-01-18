@@ -1,11 +1,13 @@
 import sys
 
-from awsglue.utils import getResolvedOptions
-from pyspark.context import SparkContext
 from awsglue.context import GlueContext
 from awsglue.job import Job
+from awsglue.utils import getResolvedOptions
+from pyspark.context import SparkContext
 
-from jobs.etl import extract, load_to_s3, load_to_postgresql_db, load_to_document_db
+from jobs.etl import extract, load_to_postgresql_db, load_to_s3
+
+# from jobs.etl import load_to_document_db # isort: skip_file
 from libs.config import get_config
 
 args = getResolvedOptions(sys.argv, ["JOB_NAME"])

@@ -1,5 +1,7 @@
-from libs.common import load_tls_ca_bundle
 from pymongo import MongoClient as PyMongoClient
+
+from libs.common import load_tls_ca_bundle
+
 from .mongo import MongoClient
 
 

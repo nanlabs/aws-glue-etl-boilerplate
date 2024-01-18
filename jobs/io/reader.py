@@ -1,4 +1,5 @@
-from awsglue.context import GlueContext, DynamicFrame
+from awsglue.context import DynamicFrame, GlueContext
+
 from .helpers import get_connection_options
 
 

@@ -1,7 +1,9 @@
 from __future__ import annotations
-import boto3
+
 import base64
 import json
+
+import boto3
 from botocore.exceptions import ClientError
 
 secrets_resolver_instance = None
