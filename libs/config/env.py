@@ -10,7 +10,7 @@ class EnvironmentVariable:
     args = {}
     cache = {}
 
-    def __init__(self, args: dict = None) -> None:
+    def __init__(self, args: dict = None) -> None:  # type: ignore
         if args is None:
             args = dict()
         self.args = args
@@ -38,7 +38,7 @@ class EnvironmentVariable:
 envs_instance = None
 
 
-def get_envs(args: dict = None) -> EnvironmentVariable:
+def get_envs(args: dict = None) -> EnvironmentVariable:  # type: ignore
     """
     Get the envs instance. If it doesn't exist, create it.
 
