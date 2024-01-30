@@ -1,6 +1,7 @@
 from typing import Any, Dict, List, Optional, Tuple, Union
 
 from pymongo import MongoClient as PyMongoClient
+from pymongo import errors as pymongo_exceptions
 
 from libs.common.logconfig import LogConfig  # type: ignore
 
@@ -33,9 +34,9 @@ class MongoClient:
         )
 
         if self._conn is None and throw_error:
-            raise Exception(
-                f"Could not connect to {host}:{port} with user {user} and password {password}"
-            )
+            msg = f"Could not connect to {host}:{port} with user {user} and password {password}"
+            self.logger.error(msg)
+            raise pymongo_exceptions.ConnectionFailure(msg)
 
         self._db = self._conn[database]
         self.logger.info("Connected to database: " + database)
@@ -73,7 +74,7 @@ class MongoClient:
         query: Dict[str, Any],
         sort: List[Tuple[str, int]],
         limit: int,
-        projection: Dict[str, Any] = None,  # type: ignore
+        projection: Optional[Dict[str, Any]] = None,
     ) -> List[Dict[str, Any]]:
         return list(self._collection.find(query, projection).sort(sort).limit(limit))
 
@@ -83,7 +84,7 @@ class MongoClient:
         sort: List[Tuple[str, int]],
         limit: int,
         skip: int,
-        projection: Dict[str, Any] = None,  # type: ignore
+        projection: Optional[Dict[str, Any]] = None,
     ) -> List[Dict[str, Any]]:
         return list(
             self._collection.find(query, projection).sort(sort).limit(limit).skip(skip)
