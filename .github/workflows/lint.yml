@@ -24,6 +24,14 @@ jobs:
           pip install pipenv
           pipenv install --dev
 
+      - name: Cache pipenv
+        uses: actions/cache@v3
+        with:
+          path: ~/.local/share/virtualenvs
+          key: ${{ runner.os }}-pipenv-${{ hashFiles('**/Pipfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-pipenv-
+
       - name: Run Super-Linter
         uses: super-linter/super-linter/slim@v5
         env:

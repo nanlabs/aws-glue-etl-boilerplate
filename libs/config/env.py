@@ -38,7 +38,7 @@ class EnvironmentVariable:
 envs_instance = None
 
 
-def get_envs(args: Optional[Dict[str, Any]] = None) -> EnvironmentVariable:
+def get_envs(args: Optional[Dict[str, Any]] = None) -> EnvironmentVariable:  # type: ignore
     """
     Get the envs instance. If it doesn't exist, create it.
 

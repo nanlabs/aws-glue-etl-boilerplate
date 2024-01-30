@@ -17,7 +17,7 @@ class MongoClient:
         port: int,
         database: str,
         protocol: str = "mongodb",
-        collection: str = None,  # type: ignore
+        collection: Optional[str] = None,
         throw_error: bool = True,
     ) -> None:
         connection_uri = (
@@ -73,7 +73,7 @@ class MongoClient:
         self,
         query: Dict[str, Any],
         sort: List[Tuple[str, int]],
-        limit: int,
+        limit: int,  # type: ignore
         projection: Optional[Dict[str, Any]] = None,
     ) -> List[Dict[str, Any]]:
         return list(self._collection.find(query, projection).sort(sort).limit(limit))
@@ -83,7 +83,7 @@ class MongoClient:
         query: Dict[str, Any],
         sort: List[Tuple[str, int]],
         limit: int,
-        skip: int,
+        skip: int,  # type: ignore
         projection: Optional[Dict[str, Any]] = None,
     ) -> List[Dict[str, Any]]:
         return list(
