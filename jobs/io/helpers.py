@@ -1,5 +1,6 @@
-from typing import Dict, Tuple, Union
+from typing import Dict, Optional, Tuple, Union
 from urllib.parse import quote
+
 from libs.common import load_tls_ca_bundle
 
 
@@ -8,8 +9,8 @@ def get_url_for_engine(
     port: int,
     database: str,
     engine: str,
-    user: str = None,
-    password: str = None,
+    user: Optional[str] = None,
+    password: Optional[str] = None,
     ssl: bool = False,
 ) -> str:
     """
@@ -44,8 +45,8 @@ def _build_mongodb_connection_string(
     port: int,
     database: str,
     engine: str,
-    user: str = None,
-    password: str = None,
+    user: Optional[str] = None,
+    password: Optional[str] = None,
     ssl: Union[bool, str] = False,
 ):
     encoded_user = _encode_mongodb_auth_special_chars(user)
@@ -61,7 +62,7 @@ def _build_mongodb_connection_string(
     return url
 
 
-def _encode_mongodb_auth_special_chars(authchars: str):
+def _encode_mongodb_auth_special_chars(authchars: Optional[str] = None):
     """
     This is a helper function to encode special characters
     that might be present on user, password, tokens, etc:
@@ -108,7 +109,7 @@ def get_connection_type(engine: str, ssl: bool = False) -> str:
     return connection_type
 
 
-def get_driver_for_engine(engine: str = None) -> str:
+def get_driver_for_engine(engine: Optional[str] = None) -> str:
     """
     Returns the driver for the engine
 
@@ -128,7 +129,7 @@ def get_driver_for_engine(engine: str = None) -> str:
     return drivers[engine]
 
 
-def get_format_for_engine(engine: str = None) -> str:
+def get_format_for_engine(engine: Optional[str] = None) -> str:
     """
     Returns the format for the engine
 
@@ -150,21 +151,21 @@ def get_format_for_engine(engine: str = None) -> str:
 
 def get_connection_options(
     engine: str,
-    host: str = None,
-    port: int = None,
-    database: str = None,
-    user: str = None,
-    password: str = None,
+    host: str,
+    port: int,
+    database: str,
+    user: Optional[str],
+    password: Optional[str],
+    dbtable: Optional[str],
+    collection: Optional[str],
+    aws_access_key_id: Optional[str],
+    aws_secret_access_key: Optional[str],
+    aws_region_name: Optional[str],
+    aws_session_token: Optional[str],
+    aws_endpoint_url: Optional[str],
+    paths: Optional[str],
+    path: Optional[str],
     ssl: bool = False,
-    dbtable: str = None,
-    collection: str = None,
-    aws_access_key_id: str = None,
-    aws_secret_access_key: str = None,
-    aws_region_name: str = None,
-    aws_session_token: str = None,
-    aws_endpoint_url: str = None,
-    paths: str = None,
-    path: str = None,
 ) -> Tuple[str, str, Dict[str, str]]:
     """
     Returns the format and options for the engine. Will use the AWS credentials
@@ -176,7 +177,6 @@ def get_connection_options(
     :param engine: The engine to get the format and options for
     :param user: The user to connect with
     :param password: The password to connect with
-    :param ssl: Whether to use ssl or not
     :param dbtable: The table to connect to
     :param collection: The collection to connect to
     :param aws_access_key_id: The aws access key id to connect with
@@ -185,6 +185,7 @@ def get_connection_options(
     :param aws_session_token: The aws session token to connect with
     :param aws_endpoint_url: The aws endpoint url to connect with
     :param path: The path to connect to
+    :param ssl: Whether to use ssl or not
     :return: The format and options for the engine
     """
     if engine is None:

@@ -1,5 +1,7 @@
-from typing import Union
 import boto3
+
+from typing import Union, Optional
+
 from libs.config import get_config
 
 
@@ -10,12 +12,12 @@ class AwsS3Client:
 
     def __init__(
         self,
-        bucket_name: str = None,
-        aws_access_key_id: str = None,
-        aws_secret_access_key: str = None,
-        aws_region_name: str = None,
-        aws_session_token: str = None,
-        aws_endpoint_url: str = None,
+        bucket_name: Optional[str] = None,
+        aws_access_key_id: Optional[str] = None,
+        aws_secret_access_key: Optional[str] = None,
+        aws_region_name: Optional[str] = None,
+        aws_session_token: Optional[str] = None,
+        aws_endpoint_url: Optional[str] = None,
     ):
         """
         :param bucket_name: The name of the bucket.

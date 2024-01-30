@@ -1,6 +1,9 @@
-from typing import Any, Dict, List, Tuple, Union
+from typing import Any, Dict, List, Optional, Tuple, Union
+
 from pymongo import MongoClient as PyMongoClient
-from libs.common.logconfig import LogConfig
+from pymongo import errors as pymongo_exceptions
+
+from libs.common.logconfig import LogConfig  # type: ignore
 
 
 class MongoClient:
@@ -14,7 +17,7 @@ class MongoClient:
         port: int,
         database: str,
         protocol: str = "mongodb",
-        collection: str = None,
+        collection: Optional[str] = None,
         throw_error: bool = True,
     ) -> None:
         connection_uri = (
@@ -31,9 +34,9 @@ class MongoClient:
         )
 
         if self._conn is None and throw_error:
-            raise Exception(
-                "Could not connect to " + host + ":" + port + " was not found."
-            )
+            msg = f"Could not connect to {host}:{port} with user {user} and password {password}"
+            self.logger.error(msg)
+            raise pymongo_exceptions.ConnectionFailure(msg)
 
         self._db = self._conn[database]
         self.logger.info("Connected to database: " + database)
@@ -70,8 +73,8 @@ class MongoClient:
         self,
         query: Dict[str, Any],
         sort: List[Tuple[str, int]],
-        limit: int,
-        projection: Dict[str, Any] = None,
+        limit: int,  # type: ignore
+        projection: Optional[Dict[str, Any]] = None,
     ) -> List[Dict[str, Any]]:
         return list(self._collection.find(query, projection).sort(sort).limit(limit))
 
@@ -80,20 +83,15 @@ class MongoClient:
         query: Dict[str, Any],
         sort: List[Tuple[str, int]],
         limit: int,
-        skip: int,
-        projection: Dict[str, Any] = None,
+        skip: int,  # type: ignore
+        projection: Optional[Dict[str, Any]] = None,
     ) -> List[Dict[str, Any]]:
         return list(
             self._collection.find(query, projection).sort(sort).limit(limit).skip(skip)
         )
 
-    def find_one(self, query: Dict[str, Any]) -> Dict[str, Any]:
+    def find_one(self, query: Dict[str, Any]) -> Optional[Dict[str, Any]]:
         return self._collection.find_one(query)
-
-    def find_one_and_update(
-        self, query: Dict[str, Any], update: Dict[str, Any]
-    ) -> Dict[str, Any]:
-        return self._collection.find_one_and_update(query, update)
 
     def find_one_and_delete(self, query: Dict[str, Any]) -> Dict[str, Any]:
         return self._collection.find_one_and_delete(query)
