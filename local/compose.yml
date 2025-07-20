@@ -1,7 +1,7 @@
 services:
   awsglue:
     build: ..
-    command: /home/glue_user/jupyter/jupyter_start.sh
+    command: /home/hadoop/start-jupyter.sh
     environment:
       DISABLE_SSL: "true"
     env_file:
@@ -12,8 +12,8 @@ services:
       - 18080:18080
       - 8998:8998
     volumes:
-      - ..:/home/glue_user/workspace/aws-glue-etl-local
-      - awsglue-jupyter:/home/glue_user/workspace/jupyter_workspace
+      - ..:/home/hadoop/workspace/
+      - awsglue-jupyter:/home/hadoop/workspace/jupyter_workspace
     networks:
       - aws-glue-boilerplate
 

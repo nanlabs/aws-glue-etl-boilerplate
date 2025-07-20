@@ -1,0 +1,84 @@
+# Example Terraform variables for Glue deployment POC
+# Copy this file to terraform.tfvars and customize the values for your deployment
+
+# Basic configuration
+aws_region  = "us-west-2"  # AWS region where resources will be deployed
+environment = "dev"        # Environment name (must be one of: dev, staging, prod)
+namespace   = "glue-poc"   # Namespace for resource naming
+prefix      = "terraform-glue"  # Prefix for resource names
+bucket_name = "glue-artifacts"  # Base name for S3 bucket (will be combined with prefix and environment)
+
+# Additional tags to apply to all resources (optional)
+# tags = {
+#   Project     = "Data Pipeline"
+#   Owner       = "Data Engineering"
+#   CostCenter  = "12345"
+# }
+
+# Glue jobs configuration
+glue_jobs = {
+  # PySpark job example
+  pyspark_hello_world = {
+    script_path         = "jobs/pyspark_hello_world.py"  # Path to the job script
+    type               =     "spark"                        # Job type: "spark" or "pythonshell"
+    glue_version       = "5.0"                          # AWS Glue version
+    max_concurrent_runs = 3                             # Maximum number of concurrent job runs
+    worker_type        = "Standard"                     # Worker type: Standard, G.1X, or G.2X
+    number_of_workers  = 2                              # Number of workers (for spark jobs)
+    timeout            = 3000                           # Timeout in seconds
+    max_retries        = 1                              # Number of retry attempts
+    connections        = []                             # List of Glue connection names
+    default_arguments = {
+      "--additional-python-modules" = "tldextract==3.3.0"  # Additional Python packages to install
+      "--CUSTOM_ARGUMENT"          = "CUSTOM_VALUE"      # Custom arguments for your job
+    }
+    support_files = [
+      {
+        local_path = "libs.zip"  # Path to local file relative to terraform directory
+        s3_prefix  = ""          # S3 prefix where the file will be uploaded
+      },
+      {
+        local_path = "jobs.zip"
+        s3_prefix  = ""
+      }
+    ]
+  },
+  
+  # Python shell job example
+  pythonshell_hello_world = {
+    script_path         = "jobs/pythonshell_hello_world.py"
+    type               = "pythonshell"
+    glue_version       = "5.0"
+    python_version     = "3.11"
+    max_concurrent_runs = 3
+    worker_type        = "Standard"
+    number_of_workers  = null  # Not applicable for Python shell jobs
+    timeout            = 3000
+    max_retries        = 1
+    connections        = []
+    default_arguments = {
+      "--additional-python-modules" = "tldextract==3.3.0"
+      "--CUSTOM_ARGUMENT"          = "CUSTOM_VALUE"
+    }
+    support_files = [
+      {
+        local_path = "libs.zip"
+        s3_prefix  = ""
+      },
+      {
+        local_path = "jobs.zip"
+        s3_prefix  = ""
+      }
+    ]
+  }
+}
+
+# Networking configuration (optional)
+# vpc_id = "vpc-12345678"  # VPC ID for Glue connections
+# subnet_id = "subnet-12345678"  # Subnet ID for Glue connections
+# database_cidr_blocks = ["10.0.0.0/8"]  # CIDR blocks for database access
+
+# CloudWatch logging configuration (optional)
+# log_retention_days = 14  # Number of days to retain Glue job logs
+# service_log_retention_days = 7  # Number of days to retain Glue service logs
+# enable_crawler_logs = false  # Enable CloudWatch log group for Glue crawlers

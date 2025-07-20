@@ -1,9 +1,9 @@
 from typing import List
 from awsglue.context import GlueContext
 
-from jobs.io import read_from_options
-from libs.config import Config
-from libs.aws import AwsS3Client
+from ..io import read_from_options
+from ..config import Config
+from ..aws import AwsS3Client
 
 
 def extract(glueContext: GlueContext, config: Config):

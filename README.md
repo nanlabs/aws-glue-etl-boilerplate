@@ -1,6 +1,6 @@
 # AWS Glue ETL Boilerplate [![Awesome](https://awesome.re/mentioned-badge.svg)](https://github.com/nanlabs/awesome-nan)
 
-Welcome to the AWS Glue ETL Boilerplate repository! This is an example AWS Glue application that uses the Serverless Framework to deploy infrastructure and allows local development with AWS Glue Libs, Spark, Jupyter Notebook, and more. It includes jobs using Python Shell and PySpark.
+Welcome to the AWS Glue ETL Boilerplate repository! This is an example AWS Glue application that uses Terraform to deploy infrastructure and allows local development with AWS Glue Libs, Spark, Jupyter Notebook, and more. It includes jobs using Python Shell and PySpark.
 
 <div align="center">
 
@@ -22,21 +22,21 @@ Check out the [Use Case Scenario](#use-case-scenario) to learn more about the mo
 - **Flexible Local Development:** Choose between using VSCode + Remote Containers or Docker Compose.
 - **Comprehensive Documentation:** Easy-to-follow guides for development and deployment.
 - **Reusable Examples:** Building upon multiple examples to provide a well-rounded solution.
-- **Serverless Framework:** Utilize Serverless Framework to deploy AWS Glue jobs and other resources.
+- **Terraform:** Utilize Terraform to deploy AWS Glue jobs and other resources.
 
 ## Usage
 
 To quickly start a project using this example, follow these steps:
 
 ```sh
-npx serverless install -u https://github.com/nanlabs/aws-glue-etl-boilerplate -n my-project
+git clone https://github.com/nanlabs/aws-glue-etl-boilerplate.git my-project
 ```
 
 ## Overview
 
 This boilerplate was created by combining the best practices from our following examples:
 
-- [Serverless Glue example](https://github.com/nanlabs/devops-reference/tree/main/examples/serverless-glue/) - Deploy AWS Glue jobs using the Serverless Framework.
+- [Terraform Glue example](https://github.com/nanlabs/devops-reference/tree/main/examples/serverless-glue/) - Deploy AWS Glue jobs using Terraform.
 - [AWS Glue docker example](https://github.com/nanlabs/devops-reference/tree/main/examples/compose-glue/) - Run AWS Glue jobs locally using Docker Compose.
 - [VSCode DevContainer example](https://github.com/nanlabs/devops-reference/tree/main/examples/devcontainer-glue/) - Run AWS Glue jobs locally using VSCode + Remote Containers.
 
@@ -72,7 +72,7 @@ Refer to the [development documentation](./docs/DEVELOPMENT.md) for detailed ste
 
 ## Deployment
 
-We utilize the Serverless Framework to deploy AWS Glue jobs and other resources. For deployment instructions, check out the [deployment documentation](./docs/DEPLOYMENT.md).
+We utilize Terraform to deploy AWS Glue jobs and other resources. For deployment instructions, check out the [deployment documentation](./docs/DEPLOYMENT.md).
 
 ## Implementation Notes
 
@@ -90,13 +90,13 @@ Imagine the scenario:
 
 **Challenge:** Traditional threat intelligence methods lack the agility and scalability needed to process the massive influx of data from OSINT sources. Manual data collection and analysis are time-consuming, making it difficult to stay ahead of emerging threats.
 
-**Solution:** Introducing our AWS Glue ETL Boilerplate – a cutting-edge solution that harnesses the power of AWS Glue, Serverless Framework, and efficient local development techniques. This comprehensive example demonstrates how to build an end-to-end datalake tailored for threat intelligence operations.
+**Solution:** Introducing our AWS Glue ETL Boilerplate – a cutting-edge solution that harnesses the power of AWS Glue, Terraform, and efficient local development techniques. This comprehensive example demonstrates how to build an end-to-end datalake tailored for threat intelligence operations.
 
 **Key Features and Benefits:**
 
 🔒 **Enhanced Security Operations:** By centralizing data from OSINT sources, your security team gains a consolidated view of potential threats. Real-time analysis enables quicker responses to emerging incidents.
 
-⚙️ **Flexible ETL Infrastructure:** The Serverless Framework empowers you to deploy AWS Glue jobs seamlessly, adapting to varying data sources and formats. This flexibility ensures smooth data integration.
+⚙️ **Flexible ETL Infrastructure:** Terraform empowers you to deploy AWS Glue jobs seamlessly, adapting to varying data sources and formats. This flexibility ensures smooth data integration.
 
 💡 **Efficient Local Development:** Develop and refine your threat intelligence pipeline locally using VSCode + Remote Containers or Docker Compose. Rapid iteration and testing significantly expedite deployment.
 

@@ -1,7 +1,7 @@
 from awsglue.context import DynamicFrame
 
-from jobs.io.writer import write_from_options
-from libs.config import Config
+from ..io.writer import write_from_options
+from ..config import Config
 
 
 def load_to_document_db(ddf: DynamicFrame, config: Config, collection: str):

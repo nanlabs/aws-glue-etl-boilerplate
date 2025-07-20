@@ -1,28 +1,54 @@
-ARG GLUE_TAG=glue_libs_4.0.0_image_01
+# Use AWS Glue 5.0 base image (x86_64 or arm64)
+FROM --platform=${BUILDPLATFORM:-linux/amd64} public.ecr.aws/glue/aws-glue-libs:5
 
-FROM amazon/aws-glue-libs:${GLUE_TAG}
-# GLUE_TAG is specified again because the FROM directive resets ARGs
-# (but their default value is retained if set previously)
-ARG GLUE_TAG
-
-WORKDIR /home/glue_user/workspace/aws-glue-etl-local
-
-COPY Pipfile Pipfile.lock .
-
-RUN pip3 install -U pipenv && \
-    python3 -m pipenv requirements --dev >requirements.txt && \
-    pip3 install -r requirements.txt
-
-ENV PYTHONPATH=${PYTHONPATH}:/home/glue_user/workspace/aws-glue-etl-local
-
-RUN rm /home/glue_user/spark/jars/mongodb-driver-sync-4.7.2.jar && \
-    wget https://repo1.maven.org/maven2/org/mongodb/mongodb-driver-sync/3.10.2/mongodb-driver-sync-3.10.2.jar -O /home/glue_user/spark/jars/mongodb-driver-sync-3.10.2.jar
-
+# Switch to root to install dependencies
 USER root
 
-# TODO: This is a temporary hack to solve the issue with the VSCode permissions.
-#       This should be removed once the issue is resolved.
-RUN chmod -R 777 /tmp/spark-events && usermod -u 1000 glue_user
+# Prepare working directory
+WORKDIR /home/hadoop/workspace
 
-# Return to original base image's user
-USER glue_user
+# Install system dependencies for compiling native packages
+RUN yum update -y && \
+    yum install -y gcc python3-devel wget && \
+    yum clean all && \
+    rm -rf /var/cache/yum
+
+# Install Python tools and extract requirements
+COPY Pipfile Pipfile.lock ./
+RUN pip3 install --upgrade pip && \
+    pip3 install pipenv && \
+    # Use the newer syntax for exporting requirements
+    pipenv requirements > requirements.txt && \
+    pip3 install -r requirements.txt
+
+
+# Install JupyterLab and tools for Glue 5.0
+RUN pip3 install jupyterlab==3.6.8 ipykernel==5.5.6 ipywidgets==7.7.2
+# Copy startup script and make it executable
+COPY local/localstack/start-jupyter.sh /home/hadoop/start-jupyter.sh
+RUN chmod +x /home/hadoop/start-jupyter.sh
+
+# Set PYTHONPATH to include workspace
+ENV PYTHONPATH="/home/hadoop/workspace:${PYTHONPATH}"
+
+# Install extra Spark drivers (PostgreSQL + MongoDB)
+RUN mkdir -p /opt/spark/jars && \
+    wget https://jdbc.postgresql.org/download/postgresql-42.2.12.jar -O /opt/spark/jars/postgresql-42.2.12.jar && \
+    wget https://repo1.maven.org/maven2/org/mongodb/mongodb-driver-sync/5.5.1/mongodb-driver-sync-5.5.1.jar -O /opt/spark/jars/mongodb-driver-sync-5.5.1.jar
+
+# Create spark-events directory (used by Spark UI)
+RUN mkdir -p /tmp/spark-events && chmod -R 777 /tmp/spark-events
+
+# Update UID of hadoop user if needed
+RUN usermod -u 1000 hadoop || true
+
+
+
+# Switch back to hadoop user
+USER hadoop
+
+# Ensure pip-installed binaries are on PATH
+ENV PATH="/home/hadoop/.local/bin:$PATH"
+
+# Set default entrypoint to use the absolute path to the script
+ENTRYPOINT ["/home/hadoop/start-jupyter.sh"]

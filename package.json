@@ -1,14 +1,21 @@
 {
-  "name": "serverless-glue-etl",
+  "name": "glue-etl",
   "version": "1.0.0",
-  "description": "Serverless Glue example",
+  "description": "Glue ETL example with Terraform and LocalStack",
   "main": "index.js",
   "scripts": {
-    "sls": "serverless",
-    "sls:deploy": "serverless deploy",
-    "sls:package": "serverless package",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "zip-libs": "bestzip libs.zip libs/* && bestzip jobs.zip jobs/*"
+    "zip-libs": "mkdir -p build && rm -rf build/** && bestzip build/libs.zip libs/* && bestzip build/jobs.zip jobs/*",
+    "pip-to-req": "pipenv requirements --from-pipfile > build/requirements.txt",
+    "lint": "npm run lint:flake8 && npm run lint:pylint && npm run lint:black-check",
+    "lint:flake8": "pipenv run flake8 libs jobs",
+    "lint:pylint": "pipenv run pylint libs jobs",
+    "lint:black-check": "pipenv run black --check libs jobs",
+    "format": "pipenv run black libs jobs",
+    "autofix": "npm run autofix:black && npm run autofix:isort",
+    "autofix:black": "pipenv run black libs jobs",
+    "autofix:isort": "pipenv run isort libs jobs",
+    "autofix:flake8": "pipenv run autoflake --in-place --remove-all-unused-imports --remove-unused-variables --recursive libs jobs"
   },
   "repository": {
     "type": "git",
@@ -18,9 +25,6 @@
   "license": "MIT",
   "homepage": "https://github.com/nanlabs/aws-glue-etl-boilerplate#readme",
   "devDependencies": {
-    "bestzip": "^2.2.1",
-    "serverless": "^3.27.0",
-    "serverless-glue": "^2.12.0",
-    "serverless-plugin-scripts": "^1.0.2"
+    "bestzip": "^2.2.1"
   }
 }

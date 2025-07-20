@@ -1,6 +1,8 @@
 from typing import Union
+
 import boto3
-from libs.config import get_config
+
+from ..config import get_config
 
 
 class AwsS3Client:
@@ -31,7 +33,7 @@ class AwsS3Client:
             aws_access_key_id=aws_access_key_id or config.s3_vars["aws_access_key_id"],
             aws_secret_access_key=aws_secret_access_key
             or config.s3_vars["aws_secret_access_key"],
-            region_name=aws_region_name or config.s3_vars["aws_region"],
+            region_name=aws_region_name or config.s3_vars["aws_aws_region_name"],
             aws_session_token=aws_session_token or config.s3_vars["aws_session_token"],
         )
         self.s3 = self.session.resource(

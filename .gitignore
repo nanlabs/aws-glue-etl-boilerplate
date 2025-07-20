@@ -199,5 +199,12 @@ node_modules
 garbage
 bin
 local/volume
-libs.zip
-jobs.zip
+
+
+
+.DS_Store
+*.swp
+*.swo
+*.swn
+*.bak
+*.tmp
