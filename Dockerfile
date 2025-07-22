@@ -17,10 +17,7 @@ RUN yum update -y && \
 COPY Pipfile Pipfile.lock ./
 RUN pip3 install --upgrade pip && \
     pip3 install pipenv && \
-    # Use the newer syntax for exporting requirements
-    pipenv requirements > requirements.txt && \
-    pip3 install -r requirements.txt
-
+    pipenv requirements > requirements.txt
 
 # Install JupyterLab and tools for Glue 5.0
 RUN pip3 install jupyterlab==3.6.8 ipykernel==5.5.6 ipywidgets==7.7.2
@@ -37,10 +34,15 @@ RUN mkdir -p /opt/spark/jars && \
     wget https://repo1.maven.org/maven2/org/mongodb/mongodb-driver-sync/5.5.1/mongodb-driver-sync-5.5.1.jar -O /opt/spark/jars/mongodb-driver-sync-5.5.1.jar
 
 # Create spark-events directory (used by Spark UI)
-RUN mkdir -p /tmp/spark-events && chmod -R 777 /tmp/spark-events
+RUN mkdir -p /tmp/spark-events && \
+    chown -R hadoop:hadoop /tmp/spark-events && \
+    chmod -R 755 /tmp/spark-events
 
 # Update UID of hadoop user if needed
-RUN usermod -u 1000 hadoop || true
+RUN id -u hadoop >/dev/null 2>&1 && \
+    [ "$(id -u hadoop)" != "1000" ] && \
+    usermod -u 1000 hadoop || \
+    echo "User hadoop already has UID 1000 or doesn't exist"
 
 
 

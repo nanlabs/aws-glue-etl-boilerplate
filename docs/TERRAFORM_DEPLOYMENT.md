@@ -30,11 +30,27 @@ Ensure your instance has an IAM role with the necessary permissions.
 ## Required AWS Permissions
 
 Your AWS credentials need the following permissions:
-- `glue:*` - Full Glue service access
-- `iam:*` - IAM role and policy management
-- `s3:*` - S3 bucket operations
-- `logs:*` - CloudWatch logs access
-- `ec2:DescribeVpcs`, `ec2:DescribeSubnets`, `ec2:DescribeSecurityGroups` - VPC operations
+- Glue permissions:
+  - `glue:CreateJob`, `glue:UpdateJob`, `glue:DeleteJob`
+  - `glue:GetJob`, `glue:GetJobs`
+  - `glue:CreateConnection`, `glue:DeleteConnection`, `glue:GetConnection`
+- IAM permissions:
+  - `iam:CreateRole`, `iam:DeleteRole`, `iam:GetRole`
+  - `iam:AttachRolePolicy`, `iam:DetachRolePolicy`
+  - `iam:CreatePolicy`, `iam:DeletePolicy`
+  - `iam:PassRole` (for Glue job execution)
+- S3 permissions:
+  - `s3:CreateBucket`, `s3:DeleteBucket`
+  - `s3:PutObject`, `s3:GetObject`, `s3:DeleteObject`
+  - `s3:PutBucketPolicy`, `s3:GetBucketPolicy`
+  - `s3:PutBucketVersioning`, `s3:PutLifecycleConfiguration`
+- CloudWatch Logs permissions:
+  - `logs:CreateLogGroup`, `logs:DeleteLogGroup`
+  - `logs:PutRetentionPolicy`
+- EC2 permissions:
+  - `ec2:DescribeVpcs`, `ec2:DescribeSubnets`, `ec2:DescribeSecurityGroups`
+  - `ec2:CreateSecurityGroup`, `ec2:DeleteSecurityGroup`
+  - `ec2:AuthorizeSecurityGroupEgress`, `ec2:RevokeSecurityGroupEgress`
 
 ## Deployment Steps
 

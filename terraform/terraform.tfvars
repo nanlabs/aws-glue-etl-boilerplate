@@ -30,7 +30,7 @@ glue_jobs = {
     connections        = []                             # List of Glue connection names
     default_arguments = {
       "--CUSTOM_ARGUMENT"          = "CUSTOM_VALUE"      # Custom arguments for your job
-      "--s3_bucket_name"           = "glue-poc-dev-glue-artifacts-glue-artifacts"   # S3 bucket name
+      "--s3_bucket_name"           = "glue-poc-dev-glue-artifacts"   # S3 bucket name
     }
     support_files = [
       {

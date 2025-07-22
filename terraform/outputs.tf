@@ -146,11 +146,6 @@ output "glue_security_group_id" {
   value       = var.vpc_id != null ? aws_security_group.glue_connection.id : null
 }
 
-output "glue_connection_name" {
-  description = "Name of the Glue connection for database access (if created)"
-  value       = var.vpc_id != null && var.subnet_id != null ? aws_glue_connection.database_connection[0].name : null
-}
-
 # Deployment summary
 output "deployment_summary" {
   description = "Summary of the Terraform Glue deployment"

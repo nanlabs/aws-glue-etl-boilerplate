@@ -67,30 +67,6 @@ resource "aws_security_group" "glue_connection" {
     create_before_destroy = true
   }
 }
-# AWS Glue Connection for database connectivity
-resource "aws_glue_connection" "database_connection" {
-  count = var.vpc_id != null && var.subnet_id != null ? 1 : 0
-  
-  name = "${local.name_prefix}-database-connection"
-  
-  connection_type = "JDBC"
-  
-  connection_properties = {
-    JDBC_CONNECTION_URL = "jdbc:postgresql://localhost:5432/postgres"
-    USERNAME           = "postgres"
-    PASSWORD           = "password"
-  }
-  
-  physical_connection_requirements {
-    availability_zone      = data.aws_subnet.glue_subnet[0].availability_zone
-    security_group_id_list = [aws_security_group.glue_connection.id]
-    subnet_id             = var.subnet_id
-  }
-  
-  tags = merge(local.common_tags, {
-    Name = "${local.name_prefix}-database-connection"
-  })
-}
 
 # Data source to get subnet information
 data "aws_subnet" "glue_subnet" {
