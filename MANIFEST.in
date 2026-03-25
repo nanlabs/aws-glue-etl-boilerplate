@@ -1,0 +1,46 @@
+# MANIFEST.in for nan-data-jobs-libs package
+# This file specifies which additional files to include in the wheel package
+
+# Include all Python files in libs/
+recursive-include libs *.py
+
+# Include configuration files
+include setup.py
+include pyproject.toml
+include README.md
+include LICENSE*
+
+# Include documentation
+recursive-include docs *.md
+recursive-include docs *.rst
+
+# Include any YAML/JSON configuration files
+recursive-include libs *.yaml
+recursive-include libs *.yml
+recursive-include libs *.json
+
+# Exclude development and cache files
+global-exclude *.pyc
+global-exclude *.pyo
+global-exclude *.pyd
+global-exclude __pycache__
+global-exclude .pytest_cache
+global-exclude *.so
+recursive-exclude * __pycache__
+recursive-exclude * *.py[co]
+
+# Exclude test files from the package
+recursive-exclude tests *
+exclude run_tests.py
+exclude pytest.ini
+
+# Exclude development files
+exclude .gitignore
+exclude .env*
+exclude Makefile
+exclude Dockerfile
+exclude compose.yml
+recursive-exclude .github *
+recursive-exclude docker *
+recursive-exclude build *
+recursive-exclude dist *

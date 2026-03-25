@@ -1,0 +1,440 @@
+{
+  "candidates": {
+    "entity_type": "candidates",
+    "entities_checked": 10,
+    "entities_with_custom_fields": 1,
+    "custom_field_values": [
+      {
+        "id": "3577340",
+        "type": "custom-field-values",
+        "attributes": {
+          "field-type": "CustomField::MultiSelect",
+          "value": [
+            "Full stack Developer"
+          ]
+        },
+        "custom_field_id": null,
+        "entity_id": "4544446",
+        "entity_type": "candidates"
+      }
+    ],
+    "custom_field_definitions": {},
+    "unique_custom_fields": "set()"
+  },
+  "jobs": {
+    "entity_type": "jobs",
+    "entities_checked": 9,
+    "entities_with_custom_fields": 9,
+    "custom_field_values": [
+      {
+        "id": "7022707",
+        "type": "custom-field-values",
+        "attributes": {
+          "field-type": "CustomField::Select",
+          "value": [
+            "Delos"
+          ]
+        },
+        "custom_field_id": null,
+        "entity_id": "463287",
+        "entity_type": "jobs"
+      },
+      {
+        "id": "7022708",
+        "type": "custom-field-values",
+        "attributes": {
+          "field-type": "CustomField::MultiSelect",
+          "value": [
+            "Contractor",
+            "NaN"
+          ]
+        },
+        "custom_field_id": null,
+        "entity_id": "463287",
+        "entity_type": "jobs"
+      },
+      {
+        "id": "7022709",
+        "type": "custom-field-values",
+        "attributes": {
+          "field-type": "CustomField::Select",
+          "value": [
+            "Upselling"
+          ]
+        },
+        "custom_field_id": null,
+        "entity_id": "463287",
+        "entity_type": "jobs"
+      },
+      {
+        "id": "7022710",
+        "type": "custom-field-values",
+        "attributes": {
+          "field-type": "CustomField::Number",
+          "value": 4000.0
+        },
+        "custom_field_id": null,
+        "entity_id": "463287",
+        "entity_type": "jobs"
+      },
+      {
+        "id": "6982222",
+        "type": "custom-field-values",
+        "attributes": {
+          "field-type": "CustomField::MultiSelect",
+          "value": [
+            "Contractor"
+          ]
+        },
+        "custom_field_id": null,
+        "entity_id": "447075",
+        "entity_type": "jobs"
+      },
+      {
+        "id": "6982223",
+        "type": "custom-field-values",
+        "attributes": {
+          "field-type": "CustomField::Select",
+          "value": [
+            "New Deal"
+          ]
+        },
+        "custom_field_id": null,
+        "entity_id": "447075",
+        "entity_type": "jobs"
+      },
+      {
+        "id": "6982224",
+        "type": "custom-field-values",
+        "attributes": {
+          "field-type": "CustomField::Select",
+          "value": [
+            "Sunstone Credit"
+          ]
+        },
+        "custom_field_id": null,
+        "entity_id": "447075",
+        "entity_type": "jobs"
+      },
+      {
+        "id": "6873910",
+        "type": "custom-field-values",
+        "attributes": {
+          "field-type": "CustomField::MultiSelect",
+          "value": [
+            "NaN"
+          ]
+        },
+        "custom_field_id": null,
+        "entity_id": "435476",
+        "entity_type": "jobs"
+      },
+      {
+        "id": "6873911",
+        "type": "custom-field-values",
+        "attributes": {
+          "field-type": "CustomField::Select",
+          "value": [
+            "Upselling"
+          ]
+        },
+        "custom_field_id": null,
+        "entity_id": "435476",
+        "entity_type": "jobs"
+      },
+      {
+        "id": "6873912",
+        "type": "custom-field-values",
+        "attributes": {
+          "field-type": "CustomField::Select",
+          "value": [
+            "Good Apple"
+          ]
+        },
+        "custom_field_id": null,
+        "entity_id": "435476",
+        "entity_type": "jobs"
+      },
+      {
+        "id": "6846328",
+        "type": "custom-field-values",
+        "attributes": {
+          "field-type": "CustomField::Select",
+          "value": [
+            "Delos"
+          ]
+        },
+        "custom_field_id": null,
+        "entity_id": "419820",
+        "entity_type": "jobs"
+      },
+      {
+        "id": "6846329",
+        "type": "custom-field-values",
+        "attributes": {
+          "field-type": "CustomField::MultiSelect",
+          "value": [
+            "NaN"
+          ]
+        },
+        "custom_field_id": null,
+        "entity_id": "419820",
+        "entity_type": "jobs"
+      },
+      {
+        "id": "6846330",
+        "type": "custom-field-values",
+        "attributes": {
+          "field-type": "CustomField::Select",
+          "value": [
+            "Upselling"
+          ]
+        },
+        "custom_field_id": null,
+        "entity_id": "419820",
+        "entity_type": "jobs"
+      },
+      {
+        "id": "6846331",
+        "type": "custom-field-values",
+        "attributes": {
+          "field-type": "CustomField::Number",
+          "value": 3499.0
+        },
+        "custom_field_id": null,
+        "entity_id": "419820",
+        "entity_type": "jobs"
+      },
+      {
+        "id": "6845852",
+        "type": "custom-field-values",
+        "attributes": {
+          "field-type": "CustomField::Select",
+          "value": [
+            "Delos"
+          ]
+        },
+        "custom_field_id": null,
+        "entity_id": "419815",
+        "entity_type": "jobs"
+      },
+      {
+        "id": "6845853",
+        "type": "custom-field-values",
+        "attributes": {
+          "field-type": "CustomField::MultiSelect",
+          "value": [
+            "NaN"
+          ]
+        },
+        "custom_field_id": null,
+        "entity_id": "419815",
+        "entity_type": "jobs"
+      },
+      {
+        "id": "6845854",
+        "type": "custom-field-values",
+        "attributes": {
+          "field-type": "CustomField::Select",
+          "value": [
+            "Upselling"
+          ]
+        },
+        "custom_field_id": null,
+        "entity_id": "419815",
+        "entity_type": "jobs"
+      },
+      {
+        "id": "6845855",
+        "type": "custom-field-values",
+        "attributes": {
+          "field-type": "CustomField::Number",
+          "value": 3499.0
+        },
+        "custom_field_id": null,
+        "entity_id": "419815",
+        "entity_type": "jobs"
+      },
+      {
+        "id": "3703571",
+        "type": "custom-field-values",
+        "attributes": {
+          "field-type": "CustomField::MultiSelect",
+          "value": [
+            "NaN"
+          ]
+        },
+        "custom_field_id": null,
+        "entity_id": "297811",
+        "entity_type": "jobs"
+      },
+      {
+        "id": "3703572",
+        "type": "custom-field-values",
+        "attributes": {
+          "field-type": "CustomField::Select",
+          "value": [
+            "New Deal"
+          ]
+        },
+        "custom_field_id": null,
+        "entity_id": "297811",
+        "entity_type": "jobs"
+      },
+      {
+        "id": "3703573",
+        "type": "custom-field-values",
+        "attributes": {
+          "field-type": "CustomField::Select",
+          "value": [
+            "Cargomatic"
+          ]
+        },
+        "custom_field_id": null,
+        "entity_id": "297811",
+        "entity_type": "jobs"
+      },
+      {
+        "id": "3691750",
+        "type": "custom-field-values",
+        "attributes": {
+          "field-type": "CustomField::MultiSelect",
+          "value": [
+            "NaN"
+          ]
+        },
+        "custom_field_id": null,
+        "entity_id": "290598",
+        "entity_type": "jobs"
+      },
+      {
+        "id": "3691751",
+        "type": "custom-field-values",
+        "attributes": {
+          "field-type": "CustomField::Select",
+          "value": [
+            "New Deal"
+          ]
+        },
+        "custom_field_id": null,
+        "entity_id": "290598",
+        "entity_type": "jobs"
+      },
+      {
+        "id": "3702749",
+        "type": "custom-field-values",
+        "attributes": {
+          "field-type": "CustomField::Select",
+          "value": [
+            "Cargomatic"
+          ]
+        },
+        "custom_field_id": null,
+        "entity_id": "290598",
+        "entity_type": "jobs"
+      },
+      {
+        "id": "3668539",
+        "type": "custom-field-values",
+        "attributes": {
+          "field-type": "CustomField::Select",
+          "value": [
+            "Delos"
+          ]
+        },
+        "custom_field_id": null,
+        "entity_id": "281098",
+        "entity_type": "jobs"
+      },
+      {
+        "id": "3668540",
+        "type": "custom-field-values",
+        "attributes": {
+          "field-type": "CustomField::MultiSelect",
+          "value": [
+            "NaN"
+          ]
+        },
+        "custom_field_id": null,
+        "entity_id": "281098",
+        "entity_type": "jobs"
+      },
+      {
+        "id": "3668541",
+        "type": "custom-field-values",
+        "attributes": {
+          "field-type": "CustomField::Select",
+          "value": [
+            "Upselling"
+          ]
+        },
+        "custom_field_id": null,
+        "entity_id": "281098",
+        "entity_type": "jobs"
+      },
+      {
+        "id": "3668542",
+        "type": "custom-field-values",
+        "attributes": {
+          "field-type": "CustomField::Number",
+          "value": 2800.0
+        },
+        "custom_field_id": null,
+        "entity_id": "281098",
+        "entity_type": "jobs"
+      },
+      {
+        "id": "3616735",
+        "type": "custom-field-values",
+        "attributes": {
+          "field-type": "CustomField::Select",
+          "value": [
+            "Machine & Partners"
+          ]
+        },
+        "custom_field_id": null,
+        "entity_id": "257170",
+        "entity_type": "jobs"
+      },
+      {
+        "id": "3616736",
+        "type": "custom-field-values",
+        "attributes": {
+          "field-type": "CustomField::MultiSelect",
+          "value": [
+            "NaN"
+          ]
+        },
+        "custom_field_id": null,
+        "entity_id": "257170",
+        "entity_type": "jobs"
+      },
+      {
+        "id": "3616737",
+        "type": "custom-field-values",
+        "attributes": {
+          "field-type": "CustomField::Select",
+          "value": [
+            "Upselling"
+          ]
+        },
+        "custom_field_id": null,
+        "entity_id": "257170",
+        "entity_type": "jobs"
+      },
+      {
+        "id": "3616738",
+        "type": "custom-field-values",
+        "attributes": {
+          "field-type": "CustomField::Number",
+          "value": 4000.0
+        },
+        "custom_field_id": null,
+        "entity_id": "257170",
+        "entity_type": "jobs"
+      }
+    ],
+    "custom_field_definitions": {},
+    "unique_custom_fields": "set()"
+  }
+}

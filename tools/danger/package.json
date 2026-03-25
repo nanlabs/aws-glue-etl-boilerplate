@@ -1,0 +1,29 @@
+{
+  "name": "nan-data-jobs-danger",
+  "version": "1.0.0",
+  "description": "Danger CI for NaNLABS Data Jobs Repository",
+  "main": "index.js",
+  "directories": {
+    "example": "examples"
+  },
+  "scripts": {
+    "tsc": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nanlabs/internal-data-lake-jobs.git"
+  },
+  "author": "NaNLABS",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/nanlabs/internal-data-lake-jobs/issues"
+  },
+  "homepage": "https://github.com/nanlabs/internal-data-lake-jobs#readme",
+  "dependencies": {
+    "danger": "^13.0.4"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.2"
+  }
+}

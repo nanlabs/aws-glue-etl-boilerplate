@@ -1,0 +1,49 @@
+name: Pull Request Validation
+
+concurrency:
+  group: pull_request_${{ github.event.number }}
+  cancel-in-progress: true
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  pr-review:
+    name: Danger JS
+
+    if: github.event_name != 'pull_request' || !github.event.pull_request.draft
+
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      pull-requests: write
+
+    steps:
+      - name: Begin CI...
+        uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: ./tools/danger/.node-version
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: latest
+
+      - name: Setup Danger Files
+        run: |
+          echo "Setting up Danger files..."
+          mv tools/danger/* .
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Danger JS Action
+        uses: danger/danger-js@13.0.4
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DANGER_GITHUB_API_TOKEN: ${{ secrets.DANGER_GITHUB_API_TOKEN }}
