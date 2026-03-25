@@ -5,7 +5,7 @@ This module contains all shared code that doesn't depend on PySpark or PyShell s
 - Configuration management (config/)
 - Utilities (utils/)
 - Exceptions
-- Business logic (teamtailor/)
+- Shared business primitives
 """
 
 from .config import ConfigBase, DatabaseConfig, print_workflow_properties

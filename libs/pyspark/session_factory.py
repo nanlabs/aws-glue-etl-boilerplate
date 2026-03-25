@@ -36,7 +36,7 @@ Usage:
         glue_context = session_info.context['glue_context']
         job = session_info.context['job']
 
-Author: NaNLABS Data Warehouse Team
+Author: Data Platform Team
 Version: 1.0.0
 """
 

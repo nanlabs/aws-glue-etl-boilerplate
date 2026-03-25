@@ -23,14 +23,14 @@ def read_readme():
 
 
 setup(
-    name="nan-data-jobs-libs",
+    name="aws-glue-etl-boilerplate-libs",
     version=version,
-    description="Shared libraries for NaNLABS Data Jobs Pipeline - Medallion Architecture on AWS Glue",
+    description="Shared libraries for AWS Glue ETL boilerplate - Medallion architecture",
     long_description=read_readme(),
     long_description_content_type="text/markdown",
-    author="NaNLABS",
-    author_email="engineering@nanlabs.com",
-    url="https://github.com/nanlabs/internal-data-lake-jobs",
+    author="Data Platform Team",
+    author_email="data-platform@example.com",
+    url="https://github.com/your-org/aws-glue-etl-boilerplate",
     # Package discovery
     packages=find_packages(include=["libs", "libs.*"]),
     # Python version requirement
@@ -100,8 +100,8 @@ setup(
     ],
     # Project URLs
     project_urls={
-        "Bug Reports": "https://github.com/nanlabs/internal-data-lake-jobs/issues",
-        "Source": "https://github.com/nanlabs/internal-data-lake-jobs",
-        "Documentation": "https://github.com/nanlabs/internal-data-lake-jobs/tree/main/docs",
+        "Bug Reports": "https://github.com/your-org/aws-glue-etl-boilerplate/issues",
+        "Source": "https://github.com/your-org/aws-glue-etl-boilerplate",
+        "Documentation": "https://github.com/your-org/aws-glue-etl-boilerplate/tree/main/docs",
     },
 )

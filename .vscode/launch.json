@@ -2,7 +2,7 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Attach to Team Tailor Job (Remote Debug)",
+      "name": "Attach to Glue Job (Remote Debug)",
       "type": "python",
       "request": "attach",
       "connect": {
@@ -22,13 +22,13 @@
       ]
     },
     {
-      "name": "Run Team Tailor Job (No Debug)",
+      "name": "Run Bronze Job (No Debug)",
       "type": "python",
       "request": "launch",
-      "program": "${workspaceFolder}/jobs/bronze/teamtailor_bronze_job.py",
+      "program": "${workspaceFolder}/jobs/bronze/public_api_bronze_job.py",
       "args": [
         "--JOB_NAME=test",
-        "--ENTITY_TYPE=candidates"
+        "--ENTITY_TYPE=posts"
       ],
       "console": "integratedTerminal",
       "env": {
@@ -45,7 +45,7 @@
       "program": "/bin/bash",
       "args": [
         "-c",
-        "cd ${workspaceFolder} && spark-submit jobs/bronze/teamtailor_bronze_job.py --JOB_NAME=test --ENTITY_TYPE=candidates"
+        "cd ${workspaceFolder} && spark-submit jobs/bronze/public_api_bronze_job.py --JOB_NAME=test --ENTITY_TYPE=posts"
       ],
       "console": "integratedTerminal",
       "env": {

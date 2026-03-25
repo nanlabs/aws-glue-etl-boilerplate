@@ -115,14 +115,14 @@ class SecretsManager:
         Get a secret using the resource naming convention.
 
         Args:
-            secret_key: The secret key (e.g., 'teamtailor-api', 'database-credentials')
+            secret_key: The secret key (e.g., 'public-api', 'database-credentials')
             use_cache: Whether to use cached values
 
         Returns:
             Secret value or None if not found
 
         Examples:
-            get_secret_by_key('teamtailor-api') -> retrieves 'nan-wl-workloads-data-lake-develop/teamtailor-api'
+            get_secret_by_key('public-api') -> retrieves 'my-app/public-api'
         """
         # Option 1: Check for explicit override via environment variable
         env_var_name = f"{secret_key.upper().replace('-', '_')}_SECRET_NAME"
@@ -149,7 +149,7 @@ class SecretsManager:
         Get a specific key from a JSON secret.
 
         Args:
-            secret_key: The secret key (e.g., 'teamtailor-api')
+            secret_key: The secret key (e.g., 'public-api')
             json_key: JSON key to extract from the secret value
             default: Default value if key not found
             use_cache: Whether to use cached values
@@ -158,7 +158,7 @@ class SecretsManager:
             Secret value for the JSON key or default
 
         Examples:
-            get_secret_json_by_key('teamtailor-api', 'api_token') -> extracts api_token from the JSON
+            get_secret_json_by_key('public-api', 'api_token') -> extracts api_token from the JSON
         """
         secret_value = self.get_secret_by_key(secret_key, use_cache)
 
@@ -194,10 +194,10 @@ class SecretsManager:
 
         Examples:
             # For JSON secret: {"api_token": "abc123", "other": "value"}
-            get_api_key_from_secret("my-app/teamtailor-api") -> "abc123"
+            get_api_key_from_secret("my-app/public-api") -> "abc123"
 
             # For plain text secret: "abc123"
-            get_api_key_from_secret("my-app/teamtailor-api") -> "abc123"
+            get_api_key_from_secret("my-app/public-api") -> "abc123"
         """
         # Get secret data
         secret_data = self.get_secret(secret_name, use_cache)
@@ -383,18 +383,18 @@ def get_secret_by_key(secret_key: str, use_cache: bool = True) -> Optional[str]:
     Convenience function to get a secret using the naming convention.
 
     Args:
-        secret_key: The secret key (e.g., 'teamtailor-api')
+        secret_key: The secret key (e.g., 'public-api')
         use_cache: Whether to use cached values
 
     Returns:
         Secret value or None if not found
 
     Examples:
-        get_secret_by_key('teamtailor-api') -> nan-wl-workloads-data-lake-develop/teamtailor-api
+        get_secret_by_key('public-api') -> my-app/public-api
 
         # Override with environment variable:
-        # export TEAMTAILOR_API_SECRET_NAME="my-custom-secret-name"
-        # get_secret_by_key('teamtailor-api') -> my-custom-secret-name
+        # export PUBLIC_API_SECRET_NAME="my-custom-secret-name"
+        # get_secret_by_key('public-api') -> my-custom-secret-name
     """
     manager = get_secrets_manager()
     return manager.get_secret_by_key(secret_key, use_cache)
@@ -410,7 +410,7 @@ def get_secret_json_by_key(
     Convenience function to get a JSON key from a secret.
 
     Args:
-        secret_key: The secret key (e.g., 'teamtailor-api')
+        secret_key: The secret key (e.g., 'public-api')
         json_key: JSON key to extract
         default: Default value if key not found
         use_cache: Whether to use cached values
@@ -419,7 +419,7 @@ def get_secret_json_by_key(
         Secret value for the JSON key or default
 
     Examples:
-        get_secret_json_by_key('teamtailor-api', 'api_token') -> extracts api_token from JSON
+        get_secret_json_by_key('public-api', 'api_token') -> extracts api_token from JSON
     """
     manager = get_secrets_manager()
     return manager.get_secret_json_by_key(secret_key, json_key, default, use_cache)
@@ -432,7 +432,7 @@ def get_ssm_parameter(
     Convenience function to get an SSM parameter using the naming convention.
 
     Args:
-        parameter_key: The parameter key (e.g., 'teamtailor-api-base-url')
+        parameter_key: The parameter key (e.g., 'public-api-base-url')
         use_cache: Whether to use cached values
         default: Default value if parameter not found
 
@@ -440,7 +440,7 @@ def get_ssm_parameter(
         Parameter value or default if not found
 
     Examples:
-        get_ssm_parameter('teamtailor-api-base-url') -> nan-wl-workloads-data-lake-develop/teamtailor-api-base-url
+        get_ssm_parameter('public-api-base-url') -> my-app/public-api-base-url
     """
     manager = get_secrets_manager()
     return manager.get_ssm_parameter(parameter_key, use_cache, default)
@@ -468,10 +468,10 @@ def get_api_key_from_secret(
 
     Examples:
         # For JSON secret: {"api_token": "abc123", "other": "value"}
-        get_api_key_from_secret("my-app/teamtailor-api") -> "abc123"
+        get_api_key_from_secret("my-app/public-api") -> "abc123"
 
         # For plain text secret: "abc123"
-        get_api_key_from_secret("my-app/teamtailor-api") -> "abc123"
+        get_api_key_from_secret("my-app/public-api") -> "abc123"
     """
     manager = get_secrets_manager()
     return manager.get_api_key_from_secret(secret_name, api_key_field, use_cache)

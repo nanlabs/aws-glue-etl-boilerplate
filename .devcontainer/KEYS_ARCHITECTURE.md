@@ -169,7 +169,7 @@ docker compose exec awsglue ls -la /var/sftp/keys/
 # Check secret in LocalStack
 source localstack.env
 awslocal secretsmanager get-secret-value \
-  --secret-id nan-wl-workloads-data-lake-develop/teamtailor-api
+  --secret-id your-project/public-api
 ```
 
 ## References

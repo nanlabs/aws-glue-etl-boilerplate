@@ -4,7 +4,7 @@ FROM alpine:3.19
 RUN apk add --no-cache openssh-keygen
 
 # Metadata
-LABEL maintainer="NaNLABS"
+LABEL maintainer="Data Platform Team"
 LABEL description="SFTP Keys generator for local development"
 LABEL version="1.0"
 

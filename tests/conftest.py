@@ -2,16 +2,14 @@
 Test Configuration and Fixtures for Data Warehouse Testing Framework
 
 This module provides shared fixtures and configuration for testing across:
-- Multiple data sources (Team Tailor, etc.)
+- Multiple data sources
 - Medallion Architecture layers (Raw, Bronze, Silver, Gold)
-- Different domains (talent, etc.)
+- Different domains
 
 Usage:
     pytest tests/unit/                    # Run unit tests only
     pytest tests/integration/             # Run integration tests only
     pytest tests/e2e/                     # Run end-to-end tests only
-    pytest -m teamtailor                  # Run Team Tailor-specific tests
-    pytest -m "bronze and teamtailor"     # Run Team Tailor Bronze layer tests
 """
 
 import json
@@ -27,13 +25,6 @@ from pyspark.sql import SparkSession
 from tests.spark_logging_fix import setup_spark_logging_fix
 
 setup_spark_logging_fix()
-
-# Import Team Tailor fixtures
-try:
-    from tests.fixtures.teamtailor.conftest import *  # noqa: F403
-except ImportError:
-    # Team Tailor fixtures not available, continue without them
-    pass
 
 # ============================================================================
 # Test Environment Configuration

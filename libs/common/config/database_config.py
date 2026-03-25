@@ -176,18 +176,18 @@ class DatabaseConfig(BaseModel):
         if layer is None:
             layer = self.detected_target_layer
 
-        base_path = f"s3://nan-data-lake-{self.environment}-storage"
+        base_path = f"s3://{self.environment}-data-lake-storage"
 
         if layer == MedallionLayer.RAW:
-            return f"{base_path}/nan/raw"
+            return f"{base_path}/raw"
         elif layer == MedallionLayer.BRONZE:
-            return f"{base_path}/nan/bronze"
+            return f"{base_path}/bronze"
         elif layer == MedallionLayer.SILVER:
-            return f"{base_path}/nan/silver"
+            return f"{base_path}/silver"
         elif layer == MedallionLayer.GOLD:
-            return f"{base_path}/nan/gold"
+            return f"{base_path}/gold"
         else:
-            return f"{base_path}/nan/{layer.value}"
+            return f"{base_path}/{layer.value}"
 
     def get_table_s3_path(self, layer: Optional[MedallionLayer] = None) -> str:
         """

@@ -1,4 +1,4 @@
-# MANIFEST.in for nan-data-jobs-libs package
+# MANIFEST.in for aws-glue-etl-boilerplate-libs package
 # This file specifies which additional files to include in the wheel package
 
 # Include all Python files in libs/

@@ -278,9 +278,9 @@ if [ "$TARGET" = "latest" ]; then
     print_success "Uploaded requirements.txt"
 
     # Deploy AWS Glue optimized uber wheel (if exists)
-    GLUE_WHEEL="build/glue-wheels/internal-data-lake-jobs_libs-1.0.0-py3-none-any.whl"
+    GLUE_WHEEL="build/glue-wheels/aws-glue-etl-boilerplate-libs-1.0.0-py3-none-any.whl"
     if [ -f "$GLUE_WHEEL" ]; then
-        $AWS_CMD_BASE s3 cp "$GLUE_WHEEL" "s3://${CODE_REGISTRY_BUCKET}/wheels/internal-data-lake-jobs_libs-latest.whl"
+        $AWS_CMD_BASE s3 cp "$GLUE_WHEEL" "s3://${CODE_REGISTRY_BUCKET}/wheels/aws-glue-etl-boilerplate-libs-latest.whl"
         print_success "Uploaded AWS Glue uber wheel"
     else
         print_warning "AWS Glue uber wheel not found (skipping)"
@@ -317,9 +317,9 @@ else
     print_success "Uploaded requirements.txt"
 
     # Deploy AWS Glue optimized uber wheel (if exists)
-    GLUE_WHEEL="build/glue-wheels/internal-data-lake-jobs_libs-1.0.0-py3-none-any.whl"
+    GLUE_WHEEL="build/glue-wheels/aws-glue-etl-boilerplate-libs-1.0.0-py3-none-any.whl"
     if [ -f "$GLUE_WHEEL" ]; then
-        $AWS_CMD_BASE s3 cp "$GLUE_WHEEL" "s3://${CODE_REGISTRY_BUCKET}/wheels/internal-data-lake-jobs_libs-${TARGET}.whl"
+        $AWS_CMD_BASE s3 cp "$GLUE_WHEEL" "s3://${CODE_REGISTRY_BUCKET}/wheels/aws-glue-etl-boilerplate-libs-${TARGET}.whl"
         print_success "Uploaded AWS Glue uber wheel"
     else
         print_warning "AWS Glue uber wheel not found (skipping)"

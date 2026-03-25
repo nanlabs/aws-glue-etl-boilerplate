@@ -104,7 +104,7 @@ export AWS_ACCESS_KEY_ID=test
 export AWS_SECRET_ACCESS_KEY=test
 
 # Run job (no --JOB_NAME triggers local mode)
-python jobs/bronze/teamtailor_bronze_job.py --ENTITY_TYPE candidates
+python jobs/bronze/public_api_bronze_job.py --ENTITY_TYPE posts
 ```
 
 #### AWS Glue Mode (Production)
@@ -532,7 +532,7 @@ self.iceberg_catalog = "glue_catalog"    # For Iceberg tables
 
 ### Complete Job Example
 
-See `jobs/bronze/teamtailor_bronze_job.py` for a complete working example.
+See `jobs/bronze/public_api_bronze_job.py` for a complete working example.
 
 Key sections:
 1. Configuration with Pydantic
@@ -560,7 +560,7 @@ class MyBronzeConfig(BronzeJobConfig):
     source_name: str = Field(default="my_source")
     raw_database: str = Field(default="my_raw_db")
     raw_table: str = Field(default="my_raw_table")
-    teamtailor_raw_path: str = Field(default="s3://bucket/raw/")
+    source_raw_path: str = Field(default="s3://bucket/raw/")
     bronze_database: str = Field(default="my_bronze_db")
     bronze_table: str = Field(default="my_bronze_table")
     warehouse_path: str = Field(default="s3://bucket/warehouse/")
@@ -693,7 +693,7 @@ See [LOCAL_DEVELOPMENT.md](../../docs/LOCAL_DEVELOPMENT.md) for testing instruct
 - [LOCAL_DEVELOPMENT.md](../../docs/LOCAL_DEVELOPMENT.md) - Local development guide
 - [BEST_PRACTICES.md](../../docs/BEST_PRACTICES.md) - Coding standards
 - [ARCHITECTURE.md](../../docs/ARCHITECTURE.md) - System architecture
-- [jobs/bronze/teamtailor_bronze_job.py](../../jobs/bronze/teamtailor_bronze_job.py) - Complete example
+- [jobs/bronze/public_api_bronze_job.py](../../jobs/bronze/public_api_bronze_job.py) - Complete example
 
 ---
 
@@ -711,4 +711,4 @@ When modifying these components:
 
 **Version**: 1.0.0  
 **Last Updated**: 2025-10-14  
-**Maintainer**: NaNLABS Data Warehouse Team
+**Maintainer**: Data Platform Team

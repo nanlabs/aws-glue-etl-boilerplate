@@ -58,8 +58,7 @@ sync_secrets_to_localstack() {
   # Sync secrets from AWS Secrets Manager to LocalStack
   echo "📦 Syncing secrets..."
   local secrets_to_sync=(
-    "${secrets_prefix}/teamtailor-api"
-    "${secrets_prefix}/clickup-api"
+    "${secrets_prefix}/public-api"
   )
 
   for secret_name in "${secrets_to_sync[@]}"; do
@@ -135,10 +134,9 @@ sync_secrets_to_localstack() {
     done <<< "${params}"
   fi
 
-  # Sync direct parameters (teamtailor-api-base-url, clickup-api-base-url)
+  # Sync direct parameters (public-api-base-url)
   local direct_params=(
-    "${ssm_prefix}/teamtailor-api-base-url"
-    "${ssm_prefix}/clickup-api-base-url"
+    "${ssm_prefix}/public-api-base-url"
   )
 
   for param_name in "${direct_params[@]}"; do

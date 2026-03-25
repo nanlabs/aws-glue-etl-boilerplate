@@ -17,7 +17,7 @@
 # Default target
 help:
 	@echo ""
-	@echo "🚀 NaNLABS - Data Warehouse Jobs Pipeline"
+	@echo "🚀 AWS Glue ETL Boilerplate"
 	@echo "=================================================="
 	@echo ""
 	@echo "⚠️  This project ONLY supports development with Dev Containers"
@@ -217,16 +217,16 @@ pyshell-run:
 # ==========================================
 # These targets configure LocalStack and execute jobs.
 # Note: Assumes environment variables are loaded via direnv (run 'direnv allow' first)
-# Usage: make run-raw DATA_SOURCE=teamtailor ENTITY_TYPE=candidates [ARGS="--MAX_PAGES_PER_BATCH 2"]
+# Usage: make run-raw DATA_SOURCE=public_api ENTITY_TYPE=posts [ARGS="--MAX_PAGES_PER_BATCH 2"]
 
 # RAW Tier - Generic Raw Jobs
-# Usage: make run-raw DATA_SOURCE=teamtailor ENTITY_TYPE=candidates [ARGS="--MAX_PAGES_PER_BATCH 2"]
+# Usage: make run-raw DATA_SOURCE=public_api ENTITY_TYPE=posts [ARGS="--MAX_PAGES_PER_BATCH 2"]
 # Note: Assumes environment variables are loaded via direnv (run 'direnv allow' first)
 run-raw:
 	@if [ -z "$(DATA_SOURCE)" ] || [ -z "$(ENTITY_TYPE)" ]; then \
 		echo "❌ Usage: make run-raw DATA_SOURCE=<source> ENTITY_TYPE=<entity_type> [ARGS=\"<additional_args>\"]"; \
-		echo "   Data sources: teamtailor, clickup, etc."; \
-		echo "   Example: make run-raw DATA_SOURCE=teamtailor ENTITY_TYPE=candidates ARGS=\"--MAX_PAGES_PER_BATCH 2\""; \
+		echo "   Data sources: public_api"; \
+		echo "   Example: make run-raw DATA_SOURCE=public_api ENTITY_TYPE=posts ARGS=\"--MAX_PAGES_PER_BATCH 2\""; \
 		exit 1; \
 	fi
 	@if [ ! -f "jobs/raw/$(DATA_SOURCE)_raw_job.py" ]; then \
@@ -245,18 +245,19 @@ run-raw:
 		--ENTITY_TYPE $(ENTITY_TYPE) \
 		$${RAW_ZONE_PATH:+--RAW_ZONE_PATH "$$RAW_ZONE_PATH"} \
 		$${WAREHOUSE_PATH:+--WAREHOUSE_PATH "$$WAREHOUSE_PATH"} \
-		$$([ "$(DATA_SOURCE)" = "teamtailor" ] && echo "--TEAMTAILOR_API_SECRET_NAME $${TEAMTAILOR_API_SECRET_NAME:-nan-wl-workloads-data-lake-develop/teamtailor-api}") \
-		$$([ "$(DATA_SOURCE)" = "teamtailor" ] && [ -n "$$TEAMTAILOR_API_BASE_URL_PARAM" ] && echo "--TEAMTAILOR_API_BASE_URL_PARAM $$TEAMTAILOR_API_BASE_URL_PARAM") \
+		$${API_BASE_URL:+--API_BASE_URL "$$API_BASE_URL"} \
+		$${API_ENDPOINT:+--API_ENDPOINT "$$API_ENDPOINT"} \
+		$${API_KEY:+--API_KEY "$$API_KEY"} \
 		$(ARGS)'
 
 # BRONZE Tier - Generic Bronze Jobs
-# Usage: make run-bronze DATA_SOURCE=teamtailor ENTITY_TYPE=candidates [ARGS="--CREATE_TABLES true"]
+# Usage: make run-bronze DATA_SOURCE=public_api ENTITY_TYPE=posts [ARGS="--CREATE_TABLES true"]
 # Note: Assumes environment variables are loaded via direnv (run 'direnv allow' first)
 run-bronze:
 	@if [ -z "$(DATA_SOURCE)" ] || [ -z "$(ENTITY_TYPE)" ]; then \
 		echo "❌ Usage: make run-bronze DATA_SOURCE=<source> ENTITY_TYPE=<entity_type> [ARGS=\"<additional_args>\"]"; \
-		echo "   Data sources: teamtailor, clickup, etc."; \
-		echo "   Example: make run-bronze DATA_SOURCE=teamtailor ENTITY_TYPE=candidates"; \
+		echo "   Data sources: public_api"; \
+		echo "   Example: make run-bronze DATA_SOURCE=public_api ENTITY_TYPE=posts"; \
 		exit 1; \
 	fi
 	@if [ ! -f "jobs/bronze/$(DATA_SOURCE)_bronze_job.py" ]; then \
@@ -273,20 +274,20 @@ run-bronze:
 	# Execute job with common and specific arguments \
 	python jobs/bronze/$(DATA_SOURCE)_bronze_job.py \
 		--ENTITY_TYPE $(ENTITY_TYPE) \
-		--RAW_DATABASE_NAME $${RAW_DATABASE_NAME:-nan_develop_raw_zone_ingestion} \
-		--BRONZE_DATABASE_NAME $${BRONZE_DATABASE_NAME:-nan_develop_bronze_zone_ingestion} \
+		--RAW_DATABASE_NAME $${RAW_DATABASE_NAME:-raw_zone} \
+		--BRONZE_DATABASE_NAME $${BRONZE_DATABASE_NAME:-bronze_zone} \
 		$${RAW_ZONE_PATH:+--RAW_ZONE_PATH "$$RAW_ZONE_PATH"} \
 		$${WAREHOUSE_PATH:+--WAREHOUSE_PATH "$$WAREHOUSE_PATH"} \
 		$(ARGS)'
 
 # SILVER Tier - Generic Silver Jobs
-# Usage: make run-silver DATA_SOURCE=teamtailor ENTITY_TYPE=candidate_profiles [ARGS="--CREATE_TABLES true"]
+# Usage: make run-silver DATA_SOURCE=public_api ENTITY_TYPE=posts [ARGS="--CREATE_TABLES true"]
 # Note: Assumes environment variables are loaded via direnv (run 'direnv allow' first)
 run-silver:
 	@if [ -z "$(DATA_SOURCE)" ] || [ -z "$(ENTITY_TYPE)" ]; then \
 		echo "❌ Usage: make run-silver DATA_SOURCE=<source> ENTITY_TYPE=<entity_type> [ARGS=\"<additional_args>\"]"; \
-		echo "   Data sources: teamtailor, clickup, etc."; \
-		echo "   Example: make run-silver DATA_SOURCE=teamtailor ENTITY_TYPE=candidate_profiles"; \
+		echo "   Data sources: public_api"; \
+		echo "   Example: make run-silver DATA_SOURCE=public_api ENTITY_TYPE=posts"; \
 		exit 1; \
 	fi
 	@if [ ! -f "jobs/silver/$(DATA_SOURCE)_silver_job.py" ]; then \
@@ -303,19 +304,19 @@ run-silver:
 	# Execute job with common and specific arguments \
 	python jobs/silver/$(DATA_SOURCE)_silver_job.py \
 		--ENTITY_TYPE $(ENTITY_TYPE) \
-		--BRONZE_DATABASE_NAME $${BRONZE_DATABASE_NAME:-nan_develop_bronze_zone_ingestion} \
-		--SILVER_DATABASE_NAME $${SILVER_DATABASE_NAME:-nan_develop_silver_analytics} \
+		--BRONZE_DATABASE_NAME $${BRONZE_DATABASE_NAME:-bronze_zone} \
+		--SILVER_DATABASE_NAME $${SILVER_DATABASE_NAME:-silver_zone} \
 		$${WAREHOUSE_PATH:+--WAREHOUSE_PATH "$$WAREHOUSE_PATH"} \
 		$(ARGS)'
 
 # GOLD Tier - Generic Gold Jobs
-# Usage: make run-gold DATA_SOURCE=teamtailor ENTITY_TYPE=talent_time_to_fill [ARGS="--CREATE_TABLES true"]
+# Usage: make run-gold DATA_SOURCE=public_api ENTITY_TYPE=posts [ARGS="--CREATE_TABLES true"]
 # Note: Assumes environment variables are loaded via direnv (run 'direnv allow' first)
 run-gold:
 	@if [ -z "$(DATA_SOURCE)" ] || [ -z "$(ENTITY_TYPE)" ]; then \
 		echo "❌ Usage: make run-gold DATA_SOURCE=<source> ENTITY_TYPE=<entity_type> [ARGS=\"<additional_args>\"]"; \
-		echo "   Data sources: teamtailor, clickup, etc."; \
-		echo "   Example: make run-gold DATA_SOURCE=teamtailor ENTITY_TYPE=talent_time_to_fill"; \
+		echo "   Data sources: public_api"; \
+		echo "   Example: make run-gold DATA_SOURCE=public_api ENTITY_TYPE=posts"; \
 		exit 1; \
 	fi
 	@if [ ! -f "jobs/gold/$(DATA_SOURCE)_gold_job.py" ]; then \
@@ -332,8 +333,8 @@ run-gold:
 	# Execute job with common and specific arguments \
 		python jobs/gold/$(DATA_SOURCE)_gold_job.py \
 		--ENTITY_TYPE $(ENTITY_TYPE) \
-		--SILVER_DATABASE_NAME $${SILVER_DATABASE_NAME:-nan_develop_silver_analytics} \
-		--GOLD_DATABASE_NAME $${GOLD_DATABASE_NAME:-nan_develop_gold_analytics} \
+		--SILVER_DATABASE_NAME $${SILVER_DATABASE_NAME:-silver_zone} \
+		--GOLD_DATABASE_NAME $${GOLD_DATABASE_NAME:-gold_zone} \
 		$${WAREHOUSE_PATH:+--WAREHOUSE_PATH "$$WAREHOUSE_PATH"} \
 		$(ARGS)'
 
@@ -357,7 +358,7 @@ migrate-dry-run:
 	@echo "🔍 Migration configuration (dev container):"
 	@echo "Environment: dev-container"
 	@echo "Bucket: local-bucket"
-	@echo "Database Prefix: nan"
+	@echo "Database Prefix: boilerplate"
 	@echo "Migrations Path: migrations/"
 	@echo "Raw Zone Path: s3://local-bucket/bronze/"
 	@echo "Iceberg Database: local_iceberg_db"

@@ -1,7 +1,7 @@
 {
-  "name": "nan-data-jobs-danger",
+  "name": "aws-glue-etl-boilerplate-danger",
   "version": "1.0.0",
-  "description": "Danger CI for NaNLABS Data Jobs Repository",
+  "description": "Danger CI for AWS Glue ETL boilerplate repository",
   "main": "index.js",
   "directories": {
     "example": "examples"
@@ -12,14 +12,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/nanlabs/internal-data-lake-jobs.git"
+    "url": "git+https://github.com/your-org/aws-glue-etl-boilerplate.git"
   },
-  "author": "NaNLABS",
+  "author": "Data Platform Team",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/nanlabs/internal-data-lake-jobs/issues"
+    "url": "https://github.com/your-org/aws-glue-etl-boilerplate/issues"
   },
-  "homepage": "https://github.com/nanlabs/internal-data-lake-jobs#readme",
+  "homepage": "https://github.com/your-org/aws-glue-etl-boilerplate#readme",
   "dependencies": {
     "danger": "^13.0.4"
   },

@@ -11,9 +11,9 @@ Features:
 - Declarative approach - no hidden defaults or auto-configuration
 
 Usage:
-    from jobs.bronze.teamtailor_bronze_job import TeamTailorBronzeConfig
+    from jobs.bronze.public_api_bronze_job import PublicApiBronzeConfig
 
-    config = TeamTailorBronzeConfig.from_args()
+    config = PublicApiBronzeConfig.from_args()
     # All parameters are validated and ready to use
     print(config.bronze_database_name)
 """
@@ -50,7 +50,7 @@ class JobConfigBase(ConfigBase):
     4. Error if required field is missing
 
     Attributes:
-        source_name: Name of the source system (e.g., 'teamtailor', 'salesforce')
+        source_name: Name of the source system (e.g., 'public_api', 'salesforce')
         warehouse_path: S3 path for Iceberg warehouse (from Terraform)
         raw_zone_path: Full S3 path to raw zone location (required)
         create_tables: Whether to create/recreate tables
@@ -60,7 +60,7 @@ class JobConfigBase(ConfigBase):
     # Common fields for all jobs
     source_name: str = Field(
         default_factory=lambda: get_required_env_var("SOURCE_NAME"),
-        description="Name of the source system (e.g., 'teamtailor', 'salesforce')",
+        description="Name of the source system (e.g., 'public_api', 'salesforce')",
     )
     warehouse_path: str = Field(
         default_factory=lambda: get_required_env_var("WAREHOUSE_PATH"),
@@ -267,7 +267,7 @@ class GoldJobConfig(JobConfigBase):
 
 
 # ==========================================
-# NOTE: Source-specific configs (TeamTailorRawConfig, etc.)
+# NOTE: Source-specific configs (PublicApiRawConfig, etc.)
 # have been moved to their respective job files for better modularity.
 #
 # If you need a source-specific config, find it in:
@@ -341,7 +341,7 @@ def validate_config(config: JobConfigBase) -> None:
 
 
 # Export all BASE configuration classes for easy importing
-# Note: Source-specific configs (TeamTailor*, etc.) are now in their respective job files
+# Note: Source-specific configs (PublicApi*, etc.) are now in their respective job files
 __all__ = [
     "MedallionLayer",
     "JobConfigBase",

@@ -7,7 +7,7 @@ correctly. These tests focus on:
 - Configuration and validation integration
 - Job component interactions
 - Utility component integration
-- Team Tailor-specific component integration
+- Source-specific component integration
 
 ## Running Integration Tests
 
@@ -28,7 +28,7 @@ will be SKIPPED by default. To run integration tests, use:
 - `test_config_validation_integration.py` - Config and validation working together
 - `test_job_integration.py` - Job component integration tests
 - `test_utils_integration.py` - Utility component integration tests
-- `test_teamtailor_integration.py` - Team Tailor component integration tests
+- `test_source_integration.py` - Source component integration tests
 
 These tests are designed to be:
 - Simple and focused on component interactions

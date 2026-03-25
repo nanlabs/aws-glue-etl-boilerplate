@@ -310,9 +310,9 @@ setup(
     name='${PACKAGE_NAME}',
     version='${PACKAGE_VERSION}',
     description='AWS Glue optimized bundle containing dependencies for ${PACKAGE_NAME}',
-    long_description='Optimized wheel bundle for AWS Glue 5.0 containing all dependencies for the NaNLABS Data Warehouse Jobs Pipeline.',
-    author='NaNLABS',
-    author_email='engineering@nanlabs.com',
+    long_description='Optimized wheel bundle for AWS Glue 5.0 containing all dependencies for the ETL boilerplate.',
+    author='Data Platform Team',
+    author_email='data-platform@example.com',
     packages=['${PACKAGE_NAME}'],
     include_package_data=True,
     package_data={
@@ -340,7 +340,7 @@ cat >"$UBER_WHEEL_DIR/${PACKAGE_NAME}/__init__.py" <<EOF
 """
 ${PACKAGE_NAME} - AWS Glue optimized dependencies bundle
 
-This package contains all dependencies for the NaNLABS Data Warehouse Jobs Pipeline,
+This package contains all dependencies for the ETL boilerplate,
 optimized for AWS Glue 5.0 (Python 3.11).
 
 Usage:

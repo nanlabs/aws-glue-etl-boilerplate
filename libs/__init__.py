@@ -1,5 +1,5 @@
 """
-NaNLABS Data Warehouse Libraries
+AWS Glue ETL Boilerplate Libraries
 
 This package provides reusable components for data warehouse jobs:
 

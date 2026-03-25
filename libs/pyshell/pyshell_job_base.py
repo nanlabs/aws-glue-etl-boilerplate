@@ -10,6 +10,7 @@ Features:
 - Pydantic-based configuration management
 - Centralized logging and error handling
 - Extract-Transform-Load pattern
+- Environment/Glue-parameter based authentication values
 
 Usage:
     from libs.base import PyShellJobBase, RawJobConfig
@@ -102,7 +103,6 @@ class PyShellJobBase:
 
         # Initialize AWS clients
         self.s3_client = self._initialize_s3_client()
-        self.secrets_client = self._initialize_secrets_client()
 
         # Fallback: Use environment variable if available
         if (
@@ -124,16 +124,6 @@ class PyShellJobBase:
 
         return create_boto3_client(
             service_name="s3",
-            region_name=self.config.aws_region,
-            endpoint_url=self.config.aws_endpoint_url,
-        )
-
-    def _initialize_secrets_client(self):
-        """Initialize Secrets Manager client with configuration."""
-        from libs.common.utils.aws import create_boto3_client
-
-        return create_boto3_client(
-            service_name="secretsmanager",
             region_name=self.config.aws_region,
             endpoint_url=self.config.aws_endpoint_url,
         )
@@ -249,7 +239,7 @@ class PyShellJobBase:
         current_time = datetime.now()
 
         # Use raw_write_path if available (source-specific path), otherwise use raw_zone_path
-        # This allows source-specific organization like teamtailor/{entity_type}/
+        # This allows organization like <source_name>/<entity_type>/
         write_path = (
             getattr(self.config, "raw_write_path", None) or self.config.raw_zone_path
         )
