@@ -6,6 +6,8 @@ from AWS Secrets Manager and SSM Parameter Store, supporting multiple SSH key
 formats and consistent boto3 client usage.
 """
 
+from __future__ import annotations
+
 import json
 import os
 import tempfile

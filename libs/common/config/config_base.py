@@ -54,15 +54,15 @@ class ConfigBase(BaseModel):
         description="Logging level (DEBUG, INFO, WARNING, ERROR, CRITICAL)",
     )
     environment: str = Field(
-        default_factory=lambda: os.getenv("ENVIRONMENT"),
+        default_factory=lambda: os.getenv("ENVIRONMENT", "develop"),
         description="Environment name (develop, staging, prod)",
     )
     stage: str = Field(
-        default_factory=lambda: os.getenv("STAGE"),
+        default_factory=lambda: os.getenv("STAGE", "local"),
         description="Stage name (local, dev, staging, prod)",
     )
     aws_region: str = Field(
-        default_factory=lambda: os.getenv("AWS_REGION"),
+        default_factory=lambda: os.getenv("AWS_REGION", "us-east-1"),
         description="AWS region for services",
     )
 

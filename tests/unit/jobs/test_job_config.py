@@ -68,17 +68,17 @@ class TestJobConfiguration:
 
         config = SilverJobConfig(
             job_name="test_job",
-            bronze_database="test_bronze_db",
-            bronze_table="test_bronze_table",
-            silver_database="test_silver_db",
-            silver_table="test_silver_table",
+            bronze_database_name="test_bronze_db",
+            bronze_table_name="test_bronze_table",
+            silver_database_name="test_silver_db",
+            silver_table_name="test_silver_table",
         )
 
         assert config.job_name == "test_job"
         assert config.source_name == "test_source"
         assert config.environment == "develop"
-        assert config.bronze_database == "test_bronze_db"
-        assert config.silver_database == "test_silver_db"
+        assert config.bronze_database_name == "test_bronze_db"
+        assert config.silver_database_name == "test_silver_db"
 
     def test_config_validation_fails_on_missing_env_vars(self):
         """Test that configuration fails without required environment variables."""
@@ -184,8 +184,8 @@ class TestDatabaseNamingConventions:
         config = BronzeJobConfig(job_name="test_job")
 
         # Database names should be read from environment
-        assert config.bronze_database == "test_project_bronze_db"
-        assert config.raw_database == "test_project_raw_db"
+        assert config.bronze_database_name == "test_project_bronze_db"
+        assert config.raw_database_name == "test_project_raw_db"
 
     @patch.dict("os.environ", TEST_ENV)
     def test_silver_config_database_parameters(self):
@@ -194,17 +194,17 @@ class TestDatabaseNamingConventions:
 
         config = SilverJobConfig(
             job_name="test_job",
-            bronze_database="test_bronze_db",
-            bronze_table="test_bronze_table",
-            silver_database="test_silver_db",
-            silver_table="test_silver_table",
+            bronze_database_name="test_bronze_db",
+            bronze_table_name="test_bronze_table",
+            silver_database_name="test_silver_db",
+            silver_table_name="test_silver_table",
         )
 
         # Parameters should be set as provided
-        assert config.bronze_database == "test_bronze_db"
-        assert config.silver_database == "test_silver_db"
-        assert config.bronze_table == "test_bronze_table"
-        assert config.silver_table == "test_silver_table"
+        assert config.bronze_database_name == "test_bronze_db"
+        assert config.silver_database_name == "test_silver_db"
+        assert config.bronze_table_name == "test_bronze_table"
+        assert config.silver_table_name == "test_silver_table"
 
 
 class TestPathValidation:

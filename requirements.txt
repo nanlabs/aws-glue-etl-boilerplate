@@ -28,3 +28,4 @@ sortedcontainers==2.4.0
 strictyaml==1.7.3; python_full_version >= '3.7.0'
 typing-extensions==4.14.1; python_version >= '3.9'
 urllib3==2.5.0; python_version >= '3.9'
+paramiko>=2.11.0
