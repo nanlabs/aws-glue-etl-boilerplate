@@ -2,7 +2,6 @@
 
 from unittest.mock import patch
 
-
 from jobs.bronze.public_api_bronze_job import PublicApiBronzeConfig
 from jobs.gold.public_api_gold_job import PublicApiGoldConfig, PublicApiGoldJob
 from jobs.raw.public_api_raw_job import PublicApiRawConfig, PublicApiRawJob
