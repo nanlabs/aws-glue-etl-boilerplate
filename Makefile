@@ -12,10 +12,11 @@
 #
 # All commands below are designed to run INSIDE the dev container environment.
 
-.PHONY: help install install-dev requirements clean test test-unit test-integration test-coverage lint format autofix validate migrate migrate-upload migrate-dry-run services-status spark-submit pyshell-run notebook prepare-localstack clean-localstack aws-login run-raw run-bronze run-silver run-gold
+.PHONY: help bootstrap install install-dev requirements clean test test-unit test-integration test-coverage lint format autofix validate migrate migrate-upload migrate-dry-run services-status spark-submit pyshell-run notebook prepare-localstack clean-localstack aws-login run-raw run-bronze run-silver run-gold
 
 # Default target
 help:
+
 	@echo ""
 	@echo "🚀 AWS Glue ETL Boilerplate"
 	@echo "=================================================="
@@ -25,6 +26,7 @@ help:
 	@echo "   CLI: devcontainer up --workspace-folder ."
 	@echo ""
 	@echo "📦 Environment & Dependencies:"
+	@echo "  bootstrap       - One-command local setup (uv venv + deps + sanity check)"
 	@echo "  install         - Install production dependencies"
 	@echo "  install-dev     - Install development dependencies"
 	@echo "  requirements    - Generate requirements.txt from Pipfile"
@@ -59,7 +61,7 @@ help:
 	@echo "  run-bronze DATA_SOURCE=<source> ENTITY_TYPE=<type> [ARGS=\"<args>\"] - Run Bronze job"
 	@echo "  run-silver DATA_SOURCE=<source> ENTITY_TYPE=<type> [ARGS=\"<args>\"] - Run Silver job"
 	@echo "  run-gold DATA_SOURCE=<source> ENTITY_TYPE=<type> [ARGS=\"<args>\"] - Run Gold job"
-	@echo "   Example: make run-raw DATA_SOURCE=teamtailor ENTITY_TYPE=candidates"
+	@echo "   Example: make run-raw DATA_SOURCE=public_api ENTITY_TYPE=posts"
 	@echo ""
 	@echo "🧪 Testing & Quality:"
 	@echo "  test            - Run all tests (unit + integration)"
@@ -80,6 +82,46 @@ help:
 	@echo "  glue-wheels     - Build AWS Glue optimized uber wheels"
 	@echo "  clean-build     - Clean build artifacts"
 	@echo "  package-clean   - Clean and rebuild packages"
+
+# One-command local setup: installs uv (if missing), creates .venv, installs all deps, runs sanity check
+bootstrap:
+	@echo ""
+	@echo "🚀 Bootstrapping local development environment..."
+	@echo ""
+	@if ! command -v uv >/dev/null 2>&1; then \
+		echo "📦 uv not found — installing..."; \
+		curl -LsSf https://astral.sh/uv/install.sh | sh; \
+		. "$$HOME/.local/bin/env"; \
+		echo "✅ uv installed"; \
+	else \
+		echo "✅ uv already available: $$(uv --version)"; \
+	fi
+	@echo ""
+	@echo "🐍 Creating virtual environment with Python 3.11..."
+	@. "$$HOME/.local/bin/env" 2>/dev/null || true; \
+	uv venv --allow-existing --python 3.11 2>&1 || { echo "❌ Could not create venv with Python 3.11. Is it installed?"; exit 1; }
+	@echo ""
+	@echo "📦 Installing runtime dependencies..."
+	@. "$$HOME/.local/bin/env" 2>/dev/null || true; \
+	uv pip install -r requirements.txt --python .venv/bin/python
+	@echo ""
+	@echo "🔬 Installing dev + test dependencies..."
+	@. "$$HOME/.local/bin/env" 2>/dev/null || true; \
+	uv pip install pytest pytest-cov pytest-mock pyspark==3.5.1 typing-inspection --python .venv/bin/python
+	@echo ""
+	@echo "📎 Installing package in editable mode..."
+	@. "$$HOME/.local/bin/env" 2>/dev/null || true; \
+	uv pip install -e . --no-deps --python .venv/bin/python
+	@echo ""
+	@echo "🧪 Running sanity check (unit tests)..."
+	@. "$$HOME/.local/bin/env" 2>/dev/null || true; \
+	.venv/bin/python -m pytest tests/unit/ -q --no-header --tb=short 2>&1 || { echo "❌ Sanity check failed"; exit 1; }
+	@echo ""
+	@echo "✅ Bootstrap complete!"
+	@echo "   Activate with: source .venv/bin/activate"
+	@echo "   Copy env:      cp .env.example .env  (then edit .env)"
+	@echo "   Run tests:     make test-unit"
+	@echo ""
 
 # Install production dependencies
 install:
@@ -156,19 +198,35 @@ aws-login:
 
 # Run all tests
 test:
-	pipenv run python run_tests.py --type all
+	@if [ -f .venv/bin/python ]; then \
+		.venv/bin/python run_tests.py --type all; \
+	else \
+		pipenv run python run_tests.py --type all; \
+	fi
 
 # Run unit tests only
 test-unit:
-	pipenv run python run_tests.py --type unit
+	@if [ -f .venv/bin/python ]; then \
+		.venv/bin/python -m pytest tests/unit/ -q --no-header --tb=short; \
+	else \
+		pipenv run python run_tests.py --type unit; \
+	fi
 
 # Run integration tests only
 test-integration:
-	pipenv run python run_tests.py --type integration
+	@if [ -f .venv/bin/python ]; then \
+		.venv/bin/python run_tests.py --type integration; \
+	else \
+		pipenv run python run_tests.py --type integration; \
+	fi
 
 # Run tests with coverage
 test-coverage:
-	pipenv run python run_tests.py --type all --coverage
+	@if [ -f .venv/bin/python ]; then \
+		.venv/bin/python run_tests.py --type all --coverage; \
+	else \
+		pipenv run python run_tests.py --type all --coverage; \
+	fi
 
 # Run code linting
 lint:
@@ -190,7 +248,7 @@ autofix:
 spark-submit:
 	@if [ -z "$(JOB)" ]; then \
 		echo "❌ Usage: make spark-submit JOB=<job_path> [ARGS=\"<args>\"]"; \
-		echo "   Example: make spark-submit JOB=jobs/bronze/teamtailor_bronze_job.py ARGS=\"--CREATE_TABLES true --ENTITY_TYPE candidates\""; \
+		echo "   Example: make spark-submit JOB=jobs/bronze/public_api_bronze_job.py ARGS=\"--CREATE_TABLES true --ENTITY_TYPE posts\""; \
 		exit 1; \
 	fi
 	@echo "🚀 Running Spark job locally: $(JOB)"
@@ -203,7 +261,7 @@ spark-submit:
 pyshell-run:
 	@if [ -z "$(JOB)" ]; then \
 		echo "❌ Usage: make pyshell-run JOB=<job_path> [ARGS=\"<args>\"]"; \
-		echo "   Example: make pyshell-run JOB=jobs/raw/teamtailor_raw_job.py ARGS=\"--ENTITY_TYPE candidates --START_DATE 2025-01-01\""; \
+		echo "   Example: make pyshell-run JOB=jobs/raw/public_api_raw_job.py ARGS=\"--ENTITY_TYPE posts\""; \
 		exit 1; \
 	fi
 	@echo "🚀 Running PyShell job locally: $(JOB)"
