@@ -196,6 +196,7 @@ The config system resolves parameters automatically — no wiring needed beyond 
 | [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) | Local run examples |
 | [docs/ENVIRONMENT_VARIABLES.md](docs/ENVIRONMENT_VARIABLES.md) | All supported env vars |
 | [docs/LIBS_STRUCTURE.md](docs/LIBS_STRUCTURE.md) | Library layout |
+| [docs/MIGRATION_GUIDE.md](docs/MIGRATION_GUIDE.md) | Private source migration checklist |
 | [docs/TESTING.md](docs/TESTING.md) | Testing conventions |
 | [CONTRIBUTING.md](CONTRIBUTING.md) | Contribution guidelines |
 | [AGENTS.md](AGENTS.md) | AI agent usage guide |
