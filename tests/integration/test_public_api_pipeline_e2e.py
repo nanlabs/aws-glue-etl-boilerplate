@@ -16,7 +16,6 @@ import hashlib
 import json
 from datetime import datetime
 from typing import List
-from unittest.mock import patch
 
 import pytest
 
@@ -26,7 +25,6 @@ from libs.common import (
     RawJobConfig,
     SilverJobConfig,
 )
-
 
 # ============================================================================
 # Test Data Fixtures

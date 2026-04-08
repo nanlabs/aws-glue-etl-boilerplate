@@ -12,7 +12,7 @@
 #
 # All commands below are designed to run INSIDE the dev container environment.
 
-.PHONY: help bootstrap install install-dev requirements clean test test-unit test-integration test-coverage lint format autofix validate migrate migrate-upload migrate-dry-run services-status spark-submit pyshell-run notebook prepare-localstack clean-localstack aws-login run-raw run-bronze run-silver run-gold
+.PHONY: help bootstrap install install-dev requirements clean test test-unit test-integration test-coverage lint type-check format autofix validate migrate migrate-upload migrate-dry-run services-status spark-submit pyshell-run notebook prepare-localstack clean-localstack aws-login run-raw run-bronze run-silver run-gold
 
 # Default target
 help:
@@ -37,7 +37,8 @@ help:
 	@echo "  test-unit       - Run unit tests only"
 	@echo "  test-integration- Run integration tests only"
 	@echo "  test-coverage   - Run tests with coverage report"
-	@echo "  lint            - Run code linting"
+	@echo "  lint            - Run code linting with Ruff"
+	@echo "  type-check      - Run mypy on core boilerplate modules"
 	@echo "  format          - Format code with black"
 	@echo "  autofix         - Auto-fix code formatting and imports"
 	@echo ""
@@ -68,7 +69,8 @@ help:
 	@echo "  test-unit       - Run unit tests only"
 	@echo "  test-integration- Run integration tests only"
 	@echo "  test-coverage   - Run tests with coverage report"
-	@echo "  lint            - Run code linting with flake8"
+	@echo "  lint            - Run code linting with Ruff"
+	@echo "  type-check      - Run mypy on core boilerplate modules"
 	@echo "  format          - Format code with black"
 	@echo "  autofix         - Auto-fix code formatting and imports"
 	@echo ""
@@ -107,7 +109,7 @@ bootstrap:
 	@echo ""
 	@echo "🔬 Installing dev + test dependencies..."
 	@. "$$HOME/.local/bin/env" 2>/dev/null || true; \
-	uv pip install pytest pytest-cov pytest-mock pyspark==3.5.1 typing-inspection --python .venv/bin/python
+	uv pip install pytest pytest-cov pytest-mock pyspark==3.5.1 typing-inspection ruff mypy --python .venv/bin/python
 	@echo ""
 	@echo "📎 Installing package in editable mode..."
 	@. "$$HOME/.local/bin/env" 2>/dev/null || true; \
@@ -230,7 +232,27 @@ test-coverage:
 
 # Run code linting
 lint:
-	pipenv run flake8 .
+	@if [ -f .venv/bin/python ]; then \
+		.venv/bin/python -m ruff check libs jobs tests; \
+	else \
+		pipenv run ruff check libs jobs tests; \
+	fi
+
+# Run static type checks
+type-check:
+	@if [ -f .venv/bin/python ]; then \
+		.venv/bin/python -m mypy \
+			libs/common/config/config_base.py \
+			jobs/bronze/public_api_bronze_job.py \
+			jobs/silver/public_api_silver_job.py \
+			jobs/gold/public_api_gold_job.py; \
+	else \
+		pipenv run mypy \
+			libs/common/config/config_base.py \
+			jobs/bronze/public_api_bronze_job.py \
+			jobs/silver/public_api_silver_job.py \
+			jobs/gold/public_api_gold_job.py; \
+	fi
 
 # Format code with black
 format:
