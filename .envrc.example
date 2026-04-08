@@ -57,7 +57,7 @@ load_localstack_params() {
     "${ssm_prefix}/data-lake/bronze_database_name:BRONZE_DATABASE_NAME"
     "${ssm_prefix}/data-lake/silver_database_name:SILVER_DATABASE_NAME"
     "${ssm_prefix}/data-lake/gold_database_name:GOLD_DATABASE_NAME"
-    "${ssm_prefix}/teamtailor-api-base-url:TEAMTAILOR_API_BASE_URL_PARAM"
+    "${ssm_prefix}/public-api-base-url:PUBLIC_API_BASE_URL_PARAM"
   )
 
   for mapping in "${param_map[@]}"; do
