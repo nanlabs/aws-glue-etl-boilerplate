@@ -12,7 +12,7 @@
 #
 # All commands below are designed to run INSIDE the dev container environment.
 
-.PHONY: help bootstrap install install-dev requirements clean test test-unit test-integration test-coverage lint type-check format autofix validate migrate migrate-upload migrate-dry-run services-status spark-submit pyshell-run notebook prepare-localstack clean-localstack aws-login run-raw run-bronze run-silver run-gold
+.PHONY: help bootstrap install install-dev requirements clean test test-unit test-integration test-coverage lint type-check format autofix validate migrate migrate-upload migrate-dry-run services-status spark-submit pyshell-run notebook prepare-localstack clean-localstack aws-login scaffold-source run-raw run-bronze run-silver run-gold
 
 # Default target
 help:
@@ -62,7 +62,9 @@ help:
 	@echo "  run-bronze DATA_SOURCE=<source> ENTITY_TYPE=<type> [ARGS=\"<args>\"] - Run Bronze job"
 	@echo "  run-silver DATA_SOURCE=<source> ENTITY_TYPE=<type> [ARGS=\"<args>\"] - Run Silver job"
 	@echo "  run-gold DATA_SOURCE=<source> ENTITY_TYPE=<type> [ARGS=\"<args>\"] - Run Gold job"
+	@echo "  scaffold-source SOURCE=<source> [ENTITY_TYPE=<type>] - Generate raw/bronze/silver/gold job templates"
 	@echo "   Example: make run-raw DATA_SOURCE=public_api ENTITY_TYPE=posts"
+	@echo "   Example: make scaffold-source SOURCE=crm_api ENTITY_TYPE=customers"
 	@echo ""
 	@echo "🧪 Testing & Quality:"
 	@echo "  test            - Run all tests (unit + integration)"
@@ -197,6 +199,15 @@ clean-localstack:
 aws-login:
 	@echo "🔐 Logging in to AWS SSO for data workload accounts..."
 	@./scripts/aws-login.sh
+
+# Generate medallion source templates
+scaffold-source:
+	@if [ -z "$(SOURCE)" ]; then \
+		echo "❌ Usage: make scaffold-source SOURCE=<source_name> [ENTITY_TYPE=<entity_type>]"; \
+		echo "   Example: make scaffold-source SOURCE=crm_api ENTITY_TYPE=customers"; \
+		exit 1; \
+	fi
+	@./scripts/scaffold-source.sh "$(SOURCE)" "$(ENTITY_TYPE)"
 
 # Run all tests
 test:
