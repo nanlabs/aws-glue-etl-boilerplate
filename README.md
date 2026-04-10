@@ -80,22 +80,17 @@ See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for more details.
 
 ## Quick Start
 
-### 1. Clone and create the virtual environment
+### 1. Clone and bootstrap
 
 ```bash
 git clone https://github.com/your-org/aws-glue-etl-boilerplate.git
 cd aws-glue-etl-boilerplate
-
-# install uv if not already available
-curl -LsSf https://astral.sh/uv/install.sh | sh
-source $HOME/.local/bin/env
-
-uv venv --python 3.11
-source .venv/bin/activate
-uv pip install -r requirements.txt
-uv pip install pytest pytest-cov pytest-mock pyspark==3.5.1
-uv pip install -e . --no-deps
+make bootstrap
 ```
+
+This sets up `uv`, creates `.venv`, installs runtime/dev dependencies, and runs a sanity test pass.
+
+Optional manual setup is still available via `uv` if you need a custom environment.
 
 ### 2. Set up environment variables
 
@@ -164,8 +159,12 @@ make test-unit
 # or:
 python -m pytest tests/unit/ -q
 
-# Integration tests (requires LocalStack running)
+# Integration tests (includes smoke coverage; some tests may require LocalStack/Spark)
 make test-integration
+
+# Quality checks
+make lint
+make type-check
 ```
 
 See [docs/TESTING.md](docs/TESTING.md) for conventions and marker usage.
@@ -174,15 +173,20 @@ See [docs/TESTING.md](docs/TESTING.md) for conventions and marker usage.
 
 ## Adding a New Data Source
 
-1. **Create config + job** in each layer following the `public_api_*` files as a template:
-   - `jobs/raw/{source}_raw_job.py` — extend `RawJobConfig` + `PyShellJobBase`
-   - `jobs/bronze/{source}_bronze_job.py` — extend `BronzeJobConfig` + `BronzeJobBase`
-   - `jobs/silver/{source}_silver_job.py` — extend `SilverJobConfig` + `SilverJobBase`
-   - `jobs/gold/{source}_gold_job.py` — extend `GoldJobConfig` + `GoldJobBase`
+1. Generate job and unit test templates:
+       ```bash
+       make scaffold-source SOURCE=my_source ENTITY_TYPE=entities
+       ```
 
-2. **Add unit tests** under `tests/unit/jobs/test_{source}_jobs.py`.
+2. Implement source-specific extraction/transform logic in generated files:
+       - `jobs/raw/{source}_raw_job.py`
+       - `jobs/bronze/{source}_bronze_job.py`
+       - `jobs/silver/{source}_silver_job.py`
+       - `jobs/gold/{source}_gold_job.py`
 
-3. **Add env vars** for the new source in `.env.example`.
+3. Adapt the generated unit tests under `tests/unit/jobs/test_{source}_jobs.py`.
+
+4. Add/adjust env vars in `.env.example` if needed.
 
 The config system resolves parameters automatically — no wiring needed beyond the field definitions.
 
@@ -196,6 +200,7 @@ The config system resolves parameters automatically — no wiring needed beyond 
 | [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) | Local run examples |
 | [docs/ENVIRONMENT_VARIABLES.md](docs/ENVIRONMENT_VARIABLES.md) | All supported env vars |
 | [docs/LIBS_STRUCTURE.md](docs/LIBS_STRUCTURE.md) | Library layout |
+| [docs/MIGRATION_GUIDE.md](docs/MIGRATION_GUIDE.md) | Private source migration checklist |
 | [docs/TESTING.md](docs/TESTING.md) | Testing conventions |
 | [CONTRIBUTING.md](CONTRIBUTING.md) | Contribution guidelines |
 | [AGENTS.md](AGENTS.md) | AI agent usage guide |

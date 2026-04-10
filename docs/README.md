@@ -10,3 +10,4 @@ This boilerplate provides a generic Medallion-style AWS Glue ETL foundation.
 - `ENVIRONMENT_VARIABLES.md`: runtime configuration
 - `ARCHITECTURE.md`: high-level project architecture
 - `TESTING.md`: testing conventions
+- `MIGRATION_GUIDE.md`: move private sources to boilerplate patterns
