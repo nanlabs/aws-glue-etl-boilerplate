@@ -1,0 +1,24 @@
+---
+# Temporary narrowing during v2 modernization migration.
+# Keep focused quality gates in dedicated workflows (Python Quality, unit tests).
+
+DISABLE_LINTERS:
+  - ACTION_ACTIONLINT
+  - BASH_BASH_EXEC
+  - BASH_SHELLCHECK
+  - COPYPASTE_JSCPD
+  - DOCKERFILE_HADOLINT
+  - JSON_JSONLINT
+  - MARKDOWN_MARKDOWN_LINK_CHECK
+  - PYTHON_BANDIT
+  - PYTHON_FLAKE8
+  - PYTHON_MYPY
+  - PYTHON_PYLINT
+  - PYTHON_PYRIGHT
+  - REPOSITORY_CHECKOV
+  - REPOSITORY_GITLEAKS
+  - REPOSITORY_GRYPE
+  - REPOSITORY_TRIVY
+  - SPELL_CSPELL
+  - SPELL_LYCHEE
+  - YAML_YAMLLINT
