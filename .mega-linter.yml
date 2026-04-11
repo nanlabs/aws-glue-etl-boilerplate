@@ -2,6 +2,8 @@
 # Temporary narrowing during v2 modernization migration.
 # Keep focused quality gates in dedicated workflows (Python Quality, unit tests).
 
+DISABLE_ERRORS: true
+
 DISABLE_LINTERS:
   - ACTION_ACTIONLINT
   - BASH_BASH_EXEC

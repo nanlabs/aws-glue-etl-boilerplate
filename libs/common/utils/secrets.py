@@ -129,13 +129,11 @@ class SecretsManager:
         explicit_secret_name = os.getenv(env_var_name)
 
         if explicit_secret_name:
-            logger.info(
-                f"Using explicit secret name from {env_var_name}: {explicit_secret_name}"
-            )
+            logger.info("Using explicit secret name from environment override")
             return self.get_secret(explicit_secret_name, use_cache)
 
         # Option 2: Use convention-based naming
-        logger.info(f"Using convention-based secret name: {secret_key}")
+        logger.info("Using convention-based secret name")
         return self.get_secret(secret_key, use_cache)
 
     def get_secret_json_by_key(
@@ -168,8 +166,8 @@ class SecretsManager:
         try:
             secret_dict: Dict[str, Any] = json.loads(secret_value)
             return secret_dict.get(json_key, default)
-        except (json.JSONDecodeError, TypeError) as e:
-            logger.error(f"Error parsing JSON secret {secret_key}: {str(e)}")
+        except (json.JSONDecodeError, TypeError):
+            logger.error("Error parsing JSON secret payload")
             return default
 
     def get_api_key_from_secret(
@@ -213,14 +211,12 @@ class SecretsManager:
                     f"API key field '{api_key_field}' not found in JSON secret '{secret_name}'"
                 )
             logger.info(
-                f"Retrieved API key from JSON field '{api_key_field}' in secret '{secret_name}'"
+                "Retrieved API key from configured JSON field"
             )
             return api_key
         except json.JSONDecodeError:
             # Fallback for non-JSON secrets - treat the entire secret as the API key
-            logger.info(
-                f"Using entire secret value as API key for secret '{secret_name}'"
-            )
+            logger.info("Using entire secret value as API key")
             return secret_data
 
     def get_secret(self, secret_name: str, use_cache: bool = True) -> Optional[str]:
@@ -236,11 +232,11 @@ class SecretsManager:
         """
         # Check cache first
         if use_cache and secret_name in self.cache:
-            logger.debug(f"Using cached secret: {secret_name}")
+            logger.debug("Using cached secret")
             return self.cache[secret_name]
 
         try:
-            logger.info(f"Retrieving secret: {secret_name}")
+            logger.info("Retrieving secret")
             response: Dict[str, Any] = self.secrets_client.get_secret_value(
                 SecretId=secret_name
             )
@@ -263,12 +259,12 @@ class SecretsManager:
         except ClientError as e:
             error_code: str = e.response["Error"]["Code"]
             if error_code == "ResourceNotFoundException":
-                logger.warning(f"Secret not found: {secret_name}")
+                logger.warning("Secret not found")
             else:
-                logger.error(f"Error retrieving secret {secret_name}: {error_code}")
+                logger.error(f"Error retrieving secret: {error_code}")
             return None
-        except Exception as e:
-            logger.error(f"Unexpected error retrieving secret {secret_name}: {str(e)}")
+        except Exception:
+            logger.error("Unexpected error retrieving secret")
             return None
 
     def get_secret_json(
@@ -292,8 +288,8 @@ class SecretsManager:
         try:
             secret_dict: Dict[str, Any] = json.loads(secret_value)
             return secret_dict.get(key, default)
-        except (json.JSONDecodeError, TypeError) as e:
-            logger.error(f"Error parsing JSON secret {secret_name}: {str(e)}")
+        except (json.JSONDecodeError, TypeError):
+            logger.error("Error parsing JSON secret payload")
             return default
 
     def get_ssm_parameter(
@@ -313,11 +309,11 @@ class SecretsManager:
         # Check cache first (use a different cache key to avoid conflicts)
         cache_key = f"ssm:{parameter_name}"
         if use_cache and cache_key in self.cache:
-            logger.debug(f"Using cached SSM parameter: {parameter_name}")
+            logger.debug("Using cached SSM parameter")
             return self.cache[cache_key]
 
         try:
-            logger.info(f"Retrieving SSM parameter: {parameter_name}")
+            logger.info("Retrieving SSM parameter")
             response: Dict[str, Any] = self.ssm_client.get_parameter(
                 Name=parameter_name, WithDecryption=True
             )
@@ -328,27 +324,21 @@ class SecretsManager:
             if use_cache:
                 self.cache[cache_key] = parameter_value
 
-            logger.info(f"Successfully retrieved SSM parameter: {parameter_name}")
+            logger.info("Successfully retrieved SSM parameter")
             return parameter_value
 
         except ClientError as e:
             error_code: str = e.response["Error"]["Code"]
             if error_code == "ParameterNotFound":
-                logger.warning(f"SSM parameter not found: {parameter_name}")
+                logger.warning("SSM parameter not found")
                 if default is not None:
-                    logger.info(
-                        f"Using default value for SSM parameter: {parameter_name}"
-                    )
+                    logger.info("Using default value for SSM parameter")
                     return default
             else:
-                logger.error(
-                    f"Error retrieving SSM parameter {parameter_name}: {error_code}"
-                )
+                logger.error(f"Error retrieving SSM parameter: {error_code}")
             return default
-        except Exception as e:
-            logger.error(
-                f"Unexpected error retrieving SSM parameter {parameter_name}: {str(e)}"
-            )
+        except Exception:
+            logger.error("Unexpected error retrieving SSM parameter")
             return default
 
 

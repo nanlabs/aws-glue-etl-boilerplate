@@ -53,7 +53,7 @@ def load_sftp_credentials_from_secret(
             "paramiko is not available. Install it with: pip install paramiko"
         )
 
-    logger.info(f"Loading SFTP credentials from secret: {secret_name}")
+    logger.info("Loading SFTP credentials from secret store")
     secrets_client = create_boto3_client(
         service_name="secretsmanager",
         region_name=region_name,
@@ -63,37 +63,36 @@ def load_sftp_credentials_from_secret(
     try:
         response = secrets_client.get_secret_value(SecretId=secret_name)
         secret_string = response["SecretString"]
-        logger.debug(f"Secret string length: {len(secret_string)} characters")
+        logger.debug("Secret payload retrieved")
 
         secret_data = json.loads(secret_string)
-        logger.debug(f"Secret data keys: {list(secret_data.keys())}")
+        logger.debug("Secret data parsed")
 
         credentials = {}
         if "username" in secret_data:
             credentials["username"] = secret_data["username"]
-            logger.info(f"✅ SFTP username loaded: {credentials['username']}")
+            logger.info("SFTP username loaded")
         else:
-            logger.warning("⚠️  Username not found in secret data")
+            logger.warning("Username not found in secret data")
 
         if "privateKey" in secret_data:
             credentials["privateKey"] = secret_data["privateKey"]
-            key_length = len(credentials["privateKey"])
-            logger.info(f"✅ SFTP private key loaded (length: {key_length} chars)")
+            logger.info("SFTP private key loaded")
         else:
-            logger.error("❌ 'privateKey' field not found in secret data")
+            logger.error("'privateKey' field not found in secret data")
             raise ValueError(
                 "SFTP secret must contain 'privateKey' field. "
                 "Password authentication is not supported."
             )
 
-        logger.info("✅ SFTP credentials loaded successfully")
+        logger.info("SFTP credentials loaded successfully")
         return credentials
 
-    except ClientError as e:
-        logger.warning(f"Failed to load SFTP credentials from Secrets Manager: {e}")
+    except ClientError:
+        logger.warning("Failed to load SFTP credentials from Secrets Manager")
         raise
-    except json.JSONDecodeError as e:
-        logger.error(f"Failed to parse secret JSON: {e}")
+    except json.JSONDecodeError:
+        logger.error("Failed to parse secret JSON")
         raise
 
 
@@ -130,34 +129,34 @@ def load_sftp_params_from_ssm(
                 logger.info(f"Loading SFTP host from SSM: {host_param}")
                 response = ssm_client.get_parameter(Name=host_param)
                 params["host"] = response["Parameter"]["Value"]
-                logger.info(f"✅ SFTP host loaded: {params['host']}")
-            except ClientError as e:
-                logger.warning(f"Could not load host from SSM: {e}")
+                logger.info("SFTP host loaded")
+            except ClientError:
+                logger.warning("Could not load host from SSM")
 
         if port_param:
             try:
                 logger.info(f"Loading SFTP port from SSM: {port_param}")
                 response = ssm_client.get_parameter(Name=port_param)
                 params["port"] = int(response["Parameter"]["Value"])
-                logger.info(f"✅ SFTP port loaded: {params['port']}")
-            except ClientError as e:
-                logger.warning(f"Could not load port from SSM: {e}")
+                logger.info("SFTP port loaded")
+            except ClientError:
+                logger.warning("Could not load port from SSM")
 
         if remote_path_param:
             try:
                 logger.info(f"Loading SFTP remote path from SSM: {remote_path_param}")
                 response = ssm_client.get_parameter(Name=remote_path_param)
                 params["remote_path"] = response["Parameter"]["Value"]
-                logger.info(f"✅ SFTP remote path loaded: {params['remote_path']}")
-            except ClientError as e:
-                logger.warning(f"Could not load remote path from SSM: {e}")
+                logger.info("SFTP remote path loaded")
+            except ClientError:
+                logger.warning("Could not load remote path from SSM")
 
     except ClientError as e:
         error_code = e.response.get("Error", {}).get("Code", "Unknown")
         if error_code == "ParameterNotFound":
-            logger.warning(f"SSM parameter not found: {e}")
+            logger.warning("SSM parameter not found")
         else:
-            logger.warning(f"Failed to load SSM parameters: {e}")
+            logger.warning("Failed to load SSM parameters")
 
     return params
 
@@ -201,8 +200,8 @@ def create_ssh_key_from_string(
         try:
             with os.fdopen(fd, "w") as key_file:
                 key_file.write(private_key_string)
-        except Exception as e:
-            logger.error(f"Failed to write key to temporary file: {e}")
+        except Exception:
+            logger.error("Failed to write key to temporary file")
             if should_cleanup and os.path.exists(key_file_path):
                 os.unlink(key_file_path)
             raise
@@ -216,7 +215,7 @@ def create_ssh_key_from_string(
             logger.info("✅ Loaded ed25519 key")
             return private_key, key_type
         except (ValueError, paramiko.ssh_exception.SSHException) as e:
-            logger.debug(f"Failed to load as ed25519: {type(e).__name__}: {e}")
+            logger.debug(f"Failed to load as ed25519: {type(e).__name__}")
 
         # Fallback to RSA
         try:
@@ -226,7 +225,7 @@ def create_ssh_key_from_string(
             logger.info("✅ Loaded RSA key")
             return private_key, key_type
         except (ValueError, paramiko.ssh_exception.SSHException) as e:
-            logger.debug(f"Failed to load as RSA: {type(e).__name__}: {e}")
+            logger.debug(f"Failed to load as RSA: {type(e).__name__}")
 
         # Try ECDSA
         try:
@@ -236,10 +235,10 @@ def create_ssh_key_from_string(
             logger.info("✅ Loaded ECDSA key")
             return private_key, key_type
         except (ValueError, paramiko.ssh_exception.SSHException) as e:
-            logger.debug(f"Failed to load as ECDSA: {type(e).__name__}: {e}")
+            logger.debug(f"Failed to load as ECDSA: {type(e).__name__}")
 
         # All attempts failed
-        logger.error("❌ Failed to load private key: all key type attempts failed")
+        logger.error("Failed to load private key: all key type attempts failed")
         # Note: e is from the last except block (line 236), but may not be in scope here
         # Use a generic error message instead
         raise ValueError(
@@ -355,8 +354,8 @@ class SFTPClient:
                 self.username = credentials["username"]
             if "privateKey" in credentials and not self.private_key:
                 self.private_key = credentials["privateKey"]
-        except Exception as e:
-            logger.warning(f"Failed to load credentials from secret: {e}")
+        except Exception:
+            logger.warning("Failed to load credentials from secret")
             if not self.username or not self.private_key:
                 raise
 
@@ -395,7 +394,8 @@ class SFTPClient:
 
         # Create SSH client
         self.ssh_client = paramiko.SSHClient()
-        self.ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        self.ssh_client.load_system_host_keys()
+        self.ssh_client.set_missing_host_key_policy(paramiko.RejectPolicy())
 
         try:
             self.ssh_client.connect(
@@ -414,8 +414,8 @@ class SFTPClient:
 
             return self.sftp_client
 
-        except Exception as e:
-            logger.error(f"Failed to connect to SFTP server: {e}")
+        except Exception:
+            logger.error("Failed to connect to SFTP server")
             self.close()
             raise
 
@@ -456,7 +456,7 @@ class SFTPClient:
             logger.info(f"Remote path is a directory: {remote_path}")
             try:
                 files = self.sftp_client.listdir(remote_path)
-                logger.info(f"Found {len(files)} items in directory: {files}")
+                logger.info(f"Found {len(files)} items in directory")
 
                 # Filter for CSV files
                 csv_files = [f for f in files if f.lower().endswith(".csv")]
@@ -471,7 +471,7 @@ class SFTPClient:
                 if len(csv_files) > 1:
                     logger.warning(
                         f"Multiple CSV files found ({len(csv_files)}). "
-                        f"Using first file: {csv_file}"
+                        "Using first file"
                     )
 
                 # Construct full path
@@ -480,11 +480,11 @@ class SFTPClient:
                 else:
                     full_remote_path = f"{remote_path}/{csv_file}"
 
-                logger.info(f"Selected CSV file: {full_remote_path}")
+                logger.info("Selected CSV file from remote directory")
                 remote_path = full_remote_path
 
-            except Exception as e:
-                logger.error(f"Failed to list directory {remote_path}: {e}")
+            except Exception:
+                logger.error("Failed to list remote directory")
                 raise
 
         logger.info(f"Downloading {remote_path} to {local_path}")
@@ -543,8 +543,8 @@ class SFTPClient:
             try:
                 self.sftp_client.close()
                 logger.debug("SFTP channel closed")
-            except Exception as e:
-                logger.warning(f"Error closing SFTP channel: {e}")
+            except Exception:
+                logger.warning("Error closing SFTP channel")
             finally:
                 self.sftp_client = None
 
@@ -552,8 +552,8 @@ class SFTPClient:
             try:
                 self.ssh_client.close()
                 logger.debug("SSH connection closed")
-            except Exception as e:
-                logger.warning(f"Error closing SSH connection: {e}")
+            except Exception:
+                logger.warning("Error closing SSH connection")
             finally:
                 self.ssh_client = None
 
