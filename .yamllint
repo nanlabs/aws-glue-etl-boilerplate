@@ -1,0 +1,20 @@
+extends: default
+
+rules:
+  line-length:
+    max: 200  # Increased for long URLs and paths in config files
+    allow-non-breakable-words: true
+  document-start: disable  # Not required for all YAML files
+  comments:
+    min-spaces-from-content: 1
+  truthy:
+    allowed-values: ['true', 'false']
+    check-keys: false
+  indentation:
+    spaces: 2
+  brackets:
+    max-spaces-inside: 1
+    max-spaces-inside-empty: 0
+  braces:
+    max-spaces-inside: 1
+    max-spaces-inside-empty: 0

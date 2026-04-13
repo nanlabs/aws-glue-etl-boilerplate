@@ -1,0 +1,29 @@
+{
+  "name": "aws-glue-etl-boilerplate-danger",
+  "version": "1.0.0",
+  "description": "Danger CI for AWS Glue ETL boilerplate repository",
+  "main": "index.js",
+  "directories": {
+    "example": "examples"
+  },
+  "scripts": {
+    "tsc": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/your-org/aws-glue-etl-boilerplate.git"
+  },
+  "author": "Data Platform Team",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/your-org/aws-glue-etl-boilerplate/issues"
+  },
+  "homepage": "https://github.com/your-org/aws-glue-etl-boilerplate#readme",
+  "dependencies": {
+    "danger": "^13.0.4"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.2"
+  }
+}

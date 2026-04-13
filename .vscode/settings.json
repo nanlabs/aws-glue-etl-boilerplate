@@ -6,5 +6,12 @@
     "editor.defaultFormatter": "ms-python.black-formatter"
   },
   "python.analysis.typeCheckingMode": "basic",
-  "python.pipenvPath": "/home/glue_user/workspace/aws-glue-etl-local"
+  "python.defaultInterpreterPath": "/usr/bin/python3.11",
+  "python.analysis.extraPaths": [
+    "/usr/lib/spark/python/lib/py4j-0.10.9.7-src.zip:/usr/lib/spark/python/:/usr/lib/spark/python/lib/",
+  ],
+  "python.testing.unittestEnabled": false,
+  "python.testing.pytestEnabled": true,
+  "python-envs.defaultEnvManager": "ms-python.python:system",
+  "python-envs.pythonProjects": []
 }
