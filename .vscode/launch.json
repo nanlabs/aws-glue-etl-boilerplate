@@ -1,0 +1,57 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Attach to Glue Job (Remote Debug)",
+      "type": "python",
+      "request": "attach",
+      "connect": {
+        "host": "localhost",
+        "port": 5678
+      },
+      "pathMappings": [
+        {
+          "localRoot": "${workspaceFolder}",
+          "remoteRoot": "/home/hadoop/workspace"
+        }
+      ],
+      "justMyCode": false,
+      "skipFiles": [
+        "<...>/py4j-*.py",
+        "<...>/pyspark/**/*.py"
+      ]
+    },
+    {
+      "name": "Run Bronze Job (No Debug)",
+      "type": "python",
+      "request": "launch",
+      "program": "${workspaceFolder}/jobs/bronze/public_api_bronze_job.py",
+      "args": [
+        "--JOB_NAME=test",
+        "--ENTITY_TYPE=posts"
+      ],
+      "console": "integratedTerminal",
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}/libs:${workspaceFolder}/jobs",
+        "PYSPARK_PYTHON": "python3",
+        "PYSPARK_DRIVER_PYTHON": "python3"
+      },
+      "cwd": "${workspaceFolder}"
+    },
+    {
+      "name": "Run via Spark Submit",
+      "type": "python",
+      "request": "launch",
+      "program": "/bin/bash",
+      "args": [
+        "-c",
+        "cd ${workspaceFolder} && spark-submit jobs/bronze/public_api_bronze_job.py --JOB_NAME=test --ENTITY_TYPE=posts"
+      ],
+      "console": "integratedTerminal",
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}/libs:${workspaceFolder}/jobs"
+      },
+      "cwd": "${workspaceFolder}"
+    }
+  ]
+}
