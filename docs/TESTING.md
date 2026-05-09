@@ -1,5 +1,22 @@
 # Testing
 
+## Validation matrix
+
+Required project checks:
+
+```bash
+make lint
+make type-check
+make test-unit
+```
+
+Recommended NaNLABS baseline checks (optional):
+
+```bash
+make check-env
+make nan-health
+```
+
 ## Unit tests
 
 Run:

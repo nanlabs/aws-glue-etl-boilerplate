@@ -1,29 +1,43 @@
-## Description
+## Summary
 
-Please include a summary of the changes and the related issue. List any dependencies that are required for this change.
+Describe what changed and why.
 
-Fixes # (issue)
+Issue: Fixes #
 
-## Type of Change
+## Change Type
 
-- [ ] Bug fix (non-breaking change which fixes an issue)
-- [ ] New feature (non-breaking change which adds functionality)
-- [ ] Breaking change (fix or feature that would cause existing functionality to not work as expected)
+- [ ] Bug fix
+- [ ] New feature
+- [ ] Breaking change
 - [ ] Documentation update
+- [ ] Dependency update
 
-## How Has This Been Tested?
+## Validation Evidence
 
-Please describe the tests that you ran to verify your changes. Provide instructions so we can reproduce.
+List the exact commands executed and a short result summary.
 
-- [ ] Test A
-- [ ] Test B
+```bash
+make lint
+make type-check
+make test-unit
+```
+
+Optional baseline checks (if available):
+
+```bash
+make check-env
+make nan-health
+```
+
+## Risk and Rollback
+
+- Risk level: [Low | Medium | High]
+- Rollback plan:
 
 ## Checklist
 
-- [ ] My code follows the style guidelines of this project
-- [ ] I have performed a self-review of my code
-- [ ] I have commented my code, particularly in hard-to-understand areas
-- [ ] I have made corresponding changes to the documentation
-- [ ] My changes generate no new warnings
-- [ ] Any dependent changes have been merged and published in downstream modules
-- [ ] I have checked my code and corrected any misspellings
+- [ ] Scope is focused and minimal
+- [ ] Tests and/or checks relevant to this change were executed
+- [ ] Docs were updated when behavior changed
+- [ ] No secrets or sensitive data were added
+- [ ] I verified spelling and basic formatting

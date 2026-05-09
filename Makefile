@@ -12,7 +12,7 @@
 #
 # All commands below are designed to run INSIDE the dev container environment.
 
-.PHONY: help bootstrap install install-dev requirements clean test test-unit test-integration test-coverage lint type-check format autofix validate migrate migrate-upload migrate-dry-run services-status spark-submit pyshell-run notebook prepare-localstack clean-localstack aws-login scaffold-source run-raw run-bronze run-silver run-gold
+.PHONY: help bootstrap install install-dev requirements clean test test-unit test-integration test-coverage lint type-check format autofix validate check-env nan-health nan-skills migrate migrate-upload migrate-dry-run services-status spark-submit pyshell-run notebook prepare-localstack clean-localstack aws-login scaffold-source run-raw run-bronze run-silver run-gold
 
 # Default target
 help:
@@ -31,6 +31,9 @@ help:
 	@echo "  install-dev     - Install development dependencies"
 	@echo "  requirements    - Generate requirements.txt from Pipfile"
 	@echo "  validate        - Validate dev container environment"
+	@echo "  check-env       - Validate environment + optional nan-doctor"
+	@echo "  nan-health      - Run optional NaNLABS baseline checks"
+	@echo "  nan-skills      - List available NaNLABS skills (if installed)"
 	@echo ""
 	@echo "🧪 Testing & Quality:"
 	@echo "  test            - Run all tests (unit + integration)"
@@ -162,6 +165,38 @@ clean:
 validate:
 	@echo "🔍 Validating dev container environment..."
 	./scripts/validate-env.sh
+
+# Validate project environment plus optional NaNLABS checks
+check-env: validate
+	@echo ""
+	@echo "🔎 Optional NaNLABS environment check..."
+	@if command -v nan-doctor >/dev/null 2>&1; then \
+		nan-doctor; \
+	else \
+		echo "ℹ️ nan-doctor not found; skipping optional baseline check."; \
+	fi
+
+# Run optional NaNLABS workstation checks without blocking contributors
+nan-health:
+	@echo "🩺 Running optional NaNLABS checks..."
+	@if command -v nan-doctor >/dev/null 2>&1; then \
+		nan-doctor; \
+	else \
+		echo "ℹ️ nan-doctor not found; skipping."; \
+	fi
+	@if command -v nan-update-check >/dev/null 2>&1; then \
+		nan-update-check; \
+	else \
+		echo "ℹ️ nan-update-check not found; skipping."; \
+	fi
+
+# List available NaNLABS skills when baseline is installed
+nan-skills:
+	@if command -v nan-skills >/dev/null 2>&1; then \
+		nan-skills list; \
+	else \
+		echo "ℹ️ nan-skills not found; skipping."; \
+	fi
 
 # Check status of all services
 services-status:

@@ -1,5 +1,22 @@
 # Development Guide
 
+## Recommended local flow
+
+```bash
+make bootstrap
+make check-env
+make lint
+make type-check
+make test-unit
+```
+
+Optional NaNLABS commands (if available):
+
+```bash
+make nan-health
+make nan-skills
+```
+
 ## Local run examples
 
 ```bash

@@ -92,6 +92,14 @@ This sets up `uv`, creates `.venv`, installs runtime/dev dependencies, and runs 
 
 Optional manual setup is still available via `uv` if you need a custom environment.
 
+Optional NaNLABS baseline checks (if installed):
+
+```bash
+make check-env
+make nan-health
+make nan-skills
+```
+
 ### 2. Set up environment variables
 
 ```bash
@@ -165,6 +173,10 @@ make test-integration
 # Quality checks
 make lint
 make type-check
+
+# Optional baseline checks
+make check-env
+make nan-health
 ```
 
 See [docs/TESTING.md](docs/TESTING.md) for conventions and marker usage.
