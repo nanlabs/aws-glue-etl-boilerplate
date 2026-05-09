@@ -194,10 +194,25 @@ poetry.toml
 .history
 .ionide
 
+# Build artifacts
+build/
+dist/
+*.zip
+
 # End of https://www.toptal.com/developers/gitignore/api/python,serverless,visualstudiocode
 node_modules
 garbage
 bin
-local/volume
-libs.zip
-jobs.zip
+docker/volume
+
+
+
+.DS_Store
+*.swp
+*.swo
+*.swn
+*.bak
+*.tmp
+
+# Docker volumes for devcontainer (generated at runtime)
+.devcontainer/.docker-volumes/

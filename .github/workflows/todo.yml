@@ -5,14 +5,17 @@ on:
     branches:
       - main
 
+permissions:
+  contents: read
+
 jobs:
   todo:
     runs-on: ubuntu-latest
 
     steps:
       - name: Begin CI...
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: TODO to Issue
-        uses: alstr/todo-to-issue-action@v4
+        uses: alstr/todo-to-issue-action@v5
         id: todo

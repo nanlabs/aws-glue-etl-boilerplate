@@ -1,0 +1,213 @@
+name: Deploy to Code Registry
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - jobs/**
+      - libs/**
+      - Pipfile
+      - Pipfile.lock
+      - scripts/package.sh
+      - .github/workflows/deploy-code-registry.yml
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: 'Version tag to deploy (e.g., v1.2.3) or "latest"'
+        required: true
+        default: 'latest'
+        type: string
+
+  # Smart releases trigger (from Release Please)
+  release:
+    types: [published]
+
+env:
+  AWS_REGION: us-west-2
+
+jobs:
+  # Pre-commit validation for smart commits
+  validate-commits:
+    name: Validate Smart Commits
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install commitlint
+        run: |
+          npm install -g @commitlint/cli @commitlint/config-conventional
+
+      - name: Validate conventional commits
+        run: |
+          npx commitlint --from=HEAD~1 --to=HEAD --verbose
+
+  # Continuous deployment on main push → latest
+  deploy-latest:
+    name: Deploy Latest to Code Registry
+
+    environment:
+      name: code-registry-deploy
+      url: https://console.aws.amazon.com/
+
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    needs: [validate-commits]
+
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install pipenv
+        run: pip install pipenv
+
+      - name: Install dependencies
+        run: pipenv install --dev
+
+      - name: Package artifacts (Python Wheels)
+        run: |
+          make package
+          make glue-wheels
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::083084510336:role/nan-infra-platform-tools-data-jobs-github-actions
+          aws-region: us-west-2
+          role-session-name: glue-code-deploy-latest
+
+      - name: Deploy latest version
+        env:
+          CODE_REGISTRY_BUCKET: nan-infra-platform-tools-glue-code-artifacts
+          TARGET: latest
+          GITHUB_ACTIONS: true
+        run: |
+          chmod +x scripts/deploy-code-registry.sh
+          ./scripts/deploy-code-registry.sh -n -t latest
+
+  # Manual redeploy by version or latest (linear, not per environment)
+  redeploy-manual:
+    name: Redeploy to Code Registry (manual)
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch'
+
+    environment:
+      name: code-registry-deploy
+      url: https://console.aws.amazon.com/
+
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install pipenv
+        run: pip install pipenv
+
+      - name: Install dependencies
+        run: pipenv install --dev
+
+      - name: Package artifacts (Python Wheels)
+        run: |
+          make package
+          make glue-wheels
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::083084510336:role/nan-infra-platform-tools-data-jobs-github-actions
+          aws-region: us-west-2
+          role-session-name: glue-code-redeploy-manual
+
+      - name: Deploy by version or latest
+        env:
+          CODE_REGISTRY_BUCKET: nan-infra-platform-tools-glue-code-artifacts
+          TARGET: ${{ github.event.inputs.release_tag }}
+          GITHUB_ACTIONS: true
+        run: |
+          chmod +x scripts/deploy-code-registry.sh
+          ./scripts/deploy-code-registry.sh -n -t "$TARGET"
+
+  # Smart release deployment (semantic versioning) → versioned + stable
+  deploy-release:
+    name: Deploy Release to Code Registry
+
+    environment:
+      name: code-registry-deploy
+      url: https://console.aws.amazon.com/
+
+    runs-on: ubuntu-latest
+    if: github.event_name == 'release'
+
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install pipenv
+        run: pip install pipenv
+
+      - name: Install dependencies
+        run: pipenv install --dev
+
+      - name: Package artifacts (Python Wheels)
+        run: |
+          make package
+          make glue-wheels
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::083084510336:role/nan-infra-platform-tools-data-jobs-github-actions
+          aws-region: us-west-2
+          role-session-name: glue-code-deploy-release
+
+      - name: Deploy release version
+        env:
+          CODE_REGISTRY_BUCKET: nan-infra-platform-tools-glue-code-artifacts
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+          GITHUB_ACTIONS: true
+        run: |
+          chmod +x scripts/deploy-code-registry.sh
+
+          # Deploy versioned release
+          ./scripts/deploy-code-registry.sh -n -t "$RELEASE_TAG"
+
+          # Also update 'stable' tag to point to this release
+          ./scripts/deploy-code-registry.sh -n -t stable
+
+          echo "✅ Release $RELEASE_TAG deployment completed"
+          echo "✅ Stable tag updated to $RELEASE_TAG"
