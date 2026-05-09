@@ -1,0 +1,55 @@
+[default]
+extend-ignore = [
+    "aws",
+    "boto",
+    "glue",
+    "iceberg",
+    "pyspark",
+    "jupyter",
+    "tfvars",
+    "amazonaws",
+    "sparkconf",
+    "sparkcontext",
+    "dataframe",
+    "parquet",
+    "avro",
+    "orc",
+    "localstack",
+    "env",
+    "cli",
+    "api",
+    "url",
+    "uri",
+    "uuid",
+    "json",
+    "yaml",
+    "sql",
+    "etl",
+    "elt",
+    "dwh",
+    "cicd",
+    "cd",
+    "dev",
+    "prod",
+    "staging"
+]
+
+[default.extend-words]
+# Add any project-specific words that should be ignored
+# SerDe is a valid technical term (Serialization/Deserialization in Hadoop/Spark)
+# Note: typos detects "Ser" in "SerDe", so we need to add both
+serde = "serde"
+SerDe = "SerDe"
+Ser = "Ser"  # Part of SerDe
+
+[files]
+extend-exclude = [
+    "*.lock",
+    "*.log",
+    "*.tfstate",
+    ".git/*",
+    "node_modules/*",
+    "__pycache__/*",
+    ".venv/*",
+    "jupyter_workspace/*"
+]

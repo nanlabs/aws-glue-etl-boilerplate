@@ -2,11 +2,11 @@
 // https://github.com/microsoft/vscode-dev-containers/tree/v0.241.1/containers/docker-existing-docker-compose
 // If you want to run as a non-root user in the container, see .devcontainer/compose.yml.
 {
-  "name": "Extended AWS Glue Dev Container",
+  "name": "AWS Glue Data Lake Jobs Dev Container",
 
   // Update the 'dockerComposeFile' list if you have more compose files or use different names.
-  // The .devcontainer/compose.yml file contains any overrides you need/want to make.
-  "dockerComposeFile": ["../local/compose.yml", "./compose.yml"],
+  // The .devcontainer/compose.yml file contains the complete dev environment configuration.
+  "dockerComposeFile": ["./compose.yml"],
 
   // The 'service' property is the name of the service for the container that VS Code should
   // use. Update this value and .devcontainer/compose.yml to the real service name.
@@ -14,30 +14,35 @@
 
   // The optional 'workspaceFolder' property is the path VS Code should open by default when
   // connected. This is typically a file mount in .devcontainer/compose.yml
-  "workspaceFolder": "/home/glue_user/workspace/aws-glue-etl-local",
+  "workspaceFolder": "/home/hadoop/workspace",
   "customizations": {
     "vscode": {
       "extensions": [
         "amazonwebservices.aws-toolkit-vscode",
         "ms-python.python",
+        "ms-python.pylint",
+        "ms-python.black-formatter",
         "ms-toolsai.jupyter",
-        "ms-azuretools.vscode-docker"
+        "ms-azuretools.vscode-docker",
+        "redhat.vscode-yaml",
+        "github.vscode-github-actions",
+        "ms-python.vscode-pylance",
+        "charliermarsh.ruff",
+        "DavidAnson.vscode-markdownlint",
+        "mkhl.direnv"
       ]
     }
   },
-
   // Use 'forwardPorts' to make a list of ports inside the container available locally.
-  // "forwardPorts": [],
+  "forwardPorts": [8888, 4040, 4566, 18080, 18080, 8998],
 
-  // Uncomment the next line if you want start specific services in your Docker Compose config.
-  // "runServices": [],
-
-  // Uncomment the next line if you want to keep your containers running after VS Code shuts down.
-  // "shutdownAction": "none",
-
-  // Uncomment the next line to run commands after the container is created - for example installing curl.
-  // "postCreateCommand": "",
+  // Start required services for the dev environment.
+  "runServices": ["localstack", "awsglue","sftp-server"],
+  // Keep containers running after VS Code shuts down (optional). Commented out by default.
+  "shutdownAction": "stopCompose",
+  // Run commands after the container is created.
+  "postCreateCommand": "scripts/validate-env.sh && (pipenv run pre-commit install || true) && ([ -f .envrc ] && direnv allow || true)",
 
   // Uncomment to connect as a non-root user if you've added one. See https://aka.ms/vscode-remote/containers/non-root.
-  "remoteUser": "glue_user"
+  "remoteUser": "hadoop"
 }
