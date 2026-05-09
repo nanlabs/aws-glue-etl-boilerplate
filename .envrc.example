@@ -1,0 +1,114 @@
+#!/usr/bin/env bash
+
+# ============================================================================
+# Configuration Variables
+# ============================================================================
+# Set these variables at the top to configure your environment
+# They can be overridden by .env file or environment variables
+
+# Environment name (develop, staging, prod)
+export ENVIRONMENT="${ENVIRONMENT:-develop}"
+
+# Stage (local, dev, staging, prod)
+# Use STAGE=local for local development with LocalStack
+export STAGE="local"
+
+# ============================================================================
+# AWS Configuration
+# ============================================================================
+# Note: For local development (STAGE=local), LocalStack is used for all AWS services
+# Use scripts/aws-login.sh to login to AWS SSO when needed
+
+# STEP 2: Configure LocalStack endpoints AFTER loading from AWS
+# This ensures jobs use LocalStack, but we've already read what we need from AWS real
+# Only configure LocalStack endpoints if STAGE=local
+export AWS_ENDPOINT_URL=http://localstack:4566
+export AWS_DEFAULT_REGION=us-east-1
+export AWS_REGION=us-east-1
+export AWS_ACCESS_KEY_ID=test
+export AWS_SECRET_ACCESS_KEY=test
+
+# ============================================================================
+# Load Parameters from LocalStack SSM
+# ============================================================================
+# Function to load environment variables from LocalStack SSM Parameter Store
+# This replaces the functionality that Teller previously provided
+load_localstack_params() {
+  # Only load if STAGE=local and LocalStack is available
+  if [[ "${STAGE}" != "local" ]]; then
+    return 0
+  fi
+
+  # Verify that LocalStack is available
+  if ! curl -s "${AWS_ENDPOINT_URL}/_localstack/health" > /dev/null 2>&1; then
+    echo "⚠️  LocalStack not available, skipping SSM parameter loading"
+    return 0
+  fi
+
+  local account_name="${AWS_ACCOUNT_NAME:-workloads-data-lake-develop}"
+  local ssm_prefix="/nan-wl-${account_name}"
+
+  # SSM parameter mapping to environment variables
+  # Only export if not already defined (allow override from .env)
+  local param_map=(
+    "${ssm_prefix}/data-lake/warehouse_path:WAREHOUSE_PATH"
+    "${ssm_prefix}/data-lake/raw_zone_path:RAW_ZONE_PATH"
+    "${ssm_prefix}/data-lake/raw_database_name:RAW_DATABASE_NAME"
+    "${ssm_prefix}/data-lake/bronze_database_name:BRONZE_DATABASE_NAME"
+    "${ssm_prefix}/data-lake/silver_database_name:SILVER_DATABASE_NAME"
+    "${ssm_prefix}/data-lake/gold_database_name:GOLD_DATABASE_NAME"
+    "${ssm_prefix}/public-api-base-url:PUBLIC_API_BASE_URL_PARAM"
+  )
+
+  for mapping in "${param_map[@]}"; do
+    IFS=':' read -r param_name env_var <<< "${mapping}"
+
+    # Only load if variable is not already defined
+    if [[ -z "${!env_var}" ]]; then
+      local param_value
+      param_value=$(awslocal ssm get-parameter \
+        --name "${param_name}" \
+        --query 'Parameter.Value' \
+        --output text 2>/dev/null)
+
+      if [[ $? -eq 0 ]] && [[ -n "${param_value}" ]]; then
+        export "${env_var}=${param_value}"
+      fi
+    fi
+  done
+}
+
+# Load parameters from LocalStack SSM (if STAGE=local)
+load_localstack_params
+
+# Load environment variables from .env if it exists
+if [[ -f .env ]]; then
+  echo "Loading environment variables from .env file..."
+  set -a
+  source .env
+  set +a
+else
+  echo "Warning: .env file not found. Copy .env.example to .env and configure your settings."
+  echo "For local development, this will set up LocalStack and S3 services."
+fi
+
+# Set up Python virtual environment if using pipenv
+if [[ -f Pipfile ]]; then
+  if command -v pipenv > /dev/null 2>&1; then
+    echo "Activating pipenv virtual environment..."
+    eval "$(pipenv --venv)" 2>/dev/null || echo "Use dev container: VS Code → 'Reopen in Container' to set up dependencies."
+  fi
+fi
+
+echo ""
+echo "Available commands:"
+echo "  make help                - Show all available make commands"
+echo "  make aws-login           - Login to AWS SSO for data workload accounts"
+echo "  make prepare-localstack  - Prepare LocalStack with secrets and resources from AWS"
+echo "  make clean-localstack    - Clean all LocalStack resources"
+echo "  make services-status     - Check status of all services"
+echo "  make test                - Run all tests"
+echo "  make lint                - Run code linting"
+echo "  make format              - Format code with black"
+echo "  make autofix             - Auto-fix code formatting and imports"
+echo "  Open in Dev Container    - VS Code → 'Reopen in Container'"

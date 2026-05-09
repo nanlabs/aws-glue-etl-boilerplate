@@ -1,0 +1,47 @@
+name: Python Quality
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  quality:
+    name: Ruff and mypy
+    runs-on: ubuntu-latest
+    if: >-
+      github.event_name != 'pull_request' ||
+      (
+        github.event.pull_request.user.login != 'dependabot[bot]' &&
+        github.event.pull_request.user.login != 'app/dependabot'
+      )
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install ruff mypy
+          pip install -e . --no-deps
+
+      - name: Ruff check
+        run: ruff check libs jobs tests
+
+      - name: mypy check
+        run: |
+          mypy \
+            libs/common/config/config_base.py \
+            jobs/bronze/public_api_bronze_job.py \
+            jobs/silver/public_api_silver_job.py \
+            jobs/gold/public_api_gold_job.py
