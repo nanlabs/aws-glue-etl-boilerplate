@@ -17,6 +17,15 @@ make nan-health
 make nan-skills
 ```
 
+## Troubleshooting optional baseline checks
+
+- `nan-* command not found`:
+	install or update your NaNLABS workstation baseline, or continue with required project checks.
+- `nan-doctor` reports non-compliant:
+	fix the reported dependencies and rerun `make nan-health`.
+- Running in external/non-NaNLABS environments:
+	`make check-env` and `make nan-health` are safe and will skip optional commands when unavailable.
+
 ## Local run examples
 
 ```bash

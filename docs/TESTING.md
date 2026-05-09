@@ -17,6 +17,8 @@ make check-env
 make nan-health
 ```
 
+When opening a PR, include the command list executed and a one-line result per command.
+
 ## Unit tests
 
 Run:
