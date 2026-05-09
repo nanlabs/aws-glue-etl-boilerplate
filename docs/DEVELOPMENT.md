@@ -1,28 +1,19 @@
-# Development using Docker Compose
+# Development Guide
 
-## Requirements
+## Local run examples
 
-- [docker](https://www.docker.com/)
-- [docker-compose](https://docs.docker.com/compose/)
-
-## Quickstart
-
-```sh
-docker-compose -f local/compose.yml up
+```bash
+make run-raw DATA_SOURCE=public_api ENTITY_TYPE=posts
+make run-bronze DATA_SOURCE=public_api ENTITY_TYPE=posts
+make run-silver DATA_SOURCE=public_api ENTITY_TYPE=posts
+make run-gold DATA_SOURCE=public_api ENTITY_TYPE=posts
 ```
 
-## Execute jobs
+## Direct runs
 
-You can test the example `jobs/pyspark_hello_world.py` in the following way:
-
-```sh
-# attach to the container
-docker-compose -f local/compose.yml exec -it awsglue /bin/bash
-```
-
-and then run the following command inside the container:
-
-```sh
-# Run the PySpark job
-glue-spark-submit jobs/pyspark_hello_world.py --JOB_NAME job_example --CUSTOM_ARGUMENT custom_value
+```bash
+python jobs/raw/public_api_raw_job.py --ENTITY_TYPE posts
+python jobs/bronze/public_api_bronze_job.py --ENTITY_TYPE posts
+python jobs/silver/public_api_silver_job.py --ENTITY_TYPE posts
+python jobs/gold/public_api_gold_job.py --ENTITY_TYPE posts
 ```
