@@ -13,7 +13,13 @@ jobs:
   pr-review:
     name: Danger JS
 
-    if: github.event_name != 'pull_request' || !github.event.pull_request.draft
+    if: >-
+      github.event_name != 'pull_request' ||
+      (
+        !github.event.pull_request.draft &&
+        github.event.pull_request.user.login != 'dependabot[bot]' &&
+        github.event.pull_request.user.login != 'app/dependabot'
+      )
 
     runs-on: ubuntu-latest
 
