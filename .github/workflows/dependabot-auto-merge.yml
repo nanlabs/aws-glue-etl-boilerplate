@@ -84,4 +84,6 @@ jobs:
 
       - name: Skip non-Dependabot PR
         if: steps.pr.outputs.number != '' && steps.author.outputs.is_dependabot != 'true'
-        run: echo "PR #${{ steps.pr.outputs.number }} is not from Dependabot; skipping."
+        run: |
+          pr_num="${{ steps.pr.outputs.number }}"
+          echo "PR #$pr_num is not from Dependabot; skipping."
