@@ -12,7 +12,7 @@ pyiceberg = "~=0.5.0"
 paramiko = "*"
 # Security hotfix pins to satisfy vulnerability scans.
 requests = ">=2.33.0"
-urllib3 = ">=2.6.3"
+urllib3 = ">=2.7.0"
 pygments = ">=2.20.0"
 cryptography = ">=46.0.7"
 pynacl = ">=1.6.2"
