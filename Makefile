@@ -16,6 +16,7 @@
 
 # Default target
 help:
+
 	@echo ""
 	@echo "🚀 AWS Glue ETL Boilerplate"
 	@echo "=================================================="
@@ -37,7 +38,7 @@ help:
 	@echo "🧪 Testing & Quality:"
 	@echo "  test            - Run all tests (unit + integration)"
 	@echo "  test-unit       - Run unit tests only"
-	@echo "  test-integration - Run integration tests only"
+	@echo "  test-integration- Run integration tests only"
 	@echo "  test-coverage   - Run tests with coverage report"
 	@echo "  lint            - Run code linting with Ruff"
 	@echo "  type-check      - Run mypy on core boilerplate modules"
@@ -67,6 +68,21 @@ help:
 	@echo "  scaffold-source SOURCE=<source> [ENTITY_TYPE=<type>] - Generate raw/bronze/silver/gold job templates"
 	@echo "   Example: make run-raw DATA_SOURCE=public_api ENTITY_TYPE=posts"
 	@echo "   Example: make scaffold-source SOURCE=crm_api ENTITY_TYPE=customers"
+	@echo ""
+	@echo "🧪 Testing & Quality:"
+	@echo "  test            - Run all tests (unit + integration)"
+	@echo "  test-unit       - Run unit tests only"
+	@echo "  test-integration- Run integration tests only"
+	@echo "  test-coverage   - Run tests with coverage report"
+	@echo "  lint            - Run code linting with Ruff"
+	@echo "  type-check      - Run mypy on core boilerplate modules"
+	@echo "  format          - Format code with black"
+	@echo "  autofix         - Auto-fix code formatting and imports"
+	@echo ""
+	@echo "🗃️  Database Migrations:"
+	@echo "  migrate         - Run database migrations (local environment)"
+	@echo "  migrate-upload  - Upload migration files to S3 (LocalStack)"
+	@echo "  migrate-dry-run - Show migration configuration without executing"
 	@echo ""
 	@echo "📦 Packaging & Deployment:"
 	@echo "  package         - Build standard package (wheels + ZIP)"
@@ -152,15 +168,35 @@ validate:
 
 # Validate project environment plus optional NaNLABS checks
 check-env: validate
-	@./scripts/nan-baseline.sh doctor
+	@echo ""
+	@echo "🔎 Optional NaNLABS environment check..."
+	@if command -v nan-doctor >/dev/null 2>&1; then \
+		nan-doctor; \
+	else \
+		echo "ℹ️ nan-doctor not found; skipping optional baseline check."; \
+	fi
 
 # Run optional NaNLABS workstation checks without blocking contributors
 nan-health:
-	@./scripts/nan-baseline.sh health
+	@echo "🩺 Running optional NaNLABS checks..."
+	@if command -v nan-doctor >/dev/null 2>&1; then \
+		nan-doctor; \
+	else \
+		echo "ℹ️ nan-doctor not found; skipping."; \
+	fi
+	@if command -v nan-update-check >/dev/null 2>&1; then \
+		nan-update-check; \
+	else \
+		echo "ℹ️ nan-update-check not found; skipping."; \
+	fi
 
 # List available NaNLABS skills when baseline is installed
 nan-skills:
-	@./scripts/nan-baseline.sh skills
+	@if command -v nan-skills >/dev/null 2>&1; then \
+		nan-skills list; \
+	else \
+		echo "ℹ️ nan-skills not found; skipping."; \
+	fi
 
 # Check status of all services
 services-status:
