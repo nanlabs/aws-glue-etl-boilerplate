@@ -33,7 +33,7 @@ flake8 = "*"
 typing-inspection = "*"
 localstack-client = "*"
 awscli-local = {extras = ["ver1"], version = "*"}
-pyspark = "~=3.5.1"
+pyspark = "~=3.4.4"
 
 [requires]
 python_version = "3.11"
