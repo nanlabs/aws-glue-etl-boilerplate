@@ -11,3 +11,4 @@ This boilerplate provides a generic Medallion-style AWS Glue ETL foundation.
 - `ARCHITECTURE.md`: high-level project architecture
 - `TESTING.md`: testing conventions
 - `MIGRATION_GUIDE.md`: move private sources to boilerplate patterns
+- `ADDING_A_DATA_SOURCE.md`: step-by-step guide for wiring up a new data source
