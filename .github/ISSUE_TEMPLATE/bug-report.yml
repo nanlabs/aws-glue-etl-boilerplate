@@ -1,0 +1,93 @@
+name: Bug report
+description: Report a reproducible bug or unexpected behavior
+title: "[Bug]: "
+labels: [bug, needs-triage]
+type: Bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting a bug. Please provide enough detail for a maintainer or contributor to reproduce it without access to private systems.
+
+  - type: checkboxes
+    id: search
+    attributes:
+      label: Existing issues
+      description: Please search before opening a new issue.
+      options:
+        - label: I have searched existing open and closed issues
+          required: true
+
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: What is broken?
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to reproduce
+      description: Provide the smallest reproducible case.
+      placeholder: |
+        1. Clone the repository
+        2. Run `...`
+        3. See `...`
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: What did you expect to happen?
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      description: What happened instead?
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Include relevant versions and platform details.
+      value: |
+        - OS:
+        - Runtime/tool version:
+        - Package manager/version:
+        - Repository commit or release:
+    validations:
+      required: false
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant logs or screenshots
+      description: Paste logs without secrets or tokens.
+      render: shell
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: public-safety
+    attributes:
+      label: Public-safety confirmation
+      options:
+        - label: This report does not include secrets, tokens, private URLs, or internal-only project references
+          required: true
+
+  - type: checkboxes
+    id: contribution
+    attributes:
+      label: Contribution
+      options:
+        - label: I am willing to submit a pull request with a fix
+          required: false
