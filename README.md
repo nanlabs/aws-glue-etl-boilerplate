@@ -87,11 +87,13 @@ git clone https://github.com/your-org/aws-glue-etl-boilerplate.git
 cd aws-glue-etl-boilerplate
 ```
 
-### 2. Open the project in a Dev Container
+### 2. Open the project in a Dev Container (Recommended)
 
-This project only supports development inside a Dev Container.
+It is recommended to open the project in the Dev Container before running any `make` commands.
 
-Open the project in VS Code and select **Reopen in Container** before running any `make` commands.
+Open the project in VS Code and select **Reopen in Container** for the recommended development environment.
+
+If you are not using a Dev Container, you can still follow the documented local setup instructions below where applicable.
 
 ### 3. Bootstrap the project
 
