@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set -euo pipefail
 
 # 🚀 Code Registry Deployment Script
 # Deploys code artifacts to the Code Registry S3 bucket using AWS profile (local) or OIDC (GitHub Actions)
@@ -93,18 +93,38 @@ while [[ $# -gt 0 ]]; do
     key="$1"
     case $key in
     -p | --profile)
+        if [[ $# -lt 2 ]]; then
+            print_error "Missing value for $1"
+            show_help
+            exit 1
+        fi
         AWS_PROFILE="$2"
         shift 2
         ;;
     -r | --region)
+        if [[ $# -lt 2 ]]; then
+            print_error "Missing value for $1"
+            show_help
+            exit 1
+        fi
         AWS_REGION="$2"
         shift 2
         ;;
     -b | --bucket)
+        if [[ $# -lt 2 ]]; then
+            print_error "Missing value for $1"
+            show_help
+            exit 1
+        fi
         CODE_REGISTRY_BUCKET="$2"
         shift 2
         ;;
     -t | --target)
+        if [[ $# -lt 2 ]]; then
+            print_error "Missing value for $1"
+            show_help
+            exit 1
+        fi
         TARGET="$2"
         shift 2
         ;;

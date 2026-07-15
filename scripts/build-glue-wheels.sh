@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set -euo pipefail
 
 # 🚀 AWS Glue Optimized Wheel Builder
 # Creates uber wheels optimized for AWS Glue 5.0 following AWS best practices
@@ -73,22 +73,47 @@ while [[ $# -gt 0 ]]; do
     key="$1"
     case $key in
     -r | --requirements)
+        if [[ $# -lt 2 ]]; then
+            print_error "Missing value for $1"
+            show_help
+            exit 1
+        fi
         REQUIREMENTS_FILE="$2"
         shift 2
         ;;
     -o | --wheel-output)
+        if [[ $# -lt 2 ]]; then
+            print_error "Missing value for $1"
+            show_help
+            exit 1
+        fi
         FINAL_WHEEL_OUTPUT_DIRECTORY="$2"
         shift 2
         ;;
     -n | --name)
+        if [[ $# -lt 2 ]]; then
+            print_error "Missing value for $1"
+            show_help
+            exit 1
+        fi
         PACKAGE_NAME="$2"
         shift 2
         ;;
     -v | --version)
+        if [[ $# -lt 2 ]]; then
+            print_error "Missing value for $1"
+            show_help
+            exit 1
+        fi
         PACKAGE_VERSION="$2"
         shift 2
         ;;
     -g | --glue-version)
+        if [[ $# -lt 2 ]]; then
+            print_error "Missing value for $1"
+            show_help
+            exit 1
+        fi
         GLUE_VERSION="$2"
         shift 2
         ;;

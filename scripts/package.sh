@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set -euo pipefail
 
 # Check for required tools
 if ! command -v pipenv >/dev/null 2>&1; then
