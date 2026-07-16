@@ -16,9 +16,15 @@ If you are not using the DevContainer, follow the setup instructions in the READ
 
 ## Recommended local flow
 
-### 1. Complete the project setup
+### 1. Bootstrap the project
 
-Follow the setup instructions in the README before continuing with the validation steps below.
+Complete the project setup described in the README.
+
+```bash
+make bootstrap
+```
+
+After the bootstrap completes, continue with the validation steps below.
 
 ### 2. Validate the environment
 
