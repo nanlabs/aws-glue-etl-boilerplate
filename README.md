@@ -80,11 +80,24 @@ See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for more details.
 
 ## Quick Start
 
-### 1. Clone and bootstrap
+### 1. Clone the repository
 
 ```bash
 git clone https://github.com/your-org/aws-glue-etl-boilerplate.git
 cd aws-glue-etl-boilerplate
+```
+
+### 2. Open the project in a Dev Container (Recommended)
+
+It is recommended to open the project in the Dev Container before running any `make` commands.
+
+Open the project in VS Code and select **Reopen in Container** for the recommended development environment.
+
+If you are not using a Dev Container, you can still follow the documented local setup instructions below where applicable.
+
+### 3. Bootstrap the project
+
+```bash
 make bootstrap
 ```
 
@@ -100,7 +113,7 @@ make nan-health
 make nan-skills
 ```
 
-### 2. Set up environment variables
+### 4. Set up environment variables
 
 ```bash
 cp .env.example .env
@@ -122,7 +135,7 @@ Key variables (see [docs/ENVIRONMENT_VARIABLES.md](docs/ENVIRONMENT_VARIABLES.md
 | `API_BASE_URL` | `https://jsonplaceholder.typicode.com` | Base URL for public API source |
 | `API_ENDPOINT` | `/posts` | Endpoint path |
 
-### 3. Start the local infrastructure
+### 5. Start the local infrastructure
 
 ```bash
 # Starts LocalStack (S3, Glue, SecretsManager) + SFTP server
