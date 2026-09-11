@@ -21,7 +21,8 @@
   },
   "homepage": "https://github.com/your-org/aws-glue-etl-boilerplate#readme",
   "dependencies": {
-    "danger": "^14.0.7"
+    "danger": "^14.0.7",
+    "undici": "^7.29.1"
   },
   "devDependencies": {
     "typescript": "^7.0.2"
