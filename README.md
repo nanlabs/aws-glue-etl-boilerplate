@@ -83,7 +83,7 @@ See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for more details.
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/your-org/aws-glue-etl-boilerplate.git
+git clone https://github.com/nanlabs/aws-glue-etl-boilerplate.git
 cd aws-glue-etl-boilerplate
 ```
 

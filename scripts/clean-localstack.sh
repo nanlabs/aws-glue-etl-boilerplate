@@ -3,11 +3,11 @@
 # This script assumes environment variables are already loaded (via direnv)
 # It uses awslocal which works with AWS_ENDPOINT_URL from the environment
 
-set -o pipefail
+set -euo pipefail
 
 echo "🧹 Cleaning LocalStack resources..."
 echo "⚠️  This will delete all secrets, SSM parameters, S3 buckets, and Glue databases in LocalStack"
-read -p "Are you sure? [y/N] " -n 1 -r
+read -p "Are you sure? [y/N] " -n 1 -r || true
 echo
 
 if [[ ! $REPLY =~ ^[Yy]$ ]]; then
@@ -16,8 +16,8 @@ if [[ ! $REPLY =~ ^[Yy]$ ]]; then
 fi
 
 # Check if LocalStack is available
-if ! curl -s "${AWS_ENDPOINT_URL}/_localstack/health" > /dev/null 2>&1; then
-  echo "⚠️  Warning: LocalStack is not available at ${AWS_ENDPOINT_URL}"
+if ! curl -s "${AWS_ENDPOINT_URL:-}/_localstack/health" > /dev/null 2>&1; then
+  echo "⚠️  Warning: LocalStack is not available at ${AWS_ENDPOINT_URL:-}"
   echo "   Make sure LocalStack is running."
   exit 1
 fi
@@ -38,7 +38,7 @@ if [[ -n "${secrets}" ]]; then
         --secret-id "${secret}" \
         --force-delete-without-recovery 2>/dev/null; then
         echo "    ⚠️  Failed to delete secret: ${secret}"
-        ((errors++))
+        ((++errors))
       fi
     fi
   done
@@ -61,7 +61,7 @@ if [[ -n "${params}" ]]; then
       if ! timeout 10 awslocal ssm delete-parameter \
         --name "${param}" 2>/dev/null; then
         echo "    ⚠️  Failed to delete parameter: ${param}"
-        ((errors++))
+        ((++errors))
       fi
     fi
   done
@@ -79,7 +79,7 @@ if [[ -n "${buckets}" ]]; then
       echo "  Deleting bucket: ${bucket}"
       if ! timeout 10 awslocal s3 rb "s3://${bucket}" --force 2>/dev/null; then
         echo "    ⚠️  Failed to delete bucket: ${bucket}"
-        ((errors++))
+        ((++errors))
       fi
     fi
   done
@@ -100,7 +100,7 @@ if [[ -n "${databases}" ]]; then
       if ! timeout 10 awslocal glue delete-database \
         --name "${db}" 2>/dev/null; then
         echo "    ⚠️  Failed to delete database: ${db}"
-        ((errors++))
+        ((++errors))
       fi
     fi
   done

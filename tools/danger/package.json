@@ -12,14 +12,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/your-org/aws-glue-etl-boilerplate.git"
+    "url": "git+https://github.com/nanlabs/aws-glue-etl-boilerplate.git"
   },
   "author": "Data Platform Team",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/your-org/aws-glue-etl-boilerplate/issues"
+    "url": "https://github.com/nanlabs/aws-glue-etl-boilerplate/issues"
   },
-  "homepage": "https://github.com/your-org/aws-glue-etl-boilerplate#readme",
+  "homepage": "https://github.com/nanlabs/aws-glue-etl-boilerplate#readme",
   "dependencies": {
     "danger": "^14.0.7",
     "undici": "^7.29.1"

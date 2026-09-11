@@ -3,7 +3,7 @@
 # This script assumes environment variables are already loaded (via direnv)
 # It uses env -u AWS_ENDPOINT_URL to read from AWS real, and awslocal to write to LocalStack
 
-set -o pipefail
+set -euo pipefail
 
 sync_secrets_to_localstack() {
   local account_name="${AWS_ACCOUNT_NAME:-workloads-data-lake-develop}"
@@ -19,8 +19,8 @@ sync_secrets_to_localstack() {
   echo ""
 
   # Check if LocalStack is available
-  if ! curl -s "${AWS_ENDPOINT_URL}/_localstack/health" > /dev/null 2>&1; then
-    echo "⚠️  Warning: LocalStack is not available at ${AWS_ENDPOINT_URL}"
+  if ! curl -s "${AWS_ENDPOINT_URL:-}/_localstack/health" > /dev/null 2>&1; then
+    echo "⚠️  Warning: LocalStack is not available at ${AWS_ENDPOINT_URL:-}"
     echo "   Skipping secret synchronization. Make sure LocalStack is running."
     return 1
   fi
@@ -66,14 +66,12 @@ sync_secrets_to_localstack() {
 
     # Read from AWS real (remove LocalStack variables for this command only)
     local secret_value
-    secret_value=$(env -u AWS_ENDPOINT_URL -u AWS_ACCESS_KEY_ID -u AWS_SECRET_ACCESS_KEY \
+    if secret_value=$(env -u AWS_ENDPOINT_URL -u AWS_ACCESS_KEY_ID -u AWS_SECRET_ACCESS_KEY \
       AWS_PROFILE="${aws_profile}" AWS_REGION="${aws_region}" \
       aws secretsmanager get-secret-value \
       --secret-id "${secret_name}" \
       --query 'SecretString' \
-      --output text 2>/dev/null)
-
-    if [[ $? -eq 0 ]] && [[ -n "${secret_value}" ]]; then
+      --output text 2>/dev/null) && [[ -n "${secret_value}" ]]; then
       # Write to LocalStack using awslocal (uses AWS_ENDPOINT_URL from environment)
       if timeout 10 awslocal secretsmanager create-secret \
         --name "${secret_name}" \
@@ -84,10 +82,10 @@ sync_secrets_to_localstack() {
         --secret-string "${secret_value}" \
         --output json > /dev/null 2>&1; then
         echo "✅"
-        ((synced_secrets++))
+        ((++synced_secrets))
       else
         echo "❌ (failed to write to LocalStack)"
-        ((errors++))
+        ((++errors))
       fi
     else
       echo "⚠️  (not found in AWS, skipping)"
@@ -111,7 +109,7 @@ sync_secrets_to_localstack() {
     --path "${data_lake_path}" \
     --recursive \
     --query 'Parameters[*].[Name,Value,Type]' \
-    --output text 2>/dev/null)
+    --output text 2>/dev/null) || params=""
 
   if [[ -n "${params}" ]]; then
     while IFS=$'\t' read -r param_name param_value param_type; do
@@ -125,10 +123,10 @@ sync_secrets_to_localstack() {
           --overwrite \
           --output json > /dev/null 2>&1; then
           echo "✅"
-          ((synced_params++))
+          ((++synced_params))
         else
           echo "❌"
-          ((errors++))
+          ((++errors))
         fi
       fi
     done <<< "${params}"
@@ -144,14 +142,12 @@ sync_secrets_to_localstack() {
 
     # Read from AWS real (remove LocalStack variables for this command only)
     local param_value
-    param_value=$(env -u AWS_ENDPOINT_URL -u AWS_ACCESS_KEY_ID -u AWS_SECRET_ACCESS_KEY \
+    if param_value=$(env -u AWS_ENDPOINT_URL -u AWS_ACCESS_KEY_ID -u AWS_SECRET_ACCESS_KEY \
       AWS_PROFILE="${aws_profile}" AWS_REGION="${aws_region}" \
       aws ssm get-parameter \
       --name "${param_name}" \
       --query 'Parameter.Value' \
-      --output text 2>/dev/null)
-
-    if [[ $? -eq 0 ]] && [[ -n "${param_value}" ]]; then
+      --output text 2>/dev/null) && [[ -n "${param_value}" ]]; then
       # Write to LocalStack using awslocal
       if timeout 10 awslocal ssm put-parameter \
         --name "${param_name}" \
@@ -160,10 +156,10 @@ sync_secrets_to_localstack() {
         --overwrite \
         --output json > /dev/null 2>&1; then
         echo "✅"
-        ((synced_params++))
+        ((++synced_params))
       else
         echo "❌"
-        ((errors++))
+        ((++errors))
       fi
     else
       echo "⚠️  (not found in AWS, skipping)"
@@ -201,18 +197,18 @@ create_localstack_resources() {
   storage_bucket=$(awslocal ssm get-parameter \
     --name "${ssm_prefix}/data-lake/storage_bucket_name" \
     --query 'Parameter.Value' \
-    --output text 2>/dev/null)
+    --output text 2>/dev/null) || storage_bucket=""
 
   if [[ -n "${storage_bucket}" ]]; then
     echo -n "   ${storage_bucket}... "
     if awslocal s3 mb "s3://${storage_bucket}" > /dev/null 2>&1; then
       echo "✅"
-      ((created_buckets++))
+      ((++created_buckets))
     elif awslocal s3 ls "s3://${storage_bucket}" > /dev/null 2>&1; then
       echo "ℹ️  (already exists)"
     else
       echo "❌"
-      ((resource_errors++))
+      ((++resource_errors))
     fi
   fi
 
@@ -220,18 +216,18 @@ create_localstack_resources() {
   temp_bucket=$(awslocal ssm get-parameter \
     --name "${ssm_prefix}/data-lake/temp_bucket_name" \
     --query 'Parameter.Value' \
-    --output text 2>/dev/null)
+    --output text 2>/dev/null) || temp_bucket=""
 
   if [[ -n "${temp_bucket}" ]]; then
     echo -n "   ${temp_bucket}... "
     if awslocal s3 mb "s3://${temp_bucket}" > /dev/null 2>&1; then
       echo "✅"
-      ((created_buckets++))
+      ((++created_buckets))
     elif awslocal s3 ls "s3://${temp_bucket}" > /dev/null 2>&1; then
       echo "ℹ️  (already exists)"
     else
       echo "❌"
-      ((resource_errors++))
+      ((++resource_errors))
     fi
   fi
 
