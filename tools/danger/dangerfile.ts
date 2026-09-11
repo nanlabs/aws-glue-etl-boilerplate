@@ -11,20 +11,17 @@ const PY_TESTS_GLOB = "tests/**/*.py";
 const WORKFLOWS_GLOB = ".github/workflows/**/*.yml";
 
 const templateSections = [
-  "## Description",
-  "## Type of Change",
-  "## How Has This Been Tested?",
+  "## Summary",
+  "## Type of change",
+  "## How was this tested?",
   "## Checklist",
 ];
 
 const checklistItems = [
-  "My code follows the style guidelines of this project",
-  "I have performed a self-review of my code",
-  "I have commented my code, particularly in hard-to-understand areas",
-  "I have made corresponding changes to the documentation",
-  "My changes generate no new warnings",
-  "Any dependent changes have been merged and published in downstream modules",
-  "I have checked my code and corrected any misspellings",
+  "Scope is focused and minimal",
+  "Tests and/or checks relevant to this change were executed",
+  "Docs were updated when behavior changed",
+  "No secrets or sensitive data were added",
 ];
 
 const prBody = danger.github.pr.body ?? "";
@@ -44,7 +41,7 @@ if (!prBody) {
   const title = ":clipboard: Missing Summary";
   const idea =
     "Can you add a Summary? " +
-    "To do so, add a `## Description` section to your PR description. " +
+    "To do so, add a `## Summary` section to your PR description. " +
     "This is a good place to explain the motivation for making this change. Include a summary of the changes and the related issue, and list any dependencies that are required for this change.";
   fail(`${title} - <i>${idea}</i>`);
 }

@@ -2,9 +2,9 @@
 
 Describe what changed and why.
 
-Issue: Fixes #
+Closes #ISSUE
 
-## Change Type
+## Type of change
 
 - [ ] Bug fix
 - [ ] New feature
@@ -12,27 +12,14 @@ Issue: Fixes #
 - [ ] Documentation update
 - [ ] Dependency update
 
-## Validation Evidence
+## How was this tested?
 
 List the exact commands executed and a short result summary.
 
 ```bash
 make lint
-make type-check
 make test-unit
 ```
-
-Optional baseline checks (if available):
-
-```bash
-make check-env
-make nan-health
-```
-
-## Risk and Rollback
-
-- Risk level: [Low | Medium | High]
-- Rollback plan:
 
 ## Checklist
 
@@ -40,4 +27,3 @@ make nan-health
 - [ ] Tests and/or checks relevant to this change were executed
 - [ ] Docs were updated when behavior changed
 - [ ] No secrets or sensitive data were added
-- [ ] I verified spelling and basic formatting
