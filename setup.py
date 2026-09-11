@@ -28,9 +28,9 @@ setup(
     description="Shared libraries for AWS Glue ETL boilerplate - Medallion architecture",
     long_description=read_readme(),
     long_description_content_type="text/markdown",
-    author="Data Platform Team",
-    author_email="data-platform@example.com",
-    url="https://github.com/your-org/aws-glue-etl-boilerplate",
+    author="NaNLABS",
+    author_email="hello@nanlabs.com",
+    url="https://github.com/nanlabs/aws-glue-etl-boilerplate",
     # Package discovery
     packages=find_packages(include=["libs", "libs.*"]),
     # Python version requirement
@@ -100,8 +100,8 @@ setup(
     ],
     # Project URLs
     project_urls={
-        "Bug Reports": "https://github.com/your-org/aws-glue-etl-boilerplate/issues",
-        "Source": "https://github.com/your-org/aws-glue-etl-boilerplate",
-        "Documentation": "https://github.com/your-org/aws-glue-etl-boilerplate/tree/main/docs",
+        "Bug Reports": "https://github.com/nanlabs/aws-glue-etl-boilerplate/issues",
+        "Source": "https://github.com/nanlabs/aws-glue-etl-boilerplate",
+        "Documentation": "https://github.com/nanlabs/aws-glue-etl-boilerplate/tree/main/docs",
     },
 )

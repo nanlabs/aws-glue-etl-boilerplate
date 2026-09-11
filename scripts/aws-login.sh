@@ -3,7 +3,7 @@
 # This script handles AWS SSO login for data workload accounts
 # It temporarily removes LocalStack variables to ensure SSO login uses real AWS
 
-set -o pipefail
+set -euo pipefail
 
 # Function to check and login to AWS SSO for data workload accounts
 # IMPORTANT: Temporarily unset AWS_ENDPOINT_URL for SSO operations
@@ -49,7 +49,7 @@ login_data_profile() {
 # Usage: aws_sso_login [profile_name]
 # Example: aws_sso_login nan-wl-workloads-data-lake-develop-terraform-execution
 aws_sso_login() {
-  local profile="${1:-${AWS_PROFILE}}"
+  local profile="${1:-${AWS_PROFILE:-}}"
   if [[ -z "${profile}" ]]; then
     echo "Error: No profile specified. Usage: aws_sso_login [profile_name]"
     return 1
