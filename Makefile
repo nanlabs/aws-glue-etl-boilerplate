@@ -99,7 +99,7 @@ bootstrap:
 	@echo ""
 	@echo "🔬 Installing dev + test dependencies..."
 	@. "$$HOME/.local/bin/env" 2>/dev/null || true; \
-	uv pip install pytest pytest-cov pytest-mock pyspark==3.5.1 typing-inspection ruff mypy --python .venv/bin/python
+	uv pip install pytest pytest-cov pytest-mock pyspark==3.5.8 typing-inspection ruff mypy --python .venv/bin/python
 	@echo ""
 	@echo "📎 Installing package in editable mode..."
 	@. "$$HOME/.local/bin/env" 2>/dev/null || true; \
