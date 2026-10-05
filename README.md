@@ -222,6 +222,7 @@ The config system resolves parameters automatically — no wiring needed beyond 
 | Doc | Description |
 |---|---|
 | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | Medallion layer overview |
+| [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) | Optional Code Registry deployment workflow setup |
 | [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) | Local run examples |
 | [docs/ENVIRONMENT_VARIABLES.md](docs/ENVIRONMENT_VARIABLES.md) | All supported env vars |
 | [docs/LIBS_STRUCTURE.md](docs/LIBS_STRUCTURE.md) | Library layout |

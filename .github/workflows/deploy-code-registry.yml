@@ -23,7 +23,7 @@ on:
     types: [published]
 
 env:
-  AWS_REGION: us-west-2
+  AWS_REGION: ${{ vars.AWS_REGION || 'us-west-2' }}
 
 jobs:
   # Pre-commit validation for smart commits
@@ -60,7 +60,7 @@ jobs:
       url: https://console.aws.amazon.com/
 
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    if: vars.CODE_REGISTRY_DEPLOY_ENABLED == 'true' && github.ref == 'refs/heads/main' && github.event_name == 'push'
     needs: [validate-commits]
 
     permissions:
@@ -87,16 +87,24 @@ jobs:
           make package
           make glue-wheels
 
+      - name: Validate deployment configuration
+        env:
+          AWS_ROLE_TO_ASSUME: ${{ vars.AWS_ROLE_TO_ASSUME }}
+          CODE_REGISTRY_BUCKET: ${{ vars.CODE_REGISTRY_BUCKET }}
+        run: |
+          test -n "$AWS_ROLE_TO_ASSUME" || { echo "Set the AWS_ROLE_TO_ASSUME repository variable to enable Code Registry deployment."; exit 1; }
+          test -n "$CODE_REGISTRY_BUCKET" || { echo "Set the CODE_REGISTRY_BUCKET repository variable to enable Code Registry deployment."; exit 1; }
+
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: arn:aws:iam::083084510336:role/nan-infra-platform-tools-data-jobs-github-actions
-          aws-region: us-west-2
+          role-to-assume: ${{ vars.AWS_ROLE_TO_ASSUME }}
+          aws-region: ${{ env.AWS_REGION }}
           role-session-name: glue-code-deploy-latest
 
       - name: Deploy latest version
         env:
-          CODE_REGISTRY_BUCKET: nan-infra-platform-tools-glue-code-artifacts
+          CODE_REGISTRY_BUCKET: ${{ vars.CODE_REGISTRY_BUCKET }}
           TARGET: latest
           GITHUB_ACTIONS: true
         run: |
@@ -107,7 +115,7 @@ jobs:
   redeploy-manual:
     name: Redeploy to Code Registry (manual)
     runs-on: ubuntu-latest
-    if: github.event_name == 'workflow_dispatch'
+    if: vars.CODE_REGISTRY_DEPLOY_ENABLED == 'true' && github.event_name == 'workflow_dispatch'
 
     environment:
       name: code-registry-deploy
@@ -137,16 +145,24 @@ jobs:
           make package
           make glue-wheels
 
+      - name: Validate deployment configuration
+        env:
+          AWS_ROLE_TO_ASSUME: ${{ vars.AWS_ROLE_TO_ASSUME }}
+          CODE_REGISTRY_BUCKET: ${{ vars.CODE_REGISTRY_BUCKET }}
+        run: |
+          test -n "$AWS_ROLE_TO_ASSUME" || { echo "Set the AWS_ROLE_TO_ASSUME repository variable to enable Code Registry deployment."; exit 1; }
+          test -n "$CODE_REGISTRY_BUCKET" || { echo "Set the CODE_REGISTRY_BUCKET repository variable to enable Code Registry deployment."; exit 1; }
+
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: arn:aws:iam::083084510336:role/nan-infra-platform-tools-data-jobs-github-actions
-          aws-region: us-west-2
+          role-to-assume: ${{ vars.AWS_ROLE_TO_ASSUME }}
+          aws-region: ${{ env.AWS_REGION }}
           role-session-name: glue-code-redeploy-manual
 
       - name: Deploy by version or latest
         env:
-          CODE_REGISTRY_BUCKET: nan-infra-platform-tools-glue-code-artifacts
+          CODE_REGISTRY_BUCKET: ${{ vars.CODE_REGISTRY_BUCKET }}
           TARGET: ${{ github.event.inputs.release_tag }}
           GITHUB_ACTIONS: true
         run: |
@@ -162,7 +178,7 @@ jobs:
       url: https://console.aws.amazon.com/
 
     runs-on: ubuntu-latest
-    if: github.event_name == 'release'
+    if: vars.CODE_REGISTRY_DEPLOY_ENABLED == 'true' && github.event_name == 'release'
 
     permissions:
       id-token: write
@@ -188,16 +204,24 @@ jobs:
           make package
           make glue-wheels
 
+      - name: Validate deployment configuration
+        env:
+          AWS_ROLE_TO_ASSUME: ${{ vars.AWS_ROLE_TO_ASSUME }}
+          CODE_REGISTRY_BUCKET: ${{ vars.CODE_REGISTRY_BUCKET }}
+        run: |
+          test -n "$AWS_ROLE_TO_ASSUME" || { echo "Set the AWS_ROLE_TO_ASSUME repository variable to enable Code Registry deployment."; exit 1; }
+          test -n "$CODE_REGISTRY_BUCKET" || { echo "Set the CODE_REGISTRY_BUCKET repository variable to enable Code Registry deployment."; exit 1; }
+
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: arn:aws:iam::083084510336:role/nan-infra-platform-tools-data-jobs-github-actions
-          aws-region: us-west-2
+          role-to-assume: ${{ vars.AWS_ROLE_TO_ASSUME }}
+          aws-region: ${{ env.AWS_REGION }}
           role-session-name: glue-code-deploy-release
 
       - name: Deploy release version
         env:
-          CODE_REGISTRY_BUCKET: nan-infra-platform-tools-glue-code-artifacts
+          CODE_REGISTRY_BUCKET: ${{ vars.CODE_REGISTRY_BUCKET }}
           RELEASE_TAG: ${{ github.event.release.tag_name }}
           GITHUB_ACTIONS: true
         run: |
