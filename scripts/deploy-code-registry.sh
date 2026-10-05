@@ -9,9 +9,9 @@ set -euo pipefail
 IS_GITHUB_ACTIONS="${GITHUB_ACTIONS:-false}"
 
 # Default values
-AWS_PROFILE="${AWS_PROFILE:-nan-infra-platform-tools-terraform-execution}"
+AWS_PROFILE="${AWS_PROFILE:-}"
 AWS_REGION="${AWS_REGION:-us-west-2}"
-CODE_REGISTRY_BUCKET="${CODE_REGISTRY_BUCKET:-nan-infra-platform-tools-glue-code-artifacts}"
+CODE_REGISTRY_BUCKET="${CODE_REGISTRY_BUCKET:-}"
 TARGET="${TARGET:-latest}"
 
 # In GitHub Actions, use environment variables if available
@@ -19,10 +19,9 @@ if [ "$IS_GITHUB_ACTIONS" = "true" ]; then
     # Override with GitHub Actions environment variables if set
     AWS_REGION="${AWS_REGION:-${AWS_DEFAULT_REGION:-us-west-2}}"
     # Don't use AWS_PROFILE in GitHub Actions (uses OIDC instead)
-    USE_AWS_PROFILE=false
-else
-    USE_AWS_PROFILE=true
+    unset AWS_PROFILE
 fi
+USE_AWS_PROFILE=false
 
 # Colors for output
 RED='\033[0;31m'
@@ -66,9 +65,9 @@ show_help() {
     echo "Deploy code artifacts to Code Registry S3 bucket"
     echo ""
     echo "Options:"
-    echo "  -p, --profile PROFILE    AWS profile to use (default: nan-infra-platform-tools-terraform-execution)"
+    echo "  -p, --profile PROFILE    AWS profile to use (default: AWS CLI credential chain)"
     echo "  -r, --region REGION      AWS region (default: us-west-2)"
-    echo "  -b, --bucket BUCKET      S3 bucket name (default: nan-infra-platform-tools-glue-code-artifacts)"
+    echo "  -b, --bucket BUCKET      S3 bucket name (required; no template default)"
     echo "  -t, --target TARGET      Deployment target: 'latest' or version tag like 'v1.2.3' (default: latest)"
     echo "  -n, --no-build           Skip building packages (assumes build/ directory exists)"
     echo "  -h, --help               Show this help message"
@@ -80,10 +79,10 @@ show_help() {
     echo "  TARGET                   Deployment target"
     echo ""
     echo "Examples:"
-    echo "  $0                                    # Deploy latest with defaults"
-    echo "  $0 -t v1.2.3                        # Deploy version v1.2.3"
-    echo "  $0 -p my-profile -t latest          # Use custom profile"
-    echo "  $0 -n                                # Skip build, deploy existing artifacts"
+    echo "  $0 -b my-code-registry-bucket        # Deploy latest using the default credential chain"
+    echo "  $0 -b my-code-registry-bucket -t v1.2.3  # Deploy version v1.2.3"
+    echo "  $0 -p my-profile -b my-bucket -t latest  # Use a named profile"
+    echo "  $0 -b my-code-registry-bucket -n     # Skip build, deploy existing artifacts"
     echo ""
 }
 
@@ -144,13 +143,25 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
+# Parse --profile before deciding whether to use a named profile. GitHub Actions
+# always uses its OIDC credentials, even if AWS_PROFILE is present in the runner.
+if [ "$IS_GITHUB_ACTIONS" != "true" ] && [ -n "$AWS_PROFILE" ]; then
+    USE_AWS_PROFILE=true
+fi
+
 print_header "Code Registry Deployment"
 if [ "$USE_AWS_PROFILE" = "true" ]; then
     print_info "AWS Profile: $AWS_PROFILE"
-else
+elif [ "$IS_GITHUB_ACTIONS" = "true" ]; then
     print_info "Authentication: GitHub Actions OIDC"
+else
+    print_info "Authentication: AWS CLI default credential chain"
 fi
 print_info "AWS Region: $AWS_REGION"
+if [ -z "$CODE_REGISTRY_BUCKET" ]; then
+    print_error "Code Registry bucket is required. Set CODE_REGISTRY_BUCKET or pass --bucket."
+    exit 1
+fi
 print_info "Bucket: $CODE_REGISTRY_BUCKET"
 print_info "Target: $TARGET"
 echo ""

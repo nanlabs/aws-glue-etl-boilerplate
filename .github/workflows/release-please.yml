@@ -5,6 +5,11 @@ on:
     branches:
       - main
   workflow_dispatch:
+    inputs:
+      reason:
+        description: Optional note for manually refreshing release calculations
+        required: false
+        type: string
 
 permissions:
   contents: write
@@ -18,7 +23,8 @@ jobs:
   release-please:
     name: Run release-please
     runs-on: ubuntu-latest
-    if: ${{ github.event_name != 'push' || !startsWith(github.event.head_commit.message, 'chore(main): release') }}
+    if: >-
+      ${{ github.event_name != 'push' || !startsWith(github.event.head_commit.message, 'chore(main): release') }}
 
     steps:
       - name: Release Please
