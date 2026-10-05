@@ -2,6 +2,8 @@
 
 A production-ready starting point for building **AWS Glue v5** data pipelines following the [Medallion Architecture](docs/ARCHITECTURE.md) (Raw → Bronze → Silver → Gold).
 
+The GitHub Actions workflows validate this starter and show how generated projects can automate CI/CD. This repository is not deployed to AWS; its Code Registry jobs stay disabled. Projects created from it can enable deployment after configuring their own OIDC role and repository variables. See [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md).
+
 Ships with:
 - Generic `public_api` sample jobs across all four layers (using [JSONPlaceholder](https://jsonplaceholder.typicode.com))
 - Pydantic v2 four-tier config resolution (Workflow Properties → CLI args → env vars → defaults)
