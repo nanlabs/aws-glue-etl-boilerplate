@@ -96,7 +96,7 @@ jobs:
           test -n "$CODE_REGISTRY_BUCKET" || { echo "Set the CODE_REGISTRY_BUCKET repository variable to enable Code Registry deployment."; exit 1; }
 
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v6
         with:
           role-to-assume: ${{ vars.AWS_ROLE_TO_ASSUME }}
           aws-region: ${{ env.AWS_REGION }}
@@ -154,7 +154,7 @@ jobs:
           test -n "$CODE_REGISTRY_BUCKET" || { echo "Set the CODE_REGISTRY_BUCKET repository variable to enable Code Registry deployment."; exit 1; }
 
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v6
         with:
           role-to-assume: ${{ vars.AWS_ROLE_TO_ASSUME }}
           aws-region: ${{ env.AWS_REGION }}
@@ -213,7 +213,7 @@ jobs:
           test -n "$CODE_REGISTRY_BUCKET" || { echo "Set the CODE_REGISTRY_BUCKET repository variable to enable Code Registry deployment."; exit 1; }
 
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v6
         with:
           role-to-assume: ${{ vars.AWS_ROLE_TO_ASSUME }}
           aws-region: ${{ env.AWS_REGION }}
