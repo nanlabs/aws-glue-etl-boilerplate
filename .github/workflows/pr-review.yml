@@ -1,0 +1,47 @@
+name: Pull Request Validation
+
+concurrency:
+  group: pull_request_${{ github.event.number }}
+  cancel-in-progress: true
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  pr-review:
+    name: PR Review
+
+    if: >-
+      github.event_name != 'pull_request' ||
+      (
+        !github.event.pull_request.draft &&
+        github.event.pull_request.user.login != 'dependabot[bot]' &&
+        github.event.pull_request.user.login != 'app/dependabot'
+      )
+
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      pull-requests: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Test PR review rules
+        run: node --test .github/scripts/pr-review.test.mjs
+
+      - name: Validate pull request
+        run: node .github/scripts/pr-review.mjs
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_EVENT_PATH: ${{ github.event_path }}
+          GITHUB_STEP_SUMMARY: ${{ github.step_summary }}
