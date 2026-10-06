@@ -22,8 +22,7 @@ repos:
         exclude: |
           (?x)^(
             \.vscode/.*|
-            \.devcontainer/.*|
-            tools/danger/.*
+            \.devcontainer/.*
           )$
       - id: check-merge-conflict
       - id: check-added-large-files
