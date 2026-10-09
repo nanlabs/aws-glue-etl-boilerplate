@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.2](https://github.com/nanlabs/aws-glue-etl-boilerplate/compare/v0.1.1...v0.1.2) (2026-10-06)
+
+
+### Bug Fixes
+
+* remove vulnerable Danger dependency from PR checks ([#96](https://github.com/nanlabs/aws-glue-etl-boilerplate/issues/96)) ([52a4863](https://github.com/nanlabs/aws-glue-etl-boilerplate/commit/52a486371c5642fa2a43af5a257882fbaac665d2))
+
 ## [0.1.1](https://github.com/nanlabs/aws-glue-etl-boilerplate/compare/v0.1.0...v0.1.1) (2026-10-05)
 
 
