@@ -52,8 +52,17 @@ jobs:
             echo "is_dependabot=false" >> "$GITHUB_OUTPUT"
           fi
 
+          # GITHUB_TOKEN cannot merge changes to .github/workflows (it has no
+          # `workflows` permission), so those PRs are left for a maintainer.
+          changed_files="$(gh pr view "$pr_number" --repo "$repo" --json files -q '.files[].path')"
+          if grep -q '^\.github/workflows/' <<< "$changed_files"; then
+            echo "touches_workflows=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "touches_workflows=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Enable auto-merge
-        if: steps.pr.outputs.number != '' && steps.author.outputs.is_dependabot == 'true'
+        if: steps.pr.outputs.number != '' && steps.author.outputs.is_dependabot == 'true' && steps.author.outputs.touches_workflows != 'true'
         run: |
           set -euo pipefail
           pr_number="${{ steps.pr.outputs.number }}"
@@ -87,3 +96,9 @@ jobs:
         run: |
           pr_num="${{ steps.pr.outputs.number }}"
           echo "PR #$pr_num is not from Dependabot; skipping."
+
+      - name: Skip workflow-changing Dependabot PR
+        if: steps.pr.outputs.number != '' && steps.author.outputs.is_dependabot == 'true' && steps.author.outputs.touches_workflows == 'true'
+        run: |
+          pr_num="${{ steps.pr.outputs.number }}"
+          echo "::notice::PR #$pr_num changes .github/workflows; GITHUB_TOKEN cannot merge it. Leaving it for manual review."
