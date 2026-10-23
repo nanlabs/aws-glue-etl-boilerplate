@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.1.2](https://github.com/nanlabs/aws-glue-etl-boilerplate/compare/v0.1.1...v0.1.2) (2026-10-23)
+
+
+### Bug Fixes
+
+* **deps:** upgrade pyiceberg to 0.9.1 so patched fsspec installs ([#108](https://github.com/nanlabs/aws-glue-etl-boilerplate/issues/108)) ([e865c51](https://github.com/nanlabs/aws-glue-etl-boilerplate/commit/e865c5146134511a184dd375163a20f1bcded981))
+* remove vulnerable Danger dependency from PR checks ([#96](https://github.com/nanlabs/aws-glue-etl-boilerplate/issues/96)) ([52a4863](https://github.com/nanlabs/aws-glue-etl-boilerplate/commit/52a486371c5642fa2a43af5a257882fbaac665d2))
+
 ## [0.1.1](https://github.com/nanlabs/aws-glue-etl-boilerplate/compare/v0.1.0...v0.1.1) (2026-10-05)
 
 
